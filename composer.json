@@ -1,0 +1,8 @@
+{
+    "name": "ymyk-uiai/erupt",
+    "description": "helps you create laravel apps",
+    "require": {
+        "php": "^7.2",
+        "laravel/framework": "7.*"
+    }
+}
