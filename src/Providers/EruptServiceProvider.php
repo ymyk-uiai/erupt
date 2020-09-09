@@ -4,7 +4,7 @@ namespace Erupt\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class EruptProvider extends ServiceProvider
+class EruptServiceProvider extends ServiceProvider
 {
   public function register()
   {

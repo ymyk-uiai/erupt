@@ -1,6 +1,6 @@
 <?php
 
-namespace Erupt\Abstracts\Plans\Attribute;
+namespace Erupt\Abstracts\Plans\Attributes;
 
 use Erupt\Abstracts\Foundations\BaseListItem;
 
