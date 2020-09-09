@@ -1,6 +1,7 @@
 {
     "name": "ymyk-uiai/erupt",
     "description": "helps you create laravel apps",
+    "license": "MIT",
     "require": {
         "php": "^7.2",
         "laravel/framework": "^8.0"
