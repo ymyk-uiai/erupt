@@ -2,7 +2,7 @@
 
 namespace Erupt\Models\Properties;
 
-use Erupt\Abstracts\Properties\Property;
+use Erupt\Abstracts\Models\Properties\Property as AbstractProperty;
 
 class Property extends AbstractProperty
 {

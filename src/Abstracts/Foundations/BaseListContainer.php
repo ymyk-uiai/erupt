@@ -42,6 +42,11 @@ abstract class BaseListContainer implements IteratorAggregate, ContainerInterfac
         }
     }
 
+    protected function count()
+    {
+        return $this->countList();
+    }
+
     protected function addList(BaseList $list)
     {
         $this->container[] = $list;

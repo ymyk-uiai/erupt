@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Controllers;
+
+class @className@ extends Controller
+{
+    public function test()
+    {
+        <!erupt
+            foreach self.attributes.fillable as fillable join ", " {
+                print("{}", fillable.name)
+            }
+        !>
+
+        //  test
+
+        <!erupt
+            foreach self.relationships.required as required {
+                foreach required.attributes.fillable as fillable {
+                    print("{}->{}", required.name, fillable.name)
+                }
+            }
+        !>
+    }
+}

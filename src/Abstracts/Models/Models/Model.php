@@ -3,7 +3,8 @@
 namespace Erupt\Abstracts\Models\Models;
 
 use Erupt\Abstracts\Foundations\BaseListItem;
-use Erupt\Lists\PropertyList;
+use Erupt\Models\Lists\Properties\PropertyList;
+use Erupt\Models\Lists\Files\FileList;
 
 abstract class Model extends BaseListItem
 {
@@ -17,14 +18,19 @@ abstract class Model extends BaseListItem
 
     protected $files;
 
-    public function __construct($name)
+    public function __construct()
     {
-        $this->name = $name;
+        //
     }
 
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
     public function getType()
@@ -52,8 +58,40 @@ abstract class Model extends BaseListItem
         $this->relationships = $relatedModels;
     }
 
-    public function setModelFiles($files)
+    public function getFiles(): FileList
+    {
+        return $this->files;
+    }
+
+    public function setFiles($files)
     {
         $this->files = $files;
+    }
+
+    public function resolve($keys, $app)
+    {
+        print_r("Model->resolve\n");
+
+        if(gettype($keys) == "string") {
+            $keys = explode('.', $keys);
+        }
+
+        print_r(implode('.', $keys)."\n");
+
+        $key = array_shift($keys);
+
+        if($key == "attributes") {
+            return $this->getProperties()->resolve($keys, $app);
+        } else if($key == "relationships") {
+            return $this->getRelationships()->resolve($keys, $app);
+        } else {
+            $props = [
+                "name",
+            ];
+    
+            if(in_array($key, $props)) {
+                return $this->{$key};
+            }
+        }
     }
 }

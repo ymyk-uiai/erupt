@@ -11,6 +11,11 @@ abstract class BaseList implements IteratorAggregate, BaseListInterface
 {
     protected $list = [];
 
+    public function getList()
+    {
+        return $this->list;
+    }
+
     public function getIterator()
     {
         return new Iterator($this->list);

@@ -4,48 +4,33 @@ namespace Erupt\Abstracts\Relationships\Relationships;
 
 use Erupt\Abstracts\Foundations\BaseListItem;
 use Erupt\Abstracts\Relationships\Members\Member;
+use Erupt\Abstracts\Relationships\Relationships\Relationship;
 
-abstract class UniformRelationship extends BaseListItem
+abstract class UniformRelationship extends Relationship
 {
-    protected $sb;
+    protected Member $sbj;
 
-    protected $ob;
-
-    protected $morphIndex;
-
-    public function __construct(Member $sb, Member $ob, $morphIndex)
-    {
-        $this->sb = $sb;
-
-        $this->ob = $ob;
-
-        $this->morphIndex = $morphIndex;
-    }
-
-    public function getSubject()
+    public function getSbj()
     {
         return $this->sb;
     }
 
-    public function getObject()
+    public function setSbj(Member $sbj)
     {
-        return $this->ob;
-    }
-
-    public function getMorphIndex()
-    {
-        return $this->morphIndex;
+        $this->sbj = $sbj;
     }
 
     public function relateTo($modelName)
     {
-        if($this->sb->getName() === $modelName) {
+        if($this->sbj->getName() === $modelName) {
             return true;
-        } else if($this->ob->getName() === $modelName) {
+        } else if($this->obj->getName() === $modelName) {
             return true;
         } else {
             return false;
         }
+
+        //  return $this->sbj->checkName($name) || $this->obj->checkName($name) || false;
     }
 
     public function serve($context)

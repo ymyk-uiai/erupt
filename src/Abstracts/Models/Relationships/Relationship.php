@@ -6,50 +6,32 @@ use Erupt\Abstracts\Foundations\BaseListItem;
 
 class Relationship extends BaseListItem
 {
-    protected string $name;
+    protected $name;
 
-    protected bool $required = false;
-
-    protected bool $index = false;
-
-    protected bool $show = false;
-
-    public function __construct(Member $member)
-    {
-        $this->name = $member->getName();
-    }
+    protected array $flags = [];
 
     public function getName()
     {
         return $this->name;
     }
 
-    public function setRequired(bool $bool)
+    public function setName($name)
     {
-        $this->required = $bool;
+        $this->name = $name;
     }
 
-    public function setIndex(bool $bool)
+    public function getFlag(string $flagKey): bool
     {
-        $this->index = $bool;
-    }
-
-    public function setShow(bool $bool)
-    {
-        $this->show = $bool;
-    }
-
-    public function check($key)
-    {
-        $flags = [
-            "required",
-            "index",
-            "show",
-        ];
-
-        if(in_array($key, $flags)) {
-            return $this->{$key};
+        if(array_key_exists($flagKey, $this->flags)) {
+            return $this->flags[$flagKey];
+        } else {
+            return false;
         }
+    }
+
+    public function setFlag(string $flagKey, bool $bool)
+    {
+        $this->flags[$flagKey] = $bool;
     }
 
     public function resolve($keys, $app)
@@ -64,7 +46,7 @@ class Relationship extends BaseListItem
 
         $key = array_shift($keys);
 
-        $model = $app->getModels()->getModel($this->name);
+        $model = $app->getModels()->get($this->name);
 
         if($key == "attributes") {
             return $model->getProperties()->resolve($keys, $app);

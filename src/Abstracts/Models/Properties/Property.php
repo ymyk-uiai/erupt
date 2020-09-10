@@ -12,15 +12,21 @@ class Property extends BaseListItem
 
     protected $valueType;
 
-    protected bool $fillable = false;
+    protected array $flags = [];
 
-    protected bool $hidden = false;
-
-    protected bool $casts = false;
+    public function getName()
+    {
+        return $this->name;
+    }
 
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function getColumnType()
+    {
+        return $this->columnType;
     }
 
     public function setColumnType($type)
@@ -28,42 +34,24 @@ class Property extends BaseListItem
         $this->columnType = $type;
     }
 
+    public function getValueTypee()
+    {
+        return $this->valueType;
+    }
+
     public function setValueType($type)
     {
         $this->valueType = $type;
     }
 
-    public function setFillable($bool)
+    public function getFlag(string $key): bool
     {
-        $this->fillable = $bool;
+        return array_key_exists($key, $this->flags) ? $this->flags[$key] : false;
     }
 
-    public function setHidden($bool)
+    public function setFlag(string $key, bool $bool)
     {
-        $this->hidden = $bool;
-    }
-
-    public function setNullable($bool)
-    {
-        $this->nulllable = $bool;
-    }
-
-    public function setCasts($type)
-    {
-        $this->casts = $type;
-    }
-
-    public function check($key)
-    {
-        $flags = [
-            "fillable",
-            "hidden",
-            "casts",
-        ];
-
-        if(in_array($key, $flags)) {
-            return $this->{$key};
-        }
+        $this->flags[$key] = $bool;
     }
 
     public function resolve($keys)

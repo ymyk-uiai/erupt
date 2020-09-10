@@ -2,9 +2,9 @@
 
 namespace Erupt\Plans\Updaters;
 
-use Erupt\Abstracts\Builders\Plans\Updaters as UpdaterAbstract;
+use Erupt\Abstracts\Plans\Updaters\Updater as AbstractUpdater;
 
-class IdUpdater extends UpdaterAbstract
+class IdUpdater extends AbstractUpdater
 {
     //
 }

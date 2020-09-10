@@ -2,46 +2,28 @@
 
 namespace Erupt\Abstracts\Relationships\Relationships;
 
-use Erupt\Abstracts\Foundations\BaseListItem;
 use Erupt\Abstracts\Relationships\Members\Member;
+use Erupt\Abstracts\Relationships\Relationships\Relationship;
 
-abstract class PolymorphicRelationship extends BaseListItem
+abstract class PolymorphicRelationship extends Relationship
 {
-    protected $sbs = [];
+    protected $sbjs = [];
 
-    protected $ob;
-
-    protected $morphIndex;
-
-    public function __construct(Member $sb, Member $ob, $morphIndex)
+    public function getSbjs()
     {
-        $this->sbs[] = $sb;
-
-        $this->ob = $ob;
-
-        $this->morphIndex = $morphIndex;
+        return $this->sbjs;
     }
 
-    public function getSubjects()
+    public function setSbj(Member $sbj)
     {
-        return $this->sbs;
+        $this->sbjs[] = $sbj;
     }
 
-    public function getObject()
-    {
-        return $this->ob;
-    }
-
-    public function getMorphIndex()
-    {
-        return $this->morphIndex;
-    }
-
-    public function tryMerge(Polymorphic $relationship)
+    public function tryMerge(PolymorphicRelationship $relationship)
     {
         if($this->morphIndex === $relationship->getMorphIndex()) {
-            foreach($relationship->getSubjects() as $sb) {
-                $this->sbs[] = $sb;
+            foreach($relationship->getSbjs() as $sbj) {
+                $this->sbjs[] = $sbj;
             }
             return true;
         }
@@ -66,6 +48,8 @@ abstract class PolymorphicRelationship extends BaseListItem
             return true;
         } else if($this->ob->getName() === $modelName) {
             return true;
+        } else {
+            return false;
         }
     }
 
