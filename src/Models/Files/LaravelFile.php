@@ -37,23 +37,16 @@ class LaravelFile extends AbstractFile
         $this->instance = $instance;
 
         $this->path = $path;
+    }
 
-        /*
-        $this->type = $command["command"];
+    public function get($keys)
+    {
+        $type = $keys[0];
 
-        $this->variant = array_key_exists("variant", $command) ? ",{$command['variant']}" : '';
+        $name = $keys[1];
 
-        $this->className = $generator->makeClassName($name, $command);
-
-        $this->namespace = $generator->makeNamespace($name, $command);
-
-        $this->fullClassName = $generator->makeFullClassName($name, $command);
-
-        $this->useAs = $generator->makeUseAs($name, $command);
-
-        $this->instance = $generator->makeInstance($name, $command);
-
-        $this->path = $generator->makePath($name, $command);
-        */
+        if($type == $this->type) {
+            return $this->{$name};
+        }
     }
 }

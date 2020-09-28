@@ -6,6 +6,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Console\GeneratorCommand;
 use Erupt\Application;
 use Erupt\Language\EruptLang;
+use Erupt\Generators\PhpClassMaker;
 
 abstract class BaseCommand extends GeneratorCommand
 {
@@ -43,10 +44,21 @@ abstract class BaseCommand extends GeneratorCommand
 
     protected function build($name)
     {
-        $template = $this->files->get($this->getStub());
+        $template = $this->makeTemplate($this->files->get($this->getStub()));
 
         $eruptLang = new EruptLang($this->app);
 
-        return $eruptLang->exec($template, $name);
+        return $eruptLang->exec($template, $name, lcfirst($this->type));
+    }
+
+    protected function makeTemplate($baseTemplate)
+    {
+        $json = json_decode($baseTemplate, true);
+
+        if($json["file_type"] == "php/class") {
+            $maker = new PhpClassMaker($json, $this->app);
+
+            return $maker->makeFile();
+        }
     }
 }

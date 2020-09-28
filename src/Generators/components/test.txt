@@ -1,0 +1,18 @@
+public function @method_name@()
+{
+    <!erupt
+        foreach self.attributes.fillable as fillable join ", " {
+            preprint("protected $fillable = [")
+            print("'{}'", fillable.name)
+            postprint("];")
+        }
+    !>
+    
+    <!erupt
+        foreach self.relationships.required as required {
+            foreach required.attributes.fillable as fillable {
+                print("{}->{}", required.name, fillable.name)
+            }
+        }
+    !>
+}

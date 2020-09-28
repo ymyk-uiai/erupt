@@ -1,0 +1,12 @@
+{
+    "file_type": "php/class",
+    "namespace": "App\\Http\\Controllers",
+    "name": "<!erupt className !>",
+    "extends": "Controller",
+    "imports": [
+        {
+            "args": "method_name=test",
+            "template": "test"
+        }
+    ]
+}

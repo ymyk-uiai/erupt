@@ -1,0 +1,19 @@
+<!erupt
+    foreach self.attributes.userInput as input join ", " {
+        preprint("protected $fillable = [")
+        print("'{}'", fillable.name)
+        postprint("];")
+    }
+
+    foreach self.attributes.hidden as hidden join ", " {
+        preprint("protected $hidden = [")
+        print("'{}'", hidden.name)
+        postprint("];")
+    }
+
+    foreach self.attributes.casts as casts join ", " {
+        preprint("protected $casts = [")
+        print("'{}' => '{}'", casts.name, casts.valueType)
+        postprint("];")
+    }
+!>

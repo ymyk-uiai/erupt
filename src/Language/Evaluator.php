@@ -4,8 +4,6 @@ namespace Erupt\Language;
 
 class Evaluator
 {
-    protected $result = "";
-
     protected $constructs = [];
 
     protected $functions = [];
@@ -35,41 +33,90 @@ class Evaluator
             print_r("format\n");
             print_r($format["value"]);
 
-            $eva->result .= $format["value"];
+            $scope->write($format["value"]);
+        };
+
+        $this->functions["preprint"] = function ($args, $scope) use ($eva) {
+            $format = array_shift($args);
+
+            foreach($args as $arg) {
+                if($arg["type"] == "value") {
+                    $format["value"] = preg_replace("/{}/", $arg["value"], $format["value"], 1);
+                } else if($arg["type"] == "word") {
+                    $format["value"] = preg_replace("/{}/", $eva->resolve($arg["name"], $scope, $eva->app), $format["value"], 1);
+                }
+            }
+
+            $scope->write($format["value"], "pre");
+        };
+
+        $this->functions["postprint"] = function ($args, $scope) use ($eva) {
+            $format = array_shift($args);
+
+            foreach($args as $arg) {
+                if($arg["type"] == "value") {
+                    $format["value"] = preg_replace("/{}/", $arg["value"], $format["value"], 1);
+                } else if($arg["type"] == "word") {
+                    $format["value"] = preg_replace("/{}/", $eva->resolve($arg["name"], $scope, $eva->app), $format["value"], 1);
+                }
+            }
+
+            $scope->write($format["value"], "post");
         };
     }
     
     public function init()
     {
         $this->result = "";
+        $this->preresult = "";
+        $this->postresult = "";
     }
 
-    public function evaluate($ast, $scope)
+    public function evaluate($ast, Scope $scope)
     {
         print_r("Evaluator->evaluate\n");
         //print_r($ast);
 
         if($ast["type"] == "statements") {
             $statements = $ast["statements"];
+
+            if(!$scope->getParent() && count($statements) == 1) {
+                if($statements[0]["type"] == "word") {
+                    $value = [
+                        "type" => "value",
+                        "value" => "{}"
+                    ];
+
+                    $this->functions["print"]([$value, $statements[0]], $scope);
+                }
+                print_r($statements);
+            }
+
             foreach($statements as $statement) {
                 $this->evaluate($statement, $scope);
             }
         } else if($ast["type"] == "construct") {
             if($ast["operator"]["name"] == "foreach") {
                 $iterator = $this->resolve($ast["iterator"]["name"], $scope);
+                
                 print_r("iterator\n");
                 print_r($ast["iterator"]["name"]."\n");
                 print_r($iterator);
+
+                $iterScope = Scope::inherit($scope);
+                $iterScope->setGlue($ast["join"]["value"]);
+
                 foreach($iterator as $item) {
                     $statements = $ast["statements"]["statements"];
-                    $iterScope = $scope;
-                    $iterScope[$ast["as"]["name"]] = $item;
-                    $iterScope["join"] = $ast["join"]["value"];
+
+                    $iterScope->setDefined($ast["as"]["name"], $item);
+
                     foreach($statements as $statement) {
                         $this->evaluate($statement, $iterScope);
-                        $this->result .= $iterScope["join"];
                     }
                 }
+
+                $iterScope->finish(true);
             }
         } else if($ast["type"] == "apply")  {
             print_r("apply\n");
@@ -85,7 +132,7 @@ class Evaluator
             return $this->resolve($ast["name"], $scope);
         }
 
-        return $this->result;
+        return $scope->finish();
     }
 
     protected function resolve($name, $scope)
@@ -94,9 +141,9 @@ class Evaluator
         print_r("$name\n");
 
         if(preg_match("/^(\w+)((?:\.\w+)+)/", $name, $matches)) {
-            return $scope[$matches[1]]->resolve(trim($matches[2], '.'), $this->app);
+            return $scope->getDefined($matches[1])->resolve(trim($matches[2], '.'), $this->app);
         } else {
-            return $scope[$name];
+            return $scope->getDefined($name);
         }
     }
 }

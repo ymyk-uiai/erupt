@@ -15,4 +15,19 @@ class FileList extends BaseList
     {
         parent::add($file);
     }
+
+    public function resolve($keys, $app)
+    {
+        if(gettype($keys) == "string") {
+            $keys = explode('.', $keys);
+        }
+
+        print_r($keys);
+
+        foreach($this->list as $file) {
+            if($file->get($keys)) {
+                return $file->get($keys);
+            }
+        }
+    }
 }

@@ -94,4 +94,9 @@ class Application
 
         return $builder->build($plans, $relationships);
     }
+
+    public function getComponent($name)
+    {
+        return __DIR__."/Generators/components/$name.txt";
+    }
 }

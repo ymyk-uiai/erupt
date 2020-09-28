@@ -43,12 +43,20 @@ class Parser
         $program = $result["rest"];
 
         if($expr["type"] == "value") {
-            //
+            $r = [
+                "statement" => $result["expr"],
+                "rest" => $result["rest"],
+            ];
+            return $r;
         } else if($expr["type"] == "word") {
             if($expr["name"] == "foreach") {
                 return $this->parseForeach($expr, $program);
             } else {
-                //
+                $r = [
+                    "statement" => $result["expr"],
+                    "rest" => $result["rest"],
+                ];
+                return $r;
             }
         } else if($expr["type"] == "apply") {
             $r = [

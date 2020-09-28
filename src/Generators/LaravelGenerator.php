@@ -276,7 +276,7 @@ class LaravelGenerator
 
     public function getTemplatePath($modelType, $classType)
     {
-        return __DIR__."/templates/{$modelType}.{$classType}.txt";
+        return __DIR__."/templates/{$modelType}.{$classType}.json";
     }
 
     public function makeCommand($input)

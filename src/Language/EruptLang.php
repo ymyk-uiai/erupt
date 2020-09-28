@@ -22,7 +22,7 @@ class EruptLang
         $this->app = $app;
     }
 
-    public function exec($template, $modelName)
+    public function exec($template, $modelName, $type)
     {
         $result = "";
 
@@ -37,10 +37,15 @@ class EruptLang
             //print_r(substr($template, $offset, $matches[0][1]));
 
             $ast = $this->parser->parse($matches[1][0]);
-            $scope = [
-                "self" => $this->app->getModels()->get($modelName),
-                "auth" => $this->app->getModels()->getByType("auth"),
-            ];
+            
+            $self = $this->app->getModels()->get($modelName);
+            $auth = $this->app->getModels()->getByType("auth");
+            $scope = Scope::init([
+                "self" => $self,
+                "auth" => $auth,
+                "className" => $self->getFiles()->resolve("$type.className", $this->app),
+                "namespace" => $self->getFiles()->resolve("$type.namespace", $this->app),
+            ]);
 
             $result .= $this->evaluator->evaluate($ast, $scope);
             

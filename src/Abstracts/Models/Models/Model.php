@@ -84,6 +84,8 @@ abstract class Model extends BaseListItem
             return $this->getProperties()->resolve($keys, $app);
         } else if($key == "relationships") {
             return $this->getRelationships()->resolve($keys, $app);
+        } else if($key == "file") {
+            return $this->getFiles()->resolve($keys, $app);
         } else {
             $props = [
                 "name",

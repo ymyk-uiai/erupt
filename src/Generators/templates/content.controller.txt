@@ -8,7 +8,9 @@ class @className@ extends Controller
     {
         <!erupt
             foreach self.attributes.fillable as fillable join ", " {
-                print("{}", fillable.name)
+                preprint("protected $fillable = [")
+                print("'{}'", fillable.name)
+                postprint("];")
             }
         !>
 
