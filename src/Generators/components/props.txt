@@ -1,7 +1,7 @@
 <!erupt
-    foreach self.attributes.userInput as input join ", " {
+    foreach self.attributes.fillable as input join ", " {
         preprint("protected $fillable = [")
-        print("'{}'", fillable.name)
+        print("'{}'", input.name)
         postprint("];")
     }
 

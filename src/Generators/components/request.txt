@@ -1,0 +1,15 @@
+public function authorize()
+{
+    return true;
+}
+
+public function rules()
+{
+    <!erupt
+        foreach self.attributes.fillable as fillable join "," {
+            preprint("return [")
+            print("'{}' => ", fillable.name)
+            postprint("];")
+        }
+    !>
+}

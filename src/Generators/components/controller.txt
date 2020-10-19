@@ -1,0 +1,80 @@
+public function index()
+{
+    if(isset($request['user_id'])) {
+        $books = <!erupt self.files.resource.className!>::where('user_id', $request->user_id)
+            ->take(10)
+            ->get();
+    } else {
+        $books = <!erupt self.files.resource.className !>::take(10)->get();
+    }
+    
+    $books->load('user');
+    
+    return new <!erupt self.files.collection.className !>($<!erupt self.files.resource.instance !>);
+}
+
+public function store(StoreBook $request)
+{
+    $this->authorize('create', '<!erupt self.files.model.fullClassName !>');
+
+    $validated = $request->validated();
+
+    $<!erupt self.files.resource.instance !> = new <!erupt self.files.resource.className !>([
+        'title' => $validated['title'],
+    ]);
+
+    $request->user()-><!erupt self.files.collection.instance !>()->save($<!erupt self.files.resource.instance !>);
+
+    return new <!erupt self.files.collection.className !>($<!erupt self.files.resource.instance !>);
+}
+
+public function show(<!erupt self.files.resource.className !> $<!erupt self.files.resource.instance !>)
+{
+    <!erupt
+        print("${}->load('user', '{}')", self.files.resource.instance, self.files.collection.instance)
+    !>
+
+    <!erupt
+        print("return new {}(${})", self.files.resource.useAs, self.files.resource.instance)
+    !>
+}
+
+<!erupt
+    print("public function update({} $request, {} ${})", self.files.request@update.className, self.files.resource.className, self.files.resource.instance)
+!>
+{
+    <!erupt
+        print("$this->authorize('update', ${})", self.files.resource.instance)
+    !>
+
+    $validated = $request->validated();
+
+    <!erupt
+        foreach self.attributes.fillable as fillable {
+            print("${}->{} = $validated['{}']", self.files.resource.instance, fillable.name, fillable.name)
+        }
+    !>
+
+    <!erupt
+        print("$request->user()->{}()->save(${})", self.files.collection.instance, self.files.resource.instance)
+    !>
+
+    <!erupt
+        print("return new {}(${})", self.files.resource.useAs, self.files.resource.instance)
+    !>
+}
+
+public function destroy(Book $book)
+{
+    <!erupt
+        print("$this->authorize('delete', ${})", self.files.resource.instance)
+    !>
+
+    <!erupt
+        print("${}->delete()", self.files.resource.instance)
+    !>
+
+    <!erupt
+        print("return new {}(${})", self.files.resource.useAs, self.files.resource.instance)
+    !>
+}

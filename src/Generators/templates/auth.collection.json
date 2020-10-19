@@ -1,0 +1,11 @@
+{
+    "file_type": "php/class",
+    "namespace": "App\\Http\\Resources",
+    "name": "<!erupt className !>",
+    "extends": "ResourceCollection",
+    "imports": [
+        {
+            "template": "collection"
+        }
+    ]
+}

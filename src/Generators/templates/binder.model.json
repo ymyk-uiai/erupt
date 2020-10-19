@@ -1,0 +1,12 @@
+{
+    "file_type": "php/class",
+    "namespace": "App\\Models",
+    "name": "<!erupt className !>",
+    "extends": "Controller",
+    "imports": [
+        {
+            "args": null,
+            "template": "props"
+        }
+    ]
+}

@@ -18,13 +18,13 @@ class PropertyList extends BaseList
 
     public function resolve($keys)
     {
-        print_r("PropertyList->resolve\n");
+        //print_r("PropertyList->resolve\n");
 
         if(gettype($keys) == "string") {
             $keys = explode('.', $keys);
         }
 
-        print_r(implode('.', $keys)."\n");
+        //print_r(implode('.', $keys)."\n");
 
         if(empty($keys)) {
             return $this;

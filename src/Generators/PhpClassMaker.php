@@ -53,7 +53,11 @@ class PhpClassMaker
         $file .= "\n{\n";
         
         foreach($this->imports as $import) {
-            $template = $this->getTemplate($import["template"], $import["args"]);
+
+            $args = $import["args"] ?? null;
+            $template = $import["template"];
+
+            $template = $this->getTemplate($template, $args);
 
             $file .= $template."\n\n";
         }
@@ -86,6 +90,10 @@ class PhpClassMaker
     protected function parseArgs($args)
     {
         $result = [];
+
+        if(!$args) {
+            return $result;
+        }
 
         $args = explode(',', $args);
 

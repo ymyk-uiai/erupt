@@ -18,13 +18,13 @@ class RelationshipList extends BaseList
 
     public function resolve($keys, $app)
     {
-        print_r("RelationshipList->resolve\n");
+        //print_r("RelationshipList->resolve\n");
 
         if(gettype($keys) == "string") {
             $keys = explode('.', $keys);
         }
 
-        print_r(implode('.', $keys)."\n");
+        //print_r(implode('.', $keys)."\n");
 
         if(empty($keys)) {
             return $this;

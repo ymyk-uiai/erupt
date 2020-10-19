@@ -24,7 +24,7 @@ class LaravelFile extends AbstractFile
     {
         $this->type = $type;
 
-        $this->variant = $variant;
+        $this->variant = trim($variant, ',');
 
         $this->className = $className;
 
@@ -39,13 +39,21 @@ class LaravelFile extends AbstractFile
         $this->path = $path;
     }
 
+    public function try($keys)
+    {
+        $type = $keys[0];
+
+        return $type == $this->type || $type == "{$this->type}@{$this->variant}" ? true : false;
+    }
+
     public function get($keys)
     {
         $type = $keys[0];
 
         $name = $keys[1];
 
-        if($type == $this->type) {
+        if($type == $this->type || "{$this->type}@{$this->variant}") {
+            print_r("$type:{$this->type}@{$this->variant}\n");
             return $this->{$name};
         }
     }

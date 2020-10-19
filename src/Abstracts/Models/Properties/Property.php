@@ -56,13 +56,13 @@ class Property extends BaseListItem
 
     public function resolve($keys)
     {
-        print_r("Property->resolve\n");
+        //print_r("Property->resolve\n");
 
         if(gettype($keys) == "string") {
             $keys = explode('.', $keys);
         }
 
-        print_r(implode('.', $keys)."\n");
+        //print_r(implode('.', $keys)."\n");
 
         if(empty($keys)) {
             return $this;

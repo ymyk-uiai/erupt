@@ -70,13 +70,13 @@ abstract class Model extends BaseListItem
 
     public function resolve($keys, $app)
     {
-        print_r("Model->resolve\n");
+        //print_r("Model->resolve\n");
 
         if(gettype($keys) == "string") {
             $keys = explode('.', $keys);
         }
 
-        print_r(implode('.', $keys)."\n");
+        //print_r(implode('.', $keys)."\n");
 
         $key = array_shift($keys);
 
@@ -84,7 +84,7 @@ abstract class Model extends BaseListItem
             return $this->getProperties()->resolve($keys, $app);
         } else if($key == "relationships") {
             return $this->getRelationships()->resolve($keys, $app);
-        } else if($key == "file") {
+        } else if($key == "files") {
             return $this->getFiles()->resolve($keys, $app);
         } else {
             $props = [

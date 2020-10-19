@@ -4,7 +4,12 @@ namespace Erupt\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Erupt\Console\EruptCommand;
+use Erupt\Console\Commands\Laravel\ModelMakeCommand as LaravelModelMakeCommand;
+use Erupt\Console\Commands\Laravel\RequestMakeCommand as LaravelRequestMakeCommand;
+use Erupt\Console\Commands\Laravel\ResourceMakeCommand as LaravelResourceMakeCommand;
+use Erupt\Console\Commands\Laravel\CollectionMakeCommand as LaravelCollectionMakeCommand;
 use Erupt\Console\Commands\Laravel\ControllerMakeCommand as LaravelControllerMakeCommand;
+use Erupt\Console\Commands\Laravel\PolicyMakeCommand as LaravelPolicyMakeCommand;
 use Erupt\Application;
 
 class EruptServiceProvider extends ServiceProvider
@@ -23,7 +28,12 @@ class EruptServiceProvider extends ServiceProvider
             
             $this->commands([
                 EruptCommand::class,
+                LaravelModelMakeCommand::class,
+                LaravelRequestMakeCommand::class,
+                LaravelResourceMakeCommand::class,
+                LaravelCollectionMakeCommand::class,
                 LaravelControllerMakeCommand::class,
+                LaravelPolicyMakeCommand::class,
             ]);
         }
     }

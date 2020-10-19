@@ -26,14 +26,10 @@ class EruptCommand extends Command
                 $c = $this->app->server->makeCommand($command);
                 $p = $this->app->server->makeParams($command, $model->getName());
 
-                if($model->getName() === "post") {
-                    if($command["command"] === "controller") {
-                        $this->call($c, $p);
-                    }
-                }
+                $this->call($c, $p);
             }
         }
         
-        //print_r($this->app);
+        print_r($this->app);
     }
 }

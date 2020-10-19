@@ -56,13 +56,13 @@ class EruptLang
 
         $result .= substr($template, $offset);
 
-        print_r("\033[31m result \033[0m");
+        print_r("\033[31m$modelName $type\033[0m\n");
         print_r("$result\n");
 
         //$ast = $this->parser->parse($template);
 
         //return $this->evaluator->evaluate($ast);
 
-        return true;
+        return $result;
     }
 }

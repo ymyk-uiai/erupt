@@ -1,0 +1,56 @@
+<!erupt
+    print("public function viewAny({} ${})", self.files.model.className, self.files.model.instance)
+!>
+{
+    return true;
+}
+
+<!erupt
+    print("public function view({} ${}, {} ${})", auth.files.model.className, auth.files.model.instance, self.files.model.className, self.files.model.instance)
+!>
+{
+    return true;
+}
+
+<!erupt
+    print("public function create({} ${})", auth.files.model.className, auth.files.model.instance)
+!>
+{
+    return Auth::check();
+}
+
+<!erupt
+    print("public function update({} ${}, {} ${})", auth.files.model.className, auth.files.model.instance, self.files.model.className, self.files.model.instance)
+!>
+{
+    <!erupt
+        print("return ${}->id === ${}->user_id;", auth.files.model.instance, self.files.model.instance)
+    !>
+}
+
+<!erupt
+    print("public function delete({} ${}, {} ${})", auth.files.model.className, auth.files.model.instance, self.files.model.className, self.files.model.instance)
+!>
+{
+    <!erupt
+        print("return ${}->id === ${}->user_id;", auth.files.model.instance, self.files.model.instance)
+    !>
+}
+
+<!erupt
+    print("public function restore({} ${}, {} ${})", auth.files.model.className, auth.files.model.instance, self.files.model.className, self.files.model.instance)
+!>
+{
+    <!erupt
+        print("return ${}->id === ${}->user_id;", auth.files.model.instance, self.files.model.instance)
+    !>
+}
+
+<!erupt
+    print("public function forceDelete({} ${}, {} ${})", auth.files.model.className, auth.files.model.instance, self.files.model.className, self.files.model.instance)
+!>
+{
+    <!erupt
+        print("return ${}->id === ${}->user_id;", auth.files.model.instance, self.files.model.instance)
+    !>
+}

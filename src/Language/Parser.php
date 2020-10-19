@@ -13,7 +13,7 @@ class Parser
 
     protected function parseStatements($program)
     {
-        print_r("parseStatements\n");
+        //print_r("parseStatements\n");
 
         $statements = [ "type" => "statements", "statements" => [] ];
 

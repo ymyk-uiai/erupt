@@ -1,0 +1,12 @@
+{
+    "file_type": "php/class",
+    "namespace": "App\\Http\\Resources",
+    "name": "<!erupt className !>",
+    "extends": "Resource",
+    "imports": [
+        {
+            "args": "method_name=test",
+            "template": "test"
+        }
+    ]
+}

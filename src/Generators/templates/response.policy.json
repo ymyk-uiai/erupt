@@ -1,0 +1,12 @@
+{
+    "file_type": "php/class",
+    "namespace": "App\\Http\\Policies",
+    "name": "<!erupt className !>",
+    "extends": "Policy",
+    "imports": [
+        {
+            "args": "method_name=test",
+            "template": "test"
+        }
+    ]
+}

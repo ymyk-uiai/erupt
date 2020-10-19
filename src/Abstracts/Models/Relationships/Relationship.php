@@ -36,13 +36,13 @@ class Relationship extends BaseListItem
 
     public function resolve($keys, $app)
     {
-        print_r("Relationship->resolve\n");
+        //print_r("Relationship->resolve\n");
 
         if(gettype($keys) == "string") {
             $keys = explode('.', $keys);
         }
 
-        print_r(implode('.', $keys)."\n");
+        //print_r(implode('.', $keys)."\n");
 
         $key = array_shift($keys);
 
