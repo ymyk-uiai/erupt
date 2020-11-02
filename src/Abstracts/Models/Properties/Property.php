@@ -12,6 +12,8 @@ class Property extends BaseListItem
 
     protected $valueType;
 
+    protected array $validationRules = [];
+
     protected array $flags = [];
 
     public function getName()
@@ -54,6 +56,16 @@ class Property extends BaseListItem
         $this->flags[$key] = $bool;
     }
 
+    public function getValidationRuls(string $key, bool $bool): bool
+    {
+        return array_key_exists($key, $this->validationRules) ? $this->validationRules[$key] : false;
+    }
+
+    public function setValidationRules(string $key, str $args = null)
+    {
+        $this->validationRules[] = $key.$args;
+    }
+
     public function resolve($keys)
     {
         //print_r("Property->resolve\n");
@@ -74,6 +86,7 @@ class Property extends BaseListItem
             "name",
             "columnType",
             "valueType",
+            "validationRules",
         ];
 
         if(in_array($key, $props)) {

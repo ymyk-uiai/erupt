@@ -1,0 +1,37 @@
+<template>
+<?php
+
+namespace <!erupt namespace !>;
+
+@use
+
+class <!erupt className !> extends Controller
+{
+    @controller_index
+
+    @controller_store
+
+    @controller_show
+
+    @controller_update
+
+    @controller_destroy
+}
+</template>
+
+<data>
+{
+    "name": "auth.controller",
+    "type": "php_class",
+    "components": [
+        "methods/controller/index",
+        "methods/controller/store",
+        "methods/controller/show",
+        "methods/controller/update",
+        "methods/controller/destroy"
+    ],
+    "use": [
+        "App\\Http\\Controllers\\Controller"
+    ]
+}
+</data>

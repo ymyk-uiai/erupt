@@ -3,15 +3,25 @@
 namespace Erupt\Plans\Attributes;
 
 use Erupt\Abstracts\Plans\Attributes\Attribute as AbstractAttribute;
-use Erupt\Plans\Constructors\Attributes\TimestampsAttributeConstructor;
 use Erupt\Plans\Containers\Updaters\UpdaterContainer;
 use Erupt\Plans\Lists\Updaters\UpdaterList;
-use Erupt\Plans\Constructors\Attributes\TimestampAttribute;
-use Erupt\Plans\Constructors\Attributes\NullableAttribute;
+use Erupt\Plans\Attributes\TimestampAttribute;
+use Erupt\Plans\Attributes\NullableAttribute;
 
 class TimestampsAttribute extends AbstractAttribute
 {
     protected $precision;
+
+    public static function build($args): Self
+    {
+        $product = new Self;
+
+        $params = Self::parseParams("precision?", $args);
+
+        $product->setPrecision($params["precision"]);
+
+        return $product;
+    }
 
     public function __construct()
     {
@@ -23,11 +33,6 @@ class TimestampsAttribute extends AbstractAttribute
         $this->precision = $precision;
     }
 
-    public static function build($args): Self
-    {
-        return TimestampsAttributeConstructor::build($args);
-    }
-    
     public function run()
     {
         $container = new UpdaterContainer;

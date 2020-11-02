@@ -50,14 +50,14 @@ class RelationshipListConstructor
         $list = new RelationshipList;
 
         foreach($data as $sb => $ob) {
-            $obs = explode('&', $ob);
+            $obs = explode('#', $ob);
 
             $sbMember = Member::build($sb, Self::getType($config, $sb), "");
 
             //$sbMember = new Member(new MemberConstructor($sb, $this->getType($config, $sb), ""));
 
             foreach($obs as $o) {
-                $exp = explode(',', $o);
+                $exp = explode('@', $o);
                 $name = $exp[0];
                 $type = Self::getType($config, $name);
                 $args = array_key_exists(1, $exp) ? $exp[1] : "";

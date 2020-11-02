@@ -106,10 +106,19 @@ class Evaluator
                 $iterScope = Scope::inherit($scope);
                 $iterScope->setGlue($ast["join"]["value"]);
 
+                $scope->setDefined($ast["into"]["name"], "");
+                
                 foreach($iterator as $item) {
                     $statements = $ast["statements"]["statements"];
 
                     $iterScope->setDefined($ast["as"]["name"], $item);
+
+                    //$scope->setDefined($ast["into"]["name"], "");
+                    $iterScope->setDefined("into_key", $ast["into"]["name"]);
+                    //print_r($scope);
+
+                    //print_r($scope);
+                    //print_r($ast["into"]["name"]."\n");
 
                     foreach($statements as $statement) {
                         $this->evaluate($statement, $iterScope);
@@ -120,7 +129,7 @@ class Evaluator
             }
         } else if($ast["type"] == "apply")  {
             //print_r("apply\n");
-            
+
             if($ast["operator"]["type"] == "word" && array_key_exists($ast["operator"]["name"], $this->functions)) {
                 //print_r("the function exists\n");
 
@@ -130,6 +139,16 @@ class Evaluator
             return $ast["value"];
         } else if($ast["type"] == "word") {
             return $this->resolve($ast["name"], $scope);
+        } else if($ast["type"] == "assignment") {
+            print_r($ast);
+            if($ast["value"]["type"] == "value") {
+                $value = $ast["value"]["value"];
+            } else if($ast["value"]["type"] == "word") {
+                $value = $this->resolve($ast["value"]["name"], $scope);
+            }
+
+            $scope->setDefined($ast["variable"]["name"], $value);
+            //return $this->resolve($ast["name"], $scope);
         }
 
         return $scope->finish();

@@ -1,0 +1,23 @@
+<template>
+public function toArray($request)
+{
+    <!erupt
+        foreach self.attributes.fillable as fillable join "," into result {
+            preprint("return [")
+            print("'{}' => $this->{}", fillable.name, fillable.name)
+            postprint("];")
+        }
+
+        print("{}", result)
+    !>
+}
+</template>
+
+<data>
+{
+    "name": "resource_toArray",
+    "type": "php_class",
+    "components": [],
+    "use": []
+}
+</data>

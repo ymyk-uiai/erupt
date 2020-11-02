@@ -8,6 +8,13 @@ use Erupt\Plans\Updaters\AutoIncrementsUpdater;
 
 class AutoIncrementsAttribute extends AbstractAttribute
 {
+    public static function build(): Self
+    {
+        $product = new Self;
+
+        return $product;
+    }
+
     public function __construct()
     {
         //
@@ -17,7 +24,7 @@ class AutoIncrementsAttribute extends AbstractAttribute
     {
         $updaterList = new UpdaterList;
 
-        $updater = new AutoIncrementsUpdater;
+        $updater = AutoIncrementsUpdater::build();
 
         $updaterList->add($updater);
 

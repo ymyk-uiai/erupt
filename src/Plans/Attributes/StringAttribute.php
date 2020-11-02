@@ -3,9 +3,8 @@
 namespace Erupt\Plans\Attributes;
 
 use Erupt\Abstracts\Plans\Attributes\Attribute as AbstractAttribute;
-use Erupt\Plans\Constructors\Attributes\StringAttribute as Constructor;
 use Erupt\Plans\Lists\Updaters\UpdaterList;
-use Erupt\Plans\Constructors\Updaters\StringUpdater;
+use Erupt\Plans\Updaters\StringUpdater;
 
 class StringAttribute extends AbstractAttribute
 {
@@ -13,14 +12,22 @@ class StringAttribute extends AbstractAttribute
 
     protected $length;
 
+    public static function build($args): Self
+    {
+        $product = new Self;
+
+        $params = Self::parseParams("name, length?", $args);
+
+        $product->setName($params["name"]);
+
+        $product->setLength($params["length"]);
+
+        return $product;
+    }
+
     public function __construct()
     {
         //
-    }
-
-    public static function build($args): Self
-    {
-        return Constructor::build($args);
     }
 
     public function setName($name)

@@ -1,0 +1,24 @@
+Generators
+    LaravelGenerator
+    NuxtGenerator
+        pages
+            models
+                auth
+                binder
+                content
+                response
+        components
+            Card
+            Full
+            etc
+        Commands
+            ComponentMakeCommand
+            StoreMakeCommand
+            PageMakeCommand
+            LayoutMakeCommand
+
+
+
+
+
+

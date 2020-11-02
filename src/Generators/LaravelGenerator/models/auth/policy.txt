@@ -1,0 +1,41 @@
+<template>
+<?php
+
+namespace <!erupt namespace !>;
+
+@use
+
+class <!erupt className !>
+{
+    @viewAny
+
+    @view
+
+    @create
+
+    @update
+
+    @delete
+
+    @restore
+
+    @forceDelete
+}
+</template>
+
+<data>
+{
+    "name": "auth.policy",
+    "type": "php_class",
+    "components": [
+        "methods/policy/viewAny",
+        "methods/policy/view",
+        "methods/policy/create",
+        "methods/policy/update",
+        "methods/policy/delete",
+        "methods/policy/restore",
+        "methods/policy/forceDelete"
+    ],
+    "use": []
+}
+</data>

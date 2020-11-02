@@ -1,0 +1,17 @@
+<template>
+public function toArray($request)
+{
+    return [
+        'data' => $this->collection,
+    ];
+}
+</template>
+
+<data>
+{
+    "name": "collection",
+    "type": "php_class",
+    "components": [],
+    "use": []
+}
+</data>

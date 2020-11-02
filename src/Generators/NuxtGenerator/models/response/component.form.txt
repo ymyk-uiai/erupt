@@ -1,0 +1,40 @@
+<template>
+<template>
+    <div>
+        <div>
+            <div>{{ post.title }}</div>
+            <div>
+                <time-elapsed :datetime="post.created_at" />
+                <time-elapsed :datetime="post.updated_at" />
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import Post from '~/http/resources/post'
+
+import TimeElapsed from '~/components/library/times/Elapsed'
+
+export default {
+    props: {
+        post: {
+            type: Post,
+            required: true,
+        }
+    },
+    components: {
+        TimeElapsed,
+    }
+}
+</script>
+</template>
+
+<data>
+{
+    "name": "auth.component",
+    "type": "vue_sfc",
+    "components": [],
+    "use": []
+}
+</data>

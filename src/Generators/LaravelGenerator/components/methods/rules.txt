@@ -1,0 +1,24 @@
+<template>
+public function rules()
+{
+    <!erupt
+        foreach self.attributes.fillable as fillable join "," into res {
+            preprint("return [")
+            foreach fillable.validationRules as rule join "|" into resu {
+                preprint("'")
+                print("{}", rule)
+                postprint("'")
+            }
+            print("'{}' => {}", fillable.name, resu)
+            postprint("];")
+        }
+        print("{}", res)
+    !>
+}
+</template>
+
+<data>
+{
+    "name": "rules"
+}
+</data>

@@ -22,7 +22,7 @@ class MemberConstructor
         $this->type = $type;
 
         if($type == "auth") {
-            $args .= "required";
+            $args .= "flag,required";
         }
 
         $this->updaters = UpdaterList::build($args);

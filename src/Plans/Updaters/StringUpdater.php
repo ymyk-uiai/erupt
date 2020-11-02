@@ -11,6 +11,17 @@ class StringUpdater extends AbstractUpdater
 
     protected $length;
 
+    public static function build($args): Self
+    {
+        $product = new Self;
+
+        $product->setName($args["name"]);
+
+        $product->setLength($args["length"]);
+
+        return $product;
+    }
+
     public function setName($name)
     {
         $this->name = $name;

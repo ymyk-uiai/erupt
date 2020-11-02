@@ -11,6 +11,17 @@ class TimestampUpdater extends AbstractUpdater
 
     protected $precision;
 
+    public static function build($args): Self
+    {
+        $product = new Self;
+
+        $product->setName($args["name"]);
+
+        $product->setPrecision($args["precision"]);
+
+        return $product;
+    }
+
     public function setName($name)
     {
         $this->name = $name;

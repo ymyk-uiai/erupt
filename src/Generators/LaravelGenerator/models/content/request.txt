@@ -1,0 +1,35 @@
+<template>
+<?php
+
+namespace <!erupt namespace !>;
+
+@use
+
+class <!erupt className !> extends FormRequest
+{
+    <!erupt
+        test = className
+
+        print("{}", test)
+    !>
+
+    @authorize
+
+    @rules
+
+    @test
+}
+</template>
+
+<data>
+{
+    "name": "request",
+    "type": "php_class",
+    "components": [
+        "methods/authorize",
+        "methods/rules",
+        "methods/test"
+    ],
+    "use": []
+}
+</data>

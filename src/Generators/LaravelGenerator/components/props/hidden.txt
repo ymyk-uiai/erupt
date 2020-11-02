@@ -1,0 +1,20 @@
+<template>
+<!erupt
+    foreach self.attributes.hidden as hidden join ", " into result {
+        preprint("protected $hidden = [")
+        print("'{}'", hidden.name)
+        postprint("];")
+    }
+
+    print("{}", result)
+!>
+</template>
+
+<data>
+{
+    "name": "hidden",
+    "type": "php_class",
+    "components": [],
+    "use": []
+}
+</data>

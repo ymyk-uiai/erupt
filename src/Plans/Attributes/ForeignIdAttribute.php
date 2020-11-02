@@ -3,20 +3,25 @@
 namespace Erupt\Plans\Attributes;
 
 use Erupt\Abstracts\Plans\Attributes\Attribute as AbstractAttribute;
-use Erupt\Plans\Constructors\Attributes\ForeignIdAttributeConstructor;
 
 class ForeignIdAttribute extends AbstractAttribute
 {
     protected $name;
 
+    public static function build($args): Self
+    {
+        $product = new Self;
+
+        $params = Self::parseParams("name", $args);
+
+        $product->setName($params["name"]);
+
+        return $product;
+    }
+
     public function __construct()
     {
         //
-    }
-
-    public static function build($args): Self
-    {
-        return ForeignIdAttributeConstructor::build($args);
     }
 
     public function setName($name)
@@ -26,7 +31,7 @@ class ForeignIdAttribute extends AbstractAttribute
     
     public function run()
     {
-        $a = new UnsignedBigIntegerAttribute(["name" => $this->name]);
+        $a = UnsignedBigIntegerAttribute::build(["name" => $this->name]);
 
         $u = $a->run();
 

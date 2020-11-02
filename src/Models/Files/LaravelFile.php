@@ -16,27 +16,35 @@ class LaravelFile extends AbstractFile
 
     protected $useAs;
 
+    protected $fullUseAs;
+
     protected $instance;
 
     protected $path;
 
-    public function __construct($type, $variant, $className, $namespace, $fullClassName, $useAs, $instance, $path)
+    public function __construct($props)
     {
-        $this->type = $type;
+        $this->type = $props["type"];
 
-        $this->variant = trim($variant, ',');
+        $this->variant = array_key_exists("variant", $props) ? trim($props["variant"], ',') : '';
 
-        $this->className = $className;
+        $this->className = $props["className"];
 
-        $this->namespace = $namespace;
+        $this->namespace = $props["namespace"];
 
-        $this->fullClassName = $fullClassName;
+        $this->className = $props["className"];
 
-        $this->useAs = $useAs;
+        $this->namespace = $props["namespace"];
 
-        $this->instance = $instance;
+        $this->fullClassName = $props["fullClassName"];
 
-        $this->path = $path;
+        $this->useAs = $props["useAs"];
+
+        $this->fullUseAs = $props["fullUseAs"];
+
+        $this->instance = $props["instance"];
+
+        $this->path = $props["path"];
     }
 
     public function try($keys)

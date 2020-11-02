@@ -101,6 +101,13 @@ class Scope
         }
     }
 
+    public function emptyStd()
+    {
+        $this->stdout["pre"] = "";
+        $this->stdout["result"] = [];
+        $this->stdout["post"] = "";
+    }
+
     protected function initStdout(string $key, $init)
     {
         if(!array_key_exists($key, $this->stdout)) {
@@ -115,7 +122,14 @@ class Scope
         $data .= $this->getStdout("post");
 
         if($this->parent && $flag) {
-            $this->parent->write($data);
+            //print_r($this->defined);
+            if(!array_key_exists("into_key", $this->defined)) {
+                //
+                return false;
+            }
+            $into_key = $this->defined["into_key"];
+            $p = $this->getParent();
+            $p->setDefined($into_key, $data);
         } else {
             return $data;
         }

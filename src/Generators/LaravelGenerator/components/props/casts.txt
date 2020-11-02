@@ -1,0 +1,20 @@
+<template>
+<!erupt
+    foreach self.attributes.casts as casts join ", " into result {
+        preprint("protected $casts = [")
+        print("'{}' => '{}'", casts.name, casts.valueType)
+        postprint("];")
+    }
+
+    print("{}", result)
+!>
+</template>
+
+<data>
+{
+    "name": "casts",
+    "type": "php_class",
+    "components": [],
+    "use": []
+}
+</data>

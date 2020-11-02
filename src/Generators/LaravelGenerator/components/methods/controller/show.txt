@@ -1,0 +1,37 @@
+<template>
+
+<!erupt
+    model = self.files.model.className
+    modelFullClass = self.files.model.fullClassName
+    collection = self.files.collection.className
+    collectionInstance = self.files.collection.instance
+    resourceInstance = self.files.resource.instance
+    resourceClass = self.files.resource.className
+    resourceUseAs = self.files.resource.useAs
+    requestStoreClass = self.files.request@store.className
+!>
+
+<!erupt
+    print("public function show({} $request, {} ${})", requestStoreClass, model, modelInstance)
+!>
+{
+    <!erupt
+        print("${}->load('user', '{}')", modelInstance, collectionInstance)
+    !>
+
+    <!erupt
+        print("return new {}(${})", resourceUseAs, resourceInstance)
+    !>
+}
+</template>
+
+<data>
+{
+    "name": "controller_show",
+    "type": "php_class",
+    "components": [],
+    "use": [
+        "<!erupt self.files.request@store.fullClassName !>"
+    ]
+}
+</data>

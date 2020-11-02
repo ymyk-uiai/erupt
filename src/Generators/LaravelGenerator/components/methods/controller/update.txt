@@ -1,0 +1,48 @@
+<template>
+
+<!erupt
+    model = self.files.model.className
+    modelFullClass = self.files.model.fullClassName
+    collection = self.files.collection.className
+    collectionInstance = self.files.collection.instance
+    resourceInstance = self.files.resource.instance
+    resourceClass = self.files.resource.className
+    resourceUseAs = self.files.resource.useAs
+    requestUpdateClass = self.files.request@update.className
+!>
+
+
+<!erupt
+    print("public function update({} $request, {} ${})", requestUpdateClass, resourceClass, resourceInstance)
+!>
+{
+    <!erupt
+        print("$this->authorize('update', ${})", resourceInstance)
+    !>
+
+    $validated = $request->validated();
+
+    <!erupt
+        foreach self.attributes.fillable as fillable {
+            print("${}->{} = $validated['{}']", resourceInstance, fillable.name, fillable.name)
+        }
+    !>
+
+    <!erupt
+        print("$request->user()->{}()->save(${})", collectionInstance, resourceInstance)
+    !>
+
+    <!erupt
+        print("return new {}(${})", resourceUseAs, resourceInstance)
+    !>
+}
+</template>
+
+<data>
+{
+    "name": "controller_update",
+    "type": "php_class",
+    "components": [],
+    "use": []
+}
+</data>

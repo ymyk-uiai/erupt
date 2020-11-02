@@ -1,0 +1,18 @@
+<template>
+public function test()
+{
+    <!erupt
+        foreach self.relationships.test as te join ", " into result {
+            print("'{}'", te.name)
+        }
+
+        print("{}", result)
+    !>
+}
+</template>
+
+<data>
+{
+    "name": "test"
+}
+</data>

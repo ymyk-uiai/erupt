@@ -9,6 +9,15 @@ class UnsignedBigIntegerUpdater extends AbstractUpdater
 {
     protected $name;
 
+    public static function build($args): Self
+    {
+        $product = new Self;
+
+        $product->setName($args["name"]);
+
+        return $product;
+    }
+
     public function setName($name)
     {
         $this->name = $name;

@@ -6,8 +6,8 @@ use Erupt\Relationships\Lists\Relationships\RelationshipList;
 use Erupt\Plans\Lists\Plans\PlanList;
 use Erupt\Models\Constructors\Lists\Models\ModelList;
 use Erupt\Migrations\Lists\Migrations\MigrationList;
-use Erupt\Generators\LaravelGenerator;
-use Erupt\Generators\NuxtGenerator;
+use Erupt\Generators\LaravelGenerator\LaravelGenerator;
+use Erupt\Generators\NuxtGenerator\NuxtGenerator;
 
 class Application
 {

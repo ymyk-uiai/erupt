@@ -7,6 +7,13 @@ use Erupt\Models\Properties\Property;
 
 class CastsUpdater extends AbstractUpdater
 {
+    public static function build(): Self
+    {
+        $product = new Self;
+
+        return $product;
+    }
+
     public function run(Property $property)
     {
         $property->setFlag("casts", true);

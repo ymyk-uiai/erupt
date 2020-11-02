@@ -1,0 +1,30 @@
+<template>
+
+<!erupt
+    authClass = auth.files.model.className
+    authInstance = auth.files.model.instance
+    modelClass = self.files.model.className
+    modelInstance = self.files.model.instance
+!>
+
+<!erupt
+    print("public function delete({} ${}, {} ${})", authClass, authInstance, modelClass, modelInstance)
+!>
+{
+    <!erupt
+        print("return ${}->id === ${}->user_id;", authInstance, modelInstance)
+    !>
+}
+</template>
+
+<data>
+{
+    "name": "delete",
+    "type": "php_class",
+    "components": [],
+    "use": [
+        "<!erupt auth.files.model.fullClassName !>",
+        "<!erupt self.files.model.fullClassName !>"
+    ]
+}
+</data>

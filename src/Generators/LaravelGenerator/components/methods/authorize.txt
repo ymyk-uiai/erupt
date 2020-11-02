@@ -1,0 +1,15 @@
+<template>
+public function authorize()
+{
+    return true;
+}
+</template>
+
+<data>
+{
+    "name": "authorize",
+    "use": [
+        "<!erupt self.files.resource.fullClassName !>"
+    ]
+}
+</data>

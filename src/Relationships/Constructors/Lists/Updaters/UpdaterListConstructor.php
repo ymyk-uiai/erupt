@@ -10,18 +10,23 @@ class UpdaterListConstructor
 
     public function __construct($args)
     {
-        $args = array_filter(explode(',', trim($args)));
+        $args = array_filter(explode(':', trim($args)));
 
         $list = new UpdaterList;
 
         $namespace = "Erupt\Relationships\Updaters";
 
         foreach($args as $arg) {
+            $exp = explode(',', $arg);
+            
+            $name = $exp[0];
+            $ags = array_slice($exp, 1);
+
             $arg = trim($arg);
 
-            $className = "$namespace\\".ucfirst($arg)."Updater";
+            $className = "$namespace\\".ucfirst($name)."Updater";
 
-            $updater = new $className;
+            $updater = new $className($ags);
 
             $list->add($updater);
         }

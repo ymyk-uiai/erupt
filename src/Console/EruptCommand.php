@@ -27,9 +27,18 @@ class EruptCommand extends Command
                 $p = $this->app->server->makeParams($command, $model->getName());
 
                 $this->call($c, $p);
+
+                //$this->call($c, $p);
+            }
+            $commands = $this->app->front->getCommands($model);
+            foreach($commands as $command) {
+                $c = $this->app->front->makeCommand($command);
+                $p = $this->app->front->makeParams($command, $model->getName());
+
+                $this->call($c, $p);
             }
         }
-        
-        print_r($this->app);
+
+        //print_r($this->app);
     }
 }

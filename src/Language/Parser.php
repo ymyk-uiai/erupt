@@ -64,6 +64,11 @@ class Parser
                 "rest" => $result["rest"],
             ];
             return $r;
+        } else if($expr["type"] == "assignment") {
+            return [
+                "statement" => $result["expr"],
+                "rest" => $result["rest"],
+            ];
         }
     }
 
@@ -107,6 +112,10 @@ class Parser
 
         $result = $this->parseJoin($program);
         $sttm["join"] = $result["expr"];
+        $program = $result["rest"];
+
+        $result = $this->parseInto($program);
+        $sttm["into"] = $result["expr"];
         $program = $result["rest"];
 
         $result = $this->parseBlock($program);
@@ -171,6 +180,25 @@ class Parser
         return $result;
     }
 
+
+    protected function parseInto($program)
+    {
+        $program = $this->skipSpace($program);
+
+        $expr = [ "type" => "word", "name" => "into" ];
+        $result = [ "expr" => $expr, "rest" => $program ];
+
+        if(preg_match("/^into/", $program, $matches)) {
+            $program = substr($program, strlen($matches[0]));
+
+            $program = $this->skipSpace($program);
+
+            $result = $this->parseIdentifier($program);
+        }
+
+        return $result;
+    }
+
     //  https://eloquentjavascript.net/12_language.html
     protected function parseExpression($program)
     {
@@ -189,12 +217,41 @@ class Parser
             //  throw new SyntaxError
         }
 
-        return $this->parseApply($expr, substr($program, strlen($matches[0])));
+        return $this->parseApplyOrAssignment($expr, substr($program, strlen($matches[0])));
+        //return $this->parseApply($expr, substr($program, strlen($matches[0])));
     }
     
     protected function skipSpace($program)
     {
         return ltrim($program);
+    }
+
+    protected function parseApplyOrAssignment($expr, $program)
+    {
+        $program = $this->skipSpace($program);
+
+        if(substr($program, 0, 1) == '=') {
+            return $this->parseAssignment($expr, $program);
+        }
+
+        return $this->parseApply($expr, $program);
+    }
+
+    protected function parseAssignment($expr, $program)
+    {
+        $program = $this->skipSpace($program);
+        if(substr($program, 0, 1) != '=') {
+            return [ "expr" => $expr, "rest" => $program ];
+        }
+
+        $program = $this->skipSpace(substr($program, 1));
+        $expr = [ "type" => "assignment", "variable" => $expr, "value" => null ];
+
+        $value = $this->parseExpression($program);
+        $expr["value"] = $value["expr"];
+        $program = $this->skipSpace($value["rest"]);
+
+        return [ "expr" => $expr, "rest" => $program ];
     }
     
     //  https://eloquentjavascript.net/12_language.html

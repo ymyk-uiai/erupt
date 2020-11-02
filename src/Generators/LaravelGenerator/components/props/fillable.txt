@@ -1,0 +1,20 @@
+<template>
+<!erupt
+    foreach self.attributes.fillable as input join ", " into result {
+        preprint("protected $fillable = [")
+        print("'{}'", input.name)
+        postprint("];")
+    }
+
+    print("{}", result)
+!>
+</template>
+
+<data>
+{
+    "name": "fillable",
+    "type": "php_class",
+    "components": [],
+    "use": []
+}
+</data>
