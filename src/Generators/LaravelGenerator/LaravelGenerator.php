@@ -17,6 +17,8 @@ class LaravelGenerator extends BaseGenerator
             "resource" => "Http\Resources",
             "collection" => "Http\Resources",
             "controller" => "Http\Controllers",
+            "factory" => "database\\factories",
+            "seeder" => "database\\seeders"
         ];
     }
 
@@ -29,6 +31,8 @@ class LaravelGenerator extends BaseGenerator
             "resource",
             "resource/collection",
             "controller",
+            "factory",
+            "seeder",
         ];
     }
 
@@ -42,6 +46,8 @@ class LaravelGenerator extends BaseGenerator
             "resource",
             "resource/collection",
             "controller",
+            "factory",
+            "seeder",
         ];
     }
 
@@ -55,6 +61,8 @@ class LaravelGenerator extends BaseGenerator
             "resource",
             "resource/collection",
             "controller",
+            "factory",
+            "seeder",
         ];
     }
 
@@ -68,6 +76,8 @@ class LaravelGenerator extends BaseGenerator
             "resource",
             "resource/collection",
             "controller",
+            "factory",
+            "seeder",
         ];
     }
 
@@ -102,6 +112,14 @@ class LaravelGenerator extends BaseGenerator
             "controller" => [
                 "command" => "controller",
                 "name" => "@Controller",
+            ],
+            "factory" => [
+                "command" => "factory",
+                "name" => "@Factory",
+            ],
+            "seeder" => [
+                "command" => "seeder",
+                "name" => "@Seeder",
             ],
             "component/card" => [
                 "command" => "component",
