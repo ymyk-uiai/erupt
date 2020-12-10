@@ -1,0 +1,13 @@
+@class/migration/basic
+
+<data>
+{
+    "name": "migration",
+    "components": [
+        "class/migration/basic"
+    ],
+    "events": [
+        "test:response_migration"
+    ]
+}
+</data>

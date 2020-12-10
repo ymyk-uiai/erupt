@@ -19,26 +19,30 @@ class EruptCommand extends Command
     }
     
     public function handle()
-    {   
-        foreach($this->app->getModels() as $model) {
-            $commands = $this->app->server->getCommands($model);
-            foreach($commands as $command) {
-                $c = $this->app->server->makeCommand($command);
-                $p = $this->app->server->makeParams($command, $model->getName());
+    {
+        $seeds = $this->app->getCommandSeeds();
 
-                $this->call($c, $p);
+        foreach($seeds as $seed) {
+            $command = $this->makeCommand($seed);
+            $argsAndOptions = $this->makeArgsAndOptions($seed);
 
-                //$this->call($c, $p);
-            }
-            $commands = $this->app->front->getCommands($model);
-            foreach($commands as $command) {
-                $c = $this->app->front->makeCommand($command);
-                $p = $this->app->front->makeParams($command, $model->getName());
-
-                $this->call($c, $p);
-            }
+            $this->call($command, $argsAndOptions);
         }
 
         //print_r($this->app);
+    }
+
+    protected function makeCommand($seed)
+    {
+        print_r($seed);
+        return "erupt:{$seed['command']}";
+    }
+
+    protected function makeArgsAndOptions($seed)
+    {
+        return [
+            "name" => $seed["name"],
+            "--model" => lcfirst($seed["modelName"]),
+        ];
     }
 }

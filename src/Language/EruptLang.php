@@ -4,6 +4,10 @@ namespace Erupt\Language;
 
 use Erupt\Language\Parser;
 use Erupt\Language\Evaluator;
+use Ds\Set;
+use PhpParser\PrettyPrinter;
+use PhpParser\Error;
+use PhpParser\ParserFactory;
 
 class EruptLang
 {
@@ -40,10 +44,8 @@ class EruptLang
         ]);
 
         while(preg_match($pattern, $template, $matches, PREG_OFFSET_CAPTURE, $offset)) {
-            //print_r($matches);
 
             $result .= substr($template, $offset, $matches[0][1] - $offset);
-            //print_r(substr($template, $offset, $matches[0][1]));
 
             $ast = $this->parser->parse($matches[1][0]);
 
@@ -58,13 +60,48 @@ class EruptLang
 
         $result .= substr($template, $offset);
 
+        $result = $this->removeDuplicatedUses($result);
+
+        /*
+        $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+        try {
+            $ast = $parser->parse($result);
+            $prettyPrinter = new PrettyPrinter\Standard;
+            $result = $prettyPrinter->prettyPrintFile($ast);
+        } catch (Error $error) {
+            echo "Parse error: {$error->getMessage()}\n";
+            return;
+        }
+        */
+
         print_r("\033[31m$modelName $type\033[0m\n");
-        print_r($template);
-        print_r("$result\n");
+        print_r("\033[33m".trim($template)."\033[0m\n");
+        print_r("\033[32m".trim($result)."\033[0m\n");
 
         //$ast = $this->parser->parse($template);
 
         //return $this->evaluator->evaluate($ast);
+
+        return $result;
+    }
+
+    protected function removeDuplicatedUses($result)
+    {
+        $pattern = "/^use\s+[a-zA-Z\\\\]+(\s+as\s+[a-zA-Z\\\\]+)?;/m";
+
+        $lines = array_map("trim", array_map("addslashes", explode(PHP_EOL, $result)));
+
+        $namespaces = preg_grep($pattern, $lines);
+
+        $namespaces = array_unique($namespaces);
+
+        sort($namespaces);
+
+        $result = preg_replace($pattern, "", $result);
+
+        $str_namespaces = implode("\n", $namespaces);
+
+        $result = preg_replace("/class/", "$str_namespaces\n\nclass", $result);
 
         return $result;
     }

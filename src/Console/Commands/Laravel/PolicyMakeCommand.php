@@ -2,9 +2,9 @@
 
 namespace Erupt\Console\Commands\Laravel;
 
-use Erupt\Console\Commands\BaseCommand;
+use Erupt\Console\Commands\Laravel\LaravelCommand;
 
-class PolicyMakeCommand extends BaseCommand
+class PolicyMakeCommand extends LaravelCommand
 {
     /**
      * The name and signature of the console command.
@@ -22,15 +22,15 @@ class PolicyMakeCommand extends BaseCommand
 
     protected $type = 'Policy';
 
+    protected $namespace = "Policies";
+
     protected function getStub()
     {
         $type = $this->model->getType();
 
         $template = null;
 
-        //$template = $template ?? "/templates/laravel/$type/controller.txt";
-
-        $template = $this->app->server->getTemplatePath($type, "policy");
+        $template = $this->generator->getBasePath() . "/models/$type/policy.txt";
 
         return $this->resolveStubPath($template);
     }

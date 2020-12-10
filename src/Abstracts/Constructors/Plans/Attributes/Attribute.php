@@ -45,8 +45,6 @@ abstract class Attribute
 
         $pattern = "/{$pattern}/";
 
-        //print_r($pattern."\n");
-
         if(gettype($args) === "string") {
             $argsStr = $args;
 
@@ -58,8 +56,6 @@ abstract class Attribute
                 $args[$group["name"]] = null;
             }
         }
-
-        //print_r($args);
 
         return $args;
     }

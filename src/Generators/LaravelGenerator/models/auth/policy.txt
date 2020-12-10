@@ -1,4 +1,3 @@
-<template>
 <?php
 
 namespace <!erupt namespace !>;
@@ -7,21 +6,22 @@ namespace <!erupt namespace !>;
 
 class <!erupt className !>
 {
-    @viewAny
+    use HandlesAuthorization;
 
-    @view
+    @methods/policy/viewAny
 
-    @create
+    @methods/policy/view
 
-    @update
+    @methods/policy/create
 
-    @delete
+    @methods/policy/update
 
-    @restore
+    @methods/policy/delete
 
-    @forceDelete
+    @methods/policy/restore
+
+    @methods/policy/forceDelete
 }
-</template>
 
 <data>
 {
@@ -36,6 +36,8 @@ class <!erupt className !>
         "methods/policy/restore",
         "methods/policy/forceDelete"
     ],
-    "use": []
+    "use": [
+        "Illuminate\\Auth\\Access\\HandlesAuthorization"
+    ]
 }
 </data>

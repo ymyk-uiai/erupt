@@ -12,6 +12,8 @@ use Erupt\Console\Commands\Laravel\ControllerMakeCommand as LaravelControllerMak
 use Erupt\Console\Commands\Laravel\PolicyMakeCommand as LaravelPolicyMakeCommand;
 use Erupt\Console\Commands\Laravel\FactoryMakeCommand as LaravelFactoryMakeCommand;
 use Erupt\Console\Commands\Laravel\SeederMakeCommand as LaravelSeederMakeCommand;
+use Erupt\Console\Commands\Laravel\MigrationMakeCommand as LaravelMigrationMakeCommand;
+
 use Erupt\Console\Commands\Nuxt\ComponentMakeCommand as NuxtComponentMakeCommand;
 use Erupt\Console\Commands\Nuxt\StoreMakeCommand as NuxtStoreMakeCommand;
 use Erupt\Console\Commands\Nuxt\PageMakeCommand as NuxtPageMakeCommand;
@@ -42,6 +44,7 @@ class EruptServiceProvider extends ServiceProvider
                 LaravelPolicyMakeCommand::class,
                 LaravelFactoryMakeCommand::class,
                 LaravelSeederMakeCommand::class,
+                LaravelMigrationMakeCommand::class,
                 NuxtComponentMakeCommand::class,
                 NuxtStoreMakeCommand::class,
                 NuxtPageMakeCommand::class,

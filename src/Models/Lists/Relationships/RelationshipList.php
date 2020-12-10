@@ -18,13 +18,9 @@ class RelationshipList extends BaseList
 
     public function resolve($keys, $app)
     {
-        //print_r("RelationshipList->resolve\n");
-
         if(gettype($keys) == "string") {
             $keys = explode('.', $keys);
         }
-
-        //print_r(implode('.', $keys)."\n");
 
         if(empty($keys)) {
             return $this;
@@ -41,5 +37,26 @@ class RelationshipList extends BaseList
         }
 
         return $relationships->resolve($keys, $app);
+    }
+
+    public function resolve1($keys, $app)
+    {
+        if(gettype($keys) == "string") {
+            $keys = explode('.', $keys);
+        }
+
+        if(empty($keys)) {
+            return $this;
+        }
+
+        $key = array_shift($keys);
+
+        $relationships = new Self;
+
+        foreach($this->list as $relationship) {
+            if($relationship->getFlag($key)) {
+                return $relationship;
+            }
+        }
     }
 }

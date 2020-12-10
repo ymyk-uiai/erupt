@@ -1,9 +1,10 @@
-<template>
 <?php
 
 use Illuminate\Database\Seeder;
 
-class UsersTableSeeder extends Seeder
+<!erupt
+    print("class {} extends Seeder", className)
+!>
 {
     /**
      * Run the database seeds.
@@ -12,16 +13,17 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\User::class, 50)->create();
+        @methods/seeds/create
     }
 }
-</template>
 
 <data>
 {
     "name": "seeder",
     "type": "php_class",
-    "components": [],
+    "components": [
+        "methods/seeds/create"
+    ],
     "use": []
 }
 </data>

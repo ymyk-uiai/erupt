@@ -1,29 +1,17 @@
-<template>
-
 <!erupt
     model = self.files.model.className
-    modelFullClass = self.files.model.fullClassName
-    collection = self.files.collection.className
-    collectionInstance = self.files.collection.instance
-    resourceInstance = self.files.resource.instance
-    resourceClass = self.files.resource.className
+    modelInstance = self.files.model.instance
     resourceUseAs = self.files.resource.useAs
-    requestStoreClass = self.files.request@store.className
 !>
 
 <!erupt
-    print("public function show({} $request, {} ${})", requestStoreClass, model, modelInstance)
+    print("public function show({} ${})", model, modelInstance)
 !>
 {
     <!erupt
-        print("${}->load('user', '{}')", modelInstance, collectionInstance)
-    !>
-
-    <!erupt
-        print("return new {}(${})", resourceUseAs, resourceInstance)
+        print("return new {}(${})", resourceUseAs, modelInstance)
     !>
 }
-</template>
 
 <data>
 {

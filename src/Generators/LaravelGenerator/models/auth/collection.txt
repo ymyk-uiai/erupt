@@ -1,4 +1,3 @@
-<template>
 <?php
 
 namespace <!erupt namespace !>;
@@ -9,9 +8,8 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class <!erupt className !> extends ResourceCollection
 {
-    @collection
+    @methods/collection
 }
-</template>
 
 <data>
 {

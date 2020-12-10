@@ -1,4 +1,3 @@
-<template>
 <?php
 
 namespace <!erupt namespace !>;
@@ -7,19 +6,10 @@ namespace <!erupt namespace !>;
 
 class <!erupt className !> extends FormRequest
 {
-    <!erupt
-        test = className
+    @methods/authorize
 
-        print("{}", test)
-    !>
-
-    @authorize
-
-    @rules
-
-    @test
+    @methods/rules
 }
-</template>
 
 <data>
 {
@@ -27,9 +17,10 @@ class <!erupt className !> extends FormRequest
     "type": "php_class",
     "components": [
         "methods/authorize",
-        "methods/rules",
-        "methods/test"
+        "methods/rules"
     ],
-    "use": []
+    "use": [
+        "Illuminate\\Foundation\\Http\\FormRequest"
+    ]
 }
 </data>

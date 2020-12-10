@@ -1,14 +1,10 @@
-<template>
-
 <!erupt
     model = self.files.model.className
-    modelFullClass = self.files.model.fullClassName
     modelInstance = self.files.model.instance
-    collection = self.files.collection.className
-    collectionInstance = self.files.collection.instance
-    resourceInstance = self.files.resource.instance
-    resourceClass = self.files.resource.className
-    storeRequestClass = self.files.request@store.fullClassName
+    modelFullClass = self.files.model.fullClassName
+    resourceUseAs = self.files.resource.useAs
+    storeRequestClass = self.files.request@store.className
+    authInstance = auth.files.model.instance
 !>
 
 <!erupt
@@ -16,24 +12,28 @@
 !>
 {
     <!erupt
-        print("$this->authorize('create', {})", modelFullClass)
+        print("$this->authorize('create', '{}')", modelFullClass)
     !>
 
     $validated = $request->validated();
 
-    $<!erupt resoureInstance !> = new <!erupt resourceClass !>([
-        'title' => $validated['title'],
-    ]);
+    <!erupt
+        foreach self.attributes.fillable as fillable join "," into result {
+            preprint("${} = new {}([", modelInstance, model)
+            print("'{}' => $validated['{}']", fillable.name, fillable.name)
+            postprint("]);")
+        }
+        print("{}", result)
+    !>
 
     <!erupt
-        print("$request->user()->{}()->save({})", collectionInstance, modelInstace)
+        print("$request->{}()->{}()->save({})", authInstance, collectionInstance, modelInstace)
     !>
     
     <!erupt
-        print("return new {}({})", resourceClass, resourceInstance)
+        print("return new {}(${})", resourceUseAs, modelInstance)
     !>
 }
-</template>
 
 <data>
 {

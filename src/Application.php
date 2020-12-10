@@ -15,6 +15,10 @@ class Application
 
     protected $migrations;
 
+    // protected array $generatorStack = [];
+
+    protected array $events;
+
     public function __construct($config)
     {
         $server = new LaravelGenerator;
@@ -24,6 +28,10 @@ class Application
         $this->server = $server;
 
         $this->front = $front;
+
+        $this->events["test"] = function ($args) {
+            print_r("\n$args\n");
+        };
 
         $relationships = RelationshipList::build($config);
 
@@ -98,5 +106,33 @@ class Application
     public function getComponent($name)
     {
         return __DIR__."/Generators/components/$name.txt";
+    }
+
+    public function getCommandSeeds()
+    {
+        $result = [];
+
+        foreach($this->models as $model) {
+            $commandSeeds = $model->getCommandSeeds($this);
+            $result = array_merge($result, $commandSeeds);
+        }
+
+        return $result;
+    }
+
+    public function dispatch($event)
+    {
+        $event = $this->parseEvent($event);
+
+        if(array_key_exists($event[1], $this->events)) {
+            $this->events[$event[1]]($event[2]);
+        }
+    }
+
+    protected function parseEvent($event)
+    {
+        preg_match("/^(\w+):([\w_,]+)?/", $event, $matches);
+
+        return $matches;
     }
 }

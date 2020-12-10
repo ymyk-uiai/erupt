@@ -1,45 +1,30 @@
-<template>
 <?php
 
 namespace Database\Factories;
 
-use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
+@use
 
-class UserFactory extends Factory
+<!erupt
+    print("class {} extends Factory", className)
+!>
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = User::class;
+    @methods/factory/model
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
-    public function definition()
-    {
-        return [
-            'name' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
-        ];
-    }
+    @methods/factory/definition
 }
-
-</template>
 
 <data>
 {
     "name": "factory",
     "type": "php_class",
-    "components": [],
-    "use": []
+    "components": [
+        "methods/factory/model",
+        "methods/factory/definition"
+    ],
+    "use": [
+        "<!erupt self.files.model.fullClassName !>",
+        "Illuminate\\Database\\Eloquent\\Factories\\Factory",
+        "Illuminate\\Support\\Str"
+    ]
 }
 </data>

@@ -1,4 +1,3 @@
-<template>
 <?php
 
 namespace <!erupt namespace !>;
@@ -7,17 +6,14 @@ namespace <!erupt namespace !>;
 
 class <!erupt className !> extends Controller
 {
-    @controller_index
+    @methods/controller/index
 
-    @controller_store
+    @methods/controller/show
 
-    @controller_show
+    @methods/controller/update
 
-    @controller_update
-
-    @controller_destroy
+    @methods/controller/destroy
 }
-</template>
 
 <data>
 {
@@ -25,7 +21,6 @@ class <!erupt className !> extends Controller
     "type": "php_class",
     "components": [
         "methods/controller/index",
-        "methods/controller/store",
         "methods/controller/show",
         "methods/controller/update",
         "methods/controller/destroy"

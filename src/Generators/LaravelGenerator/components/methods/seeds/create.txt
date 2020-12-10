@@ -1,0 +1,13 @@
+<!erupt
+    modelFullClass = self.files.model.fullClassName
+!>
+
+<!erupt
+    print("factory({}::class, 50)->create()", modelFullClass)
+!>
+
+<data>
+{
+    "name": "seeds/create"
+}
+</data>

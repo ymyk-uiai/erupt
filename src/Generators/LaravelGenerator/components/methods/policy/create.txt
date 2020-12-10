@@ -1,10 +1,6 @@
-<template>
-
 <!erupt
     authClass = auth.files.model.className
     authInstance = auth.files.model.instance
-    modelClass = self.files.model.className
-    modelInstance = self.files.model.instance
 !>
 
 <!erupt
@@ -13,7 +9,6 @@
 {
     return Auth::check();
 }
-</template>
 
 <data>
 {
@@ -21,7 +16,8 @@
     "type": "php_class",
     "components": [],
     "use": [
-        "<!erupt auth.files.model.fullClassName !>"
+        "<!erupt auth.files.model.fullClassName !>",
+        "Illuminate\\Support\\Facades\\Auth"
     ]
 }
 </data>

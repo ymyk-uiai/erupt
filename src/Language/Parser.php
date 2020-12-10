@@ -6,15 +6,11 @@ class Parser
 {
     public function parse($program)
     {
-        //print_r("$code\n");
-
         return $this->parseStatements($program);
     }
 
     protected function parseStatements($program)
     {
-        //print_r("parseStatements\n");
-
         $statements = [ "type" => "statements", "statements" => [] ];
 
         while($program != "") {
@@ -32,12 +28,7 @@ class Parser
 
     protected function parseStatement($program)
     {
-        //print_r("parseStatement\n");
-        //print_r("$program\n");
-
         $result = $this->parseExpression($program);
-
-        //print_r($result);
 
         $expr = $result["expr"];
         $program = $result["rest"];
@@ -74,9 +65,6 @@ class Parser
 
     protected function parseBlock($program)
     {
-        //print_r("parseBlock\n");
-        //print_r("$program\n");
-
         $program = $this->skipSpace($program);
 
         $statements = [ "type" => "statements", "statements" => [] ];
@@ -127,9 +115,6 @@ class Parser
 
     protected function parseAs($program)
     {
-        //print_r("parseAs\n");
-        //print_r("$program\n");
-
         $program = $this->skipSpace($program);
 
         if(preg_match("/^as/", $program, $matches)) {
@@ -145,9 +130,6 @@ class Parser
 
     protected function parseIdentifier($program)
     {
-        //print_r("parseIdentifier\n");
-        //print_r("$program\n");
-
         $program = $this->skipSpace($program);
 
         if(preg_match("/^\w+/", $program, $matches)) {
@@ -161,9 +143,6 @@ class Parser
 
     protected function parseJoin($program)
     {
-        //print_r("parseJoin\n");
-        //print_r("$program\n");
-
         $program = $this->skipSpace($program);
 
         $expr = [ "type" => "value", "value" => "\n" ];
@@ -202,9 +181,6 @@ class Parser
     //  https://eloquentjavascript.net/12_language.html
     protected function parseExpression($program)
     {
-        //print_r("parseExpression\n");
-        //print_r("$program\n");
-
         $program = $this->skipSpace($program);
         
         if(preg_match("/^\"([^\"]*)\"/", $program, $matches)) {
@@ -257,9 +233,6 @@ class Parser
     //  https://eloquentjavascript.net/12_language.html
     protected function parseApply($expr, $program)
     {
-        //print_r("parseApply\n");
-        //print_r("$program\n");
-
         $program = $this->skipSpace($program);
         if(substr($program, 0, 1) != '(') {
             return [ "expr" => $expr, "rest" => $program ];

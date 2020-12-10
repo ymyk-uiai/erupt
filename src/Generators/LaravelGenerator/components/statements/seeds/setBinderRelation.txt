@@ -1,0 +1,24 @@
+
+        foreach($posts as $post) {
+            $userBooks = $post->user->books;
+
+            if($userBooks->isNotEmpty()) {
+                $userBook = $userBooks->random();
+                
+                $post->book()->associate($userBook);
+                $post->save();
+            }
+        }
+
+<!erupt
+    instance = self.files.model.instance
+    instances = self.files.model.instances
+    authInstance = auth.files.model.instance
+    authInstances = auth.files.model.instances
+!>
+
+<data>
+{
+    "name": "setBinderRelation"
+}
+</data>

@@ -122,7 +122,6 @@ class Scope
         $data .= $this->getStdout("post");
 
         if($this->parent && $flag) {
-            //print_r($this->defined);
             if(!array_key_exists("into_key", $this->defined)) {
                 //
                 return false;

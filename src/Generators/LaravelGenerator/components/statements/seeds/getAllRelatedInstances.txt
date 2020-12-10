@@ -1,0 +1,15 @@
+<!erupt
+    foreach self.relationships.seeds as seed join "\n" into result {
+ 
+        instances = seed.files.model.instances
+        fullClassName = seed.files.model.fullClassName
+ 
+        print("${} = {}::all();", instances, fullClassName)
+    }
+!>
+
+<data>
+{
+    "name": "getAllRelatedInstances"
+}
+</data>

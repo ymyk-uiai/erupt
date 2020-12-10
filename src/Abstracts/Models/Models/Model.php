@@ -5,8 +5,10 @@ namespace Erupt\Abstracts\Models\Models;
 use Erupt\Abstracts\Foundations\BaseListItem;
 use Erupt\Models\Lists\Properties\PropertyList;
 use Erupt\Models\Lists\Files\FileList;
+use Erupt\Interfaces\Commanding;
+use Erupt\Interfaces\Migrating;
 
-abstract class Model extends BaseListItem
+abstract class Model extends BaseListItem implements Commanding, Migrating
 {
     protected $name;
 
@@ -70,13 +72,9 @@ abstract class Model extends BaseListItem
 
     public function resolve($keys, $app)
     {
-        //print_r("Model->resolve\n");
-
         if(gettype($keys) == "string") {
             $keys = explode('.', $keys);
         }
-
-        //print_r(implode('.', $keys)."\n");
 
         $key = array_shift($keys);
 
@@ -84,6 +82,8 @@ abstract class Model extends BaseListItem
             return $this->getProperties()->resolve($keys, $app);
         } else if($key == "relationships") {
             return $this->getRelationships()->resolve($keys, $app);
+        } else if($key == "relationship") {
+            return $this->getRelationships()->resolve1($keys, $app);
         } else if($key == "files") {
             return $this->getFiles()->resolve($keys, $app);
         } else {
@@ -95,5 +95,24 @@ abstract class Model extends BaseListItem
                 return $this->{$key};
             }
         }
+    }
+
+    public function getCommandSeeds($app)
+    {
+        $commandSeedKeys = $this->getCommandSeedKeys();
+
+        // foreach($this->generators as $generator) { ... }
+
+        $name = ucfirst($this->name);
+
+        $commandSeeds1 = $app->server->getCommandSeeds($commandSeedKeys, $name);
+        $commandSeeds2 = $app->front->getCommandSeeds($commandSeedKeys, $name);
+
+        return array_merge($commandSeeds1, $commandSeeds2);
+    }
+
+    public function getMigrationCommandSeeds($app)
+    {
+        //
     }
 }

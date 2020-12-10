@@ -1,5 +1,3 @@
-<template>
-
 <!erupt
     model = self.files.model.className
     collection = self.files.collection.className
@@ -11,14 +9,11 @@ public function index()
     <!erupt
         print("${} = {}::take(10)->get();", collectionInstance, model)
     !>
-    
-    $books->load('user');
 
     <!erupt
-        print("return new {}({})", collection, collectionInstance)
+        print("return new {}(${})", collection, collectionInstance)
     !>
 }
-</template>
 
 <data>
 {

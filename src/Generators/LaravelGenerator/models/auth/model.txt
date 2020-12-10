@@ -1,21 +1,24 @@
-<template>
 <?php
 
 namespace <!erupt namespace !>;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 @use
 
-class <!erupt className !> extends Model
+class <!erupt className !> extends Authenticatable
 {
-    @fillable
+    use HasFactory, Notifiable;
 
-    @hidden
+    @props/fillable
 
-    @casts
+    @props/hidden
+
+    @props/casts
 }
-</template>
 
 <data>
 {
@@ -26,6 +29,9 @@ class <!erupt className !> extends Model
         "props/hidden",
         "props/casts"
     ],
-    "use": []
+    "use": [],
+    "events": [
+        "test:auth_model"
+    ]
 }
 </data>

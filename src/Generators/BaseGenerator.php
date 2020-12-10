@@ -10,6 +10,32 @@ use Erupt\Models\Models\Response;
 
 class BaseGenerator
 {
+    public function getCommandSeeds($commandSeedKeys, $name)
+    {
+        $commandSeeds = $this->filterCommands($commandSeedKeys);
+
+        return $this->updateCommandSeeds($commandSeeds, $name);
+    }
+
+    protected function updateCommandSeeds($commandSeeds, $name)
+    {
+        $result = [];
+
+        foreach($commandSeeds as $seedName => $seedValue) {
+            $inner = [];
+            foreach($seedValue as $key => $value) {
+                $updated = str_replace('@', $name, $value);
+                $inner[$key] = $updated;
+            }
+
+            $inner["modelName"] = $name;
+            $inner["name"] = $inner["name"] ?? $name;
+            $result[] = $inner;
+        }
+
+        return $result;
+    }
+
     public function getCommands($model): array
     {
         if($model instanceof Auth) {
@@ -167,8 +193,6 @@ class BaseGenerator
         $fileList = new FileList;
 
         $commands = $this->getCommands($model);
-
-        //print_r($commands);
 
         foreach($commands as $command) {
             $file = $this->generate($model->getName(), $command);

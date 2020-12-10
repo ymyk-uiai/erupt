@@ -1,0 +1,10 @@
+@class/migration/basic
+
+<data>
+{
+    "name": "migration",
+    "components": [
+        "class/migration/basic"
+    ]
+}
+</data>

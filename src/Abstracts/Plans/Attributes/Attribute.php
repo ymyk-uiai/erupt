@@ -47,8 +47,6 @@ abstract class Attribute extends BaseListItem
 
         $pattern = "/{$pattern}/";
 
-        //print_r($pattern."\n");
-
         if(gettype($args) === "string") {
             $argsStr = $args;
 
@@ -60,8 +58,6 @@ abstract class Attribute extends BaseListItem
                 $args[$group["name"]] = null;
             }
         }
-
-        //print_r($args);
 
         return $args;
     }

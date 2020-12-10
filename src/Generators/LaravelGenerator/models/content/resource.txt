@@ -1,4 +1,3 @@
-<template>
 <?php
 
 namespace <!erupt namespace !>;
@@ -7,9 +6,8 @@ namespace <!erupt namespace !>;
 
 class <!erupt className !> extends JsonResource
 {
-    @resource_toArray
+    @methods/resource_toArray
 }
-</template>
 
 <data>
 {

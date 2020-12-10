@@ -1,17 +1,9 @@
-<template>
-
 <!erupt
     model = self.files.model.className
-    modelFullClass = self.files.model.fullClassName
     modelInstance = self.files.model.instance
-    collection = self.files.collection.className
-    collectionInstance = self.files.collection.instance
-    resourceInstance = self.files.resource.instance
-    resourceClass = self.files.resource.className
     resourceUseAs = self.files.resource.useAs
     requestUpdateClass = self.files.request@update.className
 !>
-
 
 <!erupt
     print("public function destroy({} $request, {} ${})", requestUpdateClass, model, modelInstance)
@@ -26,10 +18,9 @@
     !>
 
     <!erupt
-        print("return new {}(${})", resourceUseAs, resourceInstance)
+        print("return new {}(${})", resourceUseAs, modelInstance)
     !>
 }
-</template>
 
 <data>
 {
@@ -38,7 +29,8 @@
     "components": [],
     "use": [
         "<!erupt self.files.model.fullClassName !>",
-        "<!erupt self.files.request@update.fullClassName !>"
+        "<!erupt self.files.request@update.fullClassName !>",
+        "<!erupt self.files.resource.fullUseAs !>"
     ]
 }
 </data>

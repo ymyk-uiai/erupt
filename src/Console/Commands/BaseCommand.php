@@ -14,34 +14,57 @@ abstract class BaseCommand extends GeneratorCommand
 
     protected $model;
 
+    protected $basePath;
+
     public function __construct(Filesystem $files, Application $app)
     {
         parent::__construct($files);
 
         $this->app = $app;
     }
-    
+
     public function handle()
     {
         $modelName = $this->option("model");
 
         $this->model = $this->app->getModels()->get($modelName);
 
-        $name = $this->qualifyClass($this->getNameInput());
-            //  make sure $name start with App\ etc.
-            //  if you makes controller, $name starts with App\Http\Controllers
+        $this->basePath = $this->laravel->basePath();
 
-        $path = $this->getPath($name);
-            //  get a file path from the namespace
-            //  App\Http\Controllers -> {projectRootDirectory}/app/Http/Controllers
+        $name = $this->getMakeName($this->getNameInput());
 
-        $path = $this->updatePath($path);
+        $path = $this->getPath($this->getNameInput());
 
         $this->makeDirectory($path);
 
         $this->files->put($path, $this->build($modelName));
 
         $this->info($this->type.' created successfully.');
+    }
+
+    protected function getMakeName($name)
+    {
+        return trim($this->baseNamespace, "\\/") . "\\" . trim($this->namespace, "\\/") . "\\" . trim($name, "\\/");
+    }
+
+    protected function getPath($name)
+    {
+        $basePath = trim($this->basePath, "\\/");
+
+        $baseDirectory = trim($this->baseDirectory, "\\/");
+
+        $commandDirectory = str_replace("\\", "/", $this->namespace);
+
+        $name = $this->updateName($name);
+
+        $extention = $this->extention;
+
+        return "$baseDirectory/$commandDirectory/$name.$extention";
+    }
+
+    protected function updateName($name)
+    {
+        return $name;
     }
 
     protected function updatePath($path)
@@ -55,7 +78,21 @@ abstract class BaseCommand extends GeneratorCommand
 
         $template = $this->updateUse($template);
 
+        $data = $this->cropData($template);
+
         $template = $this->cropTemplate($template);
+
+        $json = json_decode(trim($data), true);
+
+        if(!array_key_exists("events", $json)) {
+            $json["events"] = [];
+        }
+
+        $events = $json["events"];
+
+        foreach($events as $event) {
+            $this->app->dispatch($event);
+        }
 
         $eruptLang = new EruptLang($this->app);
 
@@ -64,14 +101,9 @@ abstract class BaseCommand extends GeneratorCommand
 
     protected function getNestedComponents($component)
     {
-        //print_r("getNestedComponents\n");
-
         $data = $this->cropData($component);
 
         $json = json_decode(trim($data), true);
-
-        //print_r($data);
-        //print_r($json);
 
         $components = $json["components"] ?? [];
 
@@ -82,17 +114,15 @@ abstract class BaseCommand extends GeneratorCommand
 
             $c = $this->files->get("$dir$component.txt");
 
-            $result[] = $c;
+            $result[$component] = $c;
         }
         
     
         return $result;
     }
 
-    protected function updateComponent($parent, $child)
+    protected function updateComponent($parent, $child, $name)
     {
-        //print_r("updateComponent\n");
-
         $parentTemplate = $this->cropTemplate($parent);
 
         $parentData = $this->cropData($parent);
@@ -100,10 +130,6 @@ abstract class BaseCommand extends GeneratorCommand
         $childTemplate = $this->cropTemplate($child);
 
         $childData = $this->cropData($child);
-
-        //print_r($childData);
-        $childDataJson = json_decode($childData, true);
-        $name = $childDataJson["name"];
 
         $parentTemplate = $this->mergeTemplate($parentTemplate, $childTemplate, $name);
 
@@ -116,13 +142,11 @@ abstract class BaseCommand extends GeneratorCommand
 
     protected function cropTemplate($component)
     {
-        $pattern = "/<template>(.*)<\/template>/s";
+        $data = $this->cropData($component);
 
-        preg_match($pattern, $component, $matches);
+        $result = preg_replace("/".preg_quote("<data>$data</data>", '/')."/", '', $component);
 
-        //print_r($matches);
-
-        return $matches[1];
+        return $result;
     }
 
     protected function cropData($component)
@@ -136,7 +160,6 @@ abstract class BaseCommand extends GeneratorCommand
 
     protected function mergeTemplate($parent, $child, $name)
     {
-        //print_r("mergeTemplate : $name");
         return str_replace("@$name", trim($child), $parent);
     }
 
@@ -156,22 +179,32 @@ abstract class BaseCommand extends GeneratorCommand
 
         $parentJson["use"] = array_merge($parentJson["use"], $childJson["use"]);
 
+        if(!array_key_exists("events", $parentJson)) {
+            $parentJson["events"] = [];
+        }
+
+        if(!array_key_exists("events", $childJson)) {
+            $childJson["events"] = [];
+        }
+
+        $parentJson["events"] = array_merge($parentJson["events"], $childJson["events"]);
+
         return json_encode($parentJson);
     }
 
     protected function makeComponent($template, $data)
     {
-        return "<template>$template</template><data>$data</data>";
+        return "$template<data>$data</data>";
     }
 
     protected function makeTemplate($baseComponent)
     {
         $innerComponents = $this->getNestedComponents($baseComponent);
 
-        foreach($innerComponents as $inner) {
-            $processed = $this->makeTemplate($inner);
+        foreach($innerComponents as $key => $value) {
+            $processed = $this->makeTemplate($value);
 
-            $baseComponent = $this->updateComponent($baseComponent, $processed);
+            $baseComponent = $this->updateComponent($baseComponent, $processed, $key);
         }
 
         return $baseComponent;

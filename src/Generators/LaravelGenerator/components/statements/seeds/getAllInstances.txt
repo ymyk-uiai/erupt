@@ -1,0 +1,14 @@
+<!erupt
+    instances = self.files.model.instances
+    fullClassName = self.files.model.fullClassName
+!>
+
+<!erupt
+    print("${} = {}::all();", instances, fullClassName)
+!>
+
+<data>
+{
+    "name": "getAllInstances"
+}
+</data>

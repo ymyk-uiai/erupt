@@ -2,9 +2,9 @@
 
 namespace Erupt\Console\Commands\Nuxt;
 
-use Erupt\Console\Commands\BaseCommand;
+use Erupt\Console\Commands\Nuxt\NuxtCommand;
 
-class ComponentMakeCommand extends BaseCommand
+class ComponentMakeCommand extends NuxtCommand
 {
     /**
      * The name and signature of the console command.
@@ -22,6 +22,10 @@ class ComponentMakeCommand extends BaseCommand
 
     protected $type = 'Component';
 
+    protected $namespace = "components";
+
+    protected $extention = "vue";
+
     protected function getStub()
     {
         $type = $this->model->getType();
@@ -30,11 +34,16 @@ class ComponentMakeCommand extends BaseCommand
 
         $template = null;
 
-        //$template = $template ?? "/templates/laravel/$type/controller.txt";
-
-        $template = $this->app->front->getTemplatePath($type, $name);
+        $template = $this->generator->getBasePath() . "/models/$type/$name.txt";
 
         return $this->resolveStubPath($template);
+    }
+
+    protected function updateName($name)
+    {
+        $type = $this->model->getType();
+
+        return "$type/$name";
     }
 
     protected function updatePath($path)

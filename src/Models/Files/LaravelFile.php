@@ -44,6 +44,8 @@ class LaravelFile extends AbstractFile
 
         $this->instance = $props["instance"];
 
+        $this->instances = $props["instance"].'s';
+
         $this->path = $props["path"];
     }
 
@@ -61,7 +63,6 @@ class LaravelFile extends AbstractFile
         $name = $keys[1];
 
         if($type == $this->type || "{$this->type}@{$this->variant}") {
-            print_r("$type:{$this->type}@{$this->variant}\n");
             return $this->{$name};
         }
     }

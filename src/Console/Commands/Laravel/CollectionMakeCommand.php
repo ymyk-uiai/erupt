@@ -2,9 +2,9 @@
 
 namespace Erupt\Console\Commands\Laravel;
 
-use Erupt\Console\Commands\BaseCommand;
+use Erupt\Console\Commands\Laravel\LaravelCommand;
 
-class CollectionMakeCommand extends BaseCommand
+class CollectionMakeCommand extends LaravelCommand
 {
     /**
      * The name and signature of the console command.
@@ -22,15 +22,15 @@ class CollectionMakeCommand extends BaseCommand
 
     protected $type = 'Collection';
 
+    protected $namespace = "Http\\Resources";
+
     protected function getStub()
     {
         $type = $this->model->getType();
 
         $template = null;
 
-        //$template = $template ?? "/templates/laravel/$type/controller.txt";
-
-        $template = $this->app->server->getTemplatePath($type, "collection");
+        $template = $this->generator->getBasePath() . "/models/$type/collection.txt";
 
         return $this->resolveStubPath($template);
     }

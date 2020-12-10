@@ -1,4 +1,3 @@
-<template>
 <!erupt
     foreach self.attributes.hidden as hidden join ", " into result {
         preprint("protected $hidden = [")
@@ -8,7 +7,6 @@
 
     print("{}", result)
 !>
-</template>
 
 <data>
 {

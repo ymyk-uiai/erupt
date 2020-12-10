@@ -2,9 +2,9 @@
 
 namespace Erupt\Console\Commands\Laravel;
 
-use Erupt\Console\Commands\BaseCommand;
+use Erupt\Console\Commands\Laravel\LaravelCommand;
 
-class SeederMakeCommand extends BaseCommand
+class SeederMakeCommand extends LaravelCommand
 {
     /**
      * The name and signature of the console command.
@@ -22,17 +22,17 @@ class SeederMakeCommand extends BaseCommand
 
     protected $type = 'Seeder';
 
+    protected $namespace = "seeders";
+
+    protected string $baseDirectory = "database";
+
     protected function getStub()
     {
         $type = $this->model->getType();
 
-        $name = "seeder";
-
         $template = null;
 
-        //$template = $template ?? "/templates/laravel/$type/controller.txt";
-
-        $template = $this->app->server->getTemplatePath($type, $name);
+        $template = $this->generator->getBasePath() . "/models/$type/seeder.txt";
 
         return $this->resolveStubPath($template);
     }

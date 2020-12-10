@@ -1,4 +1,3 @@
-<template>
 public function toArray($request)
 {
     <!erupt
@@ -11,7 +10,6 @@ public function toArray($request)
         print("{}", result)
     !>
 }
-</template>
 
 <data>
 {

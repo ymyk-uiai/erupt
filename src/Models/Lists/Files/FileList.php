@@ -22,8 +22,6 @@ class FileList extends BaseList
             $keys = explode('.', $keys);
         }
 
-        //print_r($keys);
-
         foreach($this->list as $file) {
             if($file->try($keys)) {
                 return $file->get($keys);

@@ -2,9 +2,9 @@
 
 namespace Erupt\Console\Commands\Laravel;
 
-use Erupt\Console\Commands\BaseCommand;
+use Erupt\Console\Commands\Laravel\LaravelCommand;
 
-class ModelMakeCommand extends BaseCommand
+class ModelMakeCommand extends LaravelCommand
 {
     /**
      * The name and signature of the console command.
@@ -22,15 +22,15 @@ class ModelMakeCommand extends BaseCommand
 
     protected $type = 'Model';
 
+    protected $namespace = "Models";
+
     protected function getStub()
     {
         $type = $this->model->getType();
 
         $template = null;
 
-        //$template = $template ?? "/templates/laravel/$type/controller.txt";
-
-        $template = $this->app->server->getTemplatePath($type, "model");
+        $template = $this->generator->getBasePath() . "/models/$type/model.txt";
 
         return $this->resolveStubPath($template);
     }
@@ -47,6 +47,6 @@ class ModelMakeCommand extends BaseCommand
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace;
+        return $rootNamespace."\\Models";
     }
 }

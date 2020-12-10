@@ -11,7 +11,7 @@ class LaravelGenerator extends BaseGenerator
     protected function getNamespaces()
     {
         return [
-            "model" => "",
+            "model" => "Models",
             "policy" => "Policies",
             "request" => "Http\Requests",
             "resource" => "Http\Resources",
@@ -119,7 +119,11 @@ class LaravelGenerator extends BaseGenerator
             ],
             "seeder" => [
                 "command" => "seeder",
-                "name" => "@Seeder",
+                "name" => "@TableSeeder",
+            ],
+            "migration" => [
+                "command" => "migration",
+                "name" => "@Migration",
             ],
             "component/card" => [
                 "command" => "component",

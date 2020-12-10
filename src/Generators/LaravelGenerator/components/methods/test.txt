@@ -1,4 +1,3 @@
-<template>
 public function test()
 {
     <!erupt
@@ -9,7 +8,6 @@ public function test()
         print("{}", result)
     !>
 }
-</template>
 
 <data>
 {

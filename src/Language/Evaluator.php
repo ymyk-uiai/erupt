@@ -19,7 +19,6 @@ class Evaluator
         $eva = $this;
 
         $this->functions["print"] = function ($args, $scope) use ($eva) {
-            //print_r("functions:print\n");
             $format = array_shift($args);
 
             foreach($args as $arg) {
@@ -29,9 +28,6 @@ class Evaluator
                     $format["value"] = preg_replace("/{}/", $eva->resolve($arg["name"], $scope, $eva->app), $format["value"], 1);
                 }
             }
-
-            //print_r("format\n");
-            //print_r($format["value"]);
 
             $scope->write($format["value"]);
         };
@@ -74,9 +70,6 @@ class Evaluator
 
     public function evaluate($ast, Scope $scope)
     {
-        //print_r("Evaluator->evaluate\n");
-        //print_r($ast);
-
         if($ast["type"] == "statements") {
             $statements = $ast["statements"];
 
@@ -89,7 +82,6 @@ class Evaluator
 
                     $this->functions["print"]([$value, $statements[0]], $scope);
                 }
-                //print_r($statements);
             }
 
             foreach($statements as $statement) {
@@ -98,10 +90,6 @@ class Evaluator
         } else if($ast["type"] == "construct") {
             if($ast["operator"]["name"] == "foreach") {
                 $iterator = $this->resolve($ast["iterator"]["name"], $scope);
-                
-                //print_r("iterator\n");
-                //print_r($ast["iterator"]["name"]."\n");
-                //print_r($iterator);
 
                 $iterScope = Scope::inherit($scope);
                 $iterScope->setGlue($ast["join"]["value"]);
@@ -115,10 +103,6 @@ class Evaluator
 
                     //$scope->setDefined($ast["into"]["name"], "");
                     $iterScope->setDefined("into_key", $ast["into"]["name"]);
-                    //print_r($scope);
-
-                    //print_r($scope);
-                    //print_r($ast["into"]["name"]."\n");
 
                     foreach($statements as $statement) {
                         $this->evaluate($statement, $iterScope);
@@ -128,10 +112,8 @@ class Evaluator
                 $iterScope->finish(true);
             }
         } else if($ast["type"] == "apply")  {
-            //print_r("apply\n");
 
             if($ast["operator"]["type"] == "word" && array_key_exists($ast["operator"]["name"], $this->functions)) {
-                //print_r("the function exists\n");
 
                 return $this->functions[$ast["operator"]["name"]]($ast["args"], $scope);
             }
@@ -140,7 +122,6 @@ class Evaluator
         } else if($ast["type"] == "word") {
             return $this->resolve($ast["name"], $scope);
         } else if($ast["type"] == "assignment") {
-            print_r($ast);
             if($ast["value"]["type"] == "value") {
                 $value = $ast["value"]["value"];
             } else if($ast["value"]["type"] == "word") {
@@ -156,9 +137,6 @@ class Evaluator
 
     protected function resolve($name, $scope)
     {
-        //print_r("Evaluator->resolve\n");
-        //print_r("$name\n");
-
         if(preg_match("/^(\w+)((?:\.[\w@]+)+)/", $name, $matches)) {
             return $scope->getDefined($matches[1])->resolve(trim($matches[2], '.'), $this->app);
         } else {

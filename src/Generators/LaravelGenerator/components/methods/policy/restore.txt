@@ -1,5 +1,3 @@
-<template>
-
 <!erupt
     authClass = auth.files.model.className
     authInstance = auth.files.model.instance
@@ -15,7 +13,6 @@
         print("return ${}->id === ${}->user_id;", authInstance, modelInstance)
     !>
 }
-</template>
 
 <data>
 {

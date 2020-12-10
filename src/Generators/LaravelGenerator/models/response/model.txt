@@ -1,4 +1,3 @@
-<template>
 <?php
 
 namespace <!erupt namespace !>;
@@ -8,13 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class <!erupt className !> extends Model
 {
-    @fillable
+    @props/fillable
 
-    @hidden
+    @props/hidden
 
-    @casts
+    @props/casts
 }
-</template>
 
 <data>
 {

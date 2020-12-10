@@ -1,4 +1,3 @@
-<template>
 public function rules()
 {
     <!erupt
@@ -15,7 +14,6 @@ public function rules()
         print("{}", res)
     !>
 }
-</template>
 
 <data>
 {

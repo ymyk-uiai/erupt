@@ -2,9 +2,9 @@
 
 namespace Erupt\Console\Commands\Laravel;
 
-use Erupt\Console\Commands\BaseCommand;
+use Erupt\Console\Commands\Laravel\LaravelCommand;
 
-class FactoryMakeCommand extends BaseCommand
+class FactoryMakeCommand extends LaravelCommand
 {
     /**
      * The name and signature of the console command.
@@ -22,17 +22,17 @@ class FactoryMakeCommand extends BaseCommand
 
     protected $type = 'Factory';
 
+    protected $namespace = "factories";
+
+    protected string $baseDirectory = "database";
+
     protected function getStub()
     {
         $type = $this->model->getType();
 
-        $name = "factory";
-
         $template = null;
 
-        //$template = $template ?? "/templates/laravel/$type/controller.txt";
-
-        $template = $this->app->server->getTemplatePath($type, $name);
+        $template = $this->generator->getBasePath() . "/models/$type/factory.txt";
 
         return $this->resolveStubPath($template);
     }

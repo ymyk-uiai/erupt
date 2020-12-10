@@ -12,6 +12,8 @@ class Property extends BaseListItem
 
     protected $valueType;
 
+    protected string $factory = "";
+
     protected array $validationRules = [];
 
     protected array $flags = [];
@@ -46,6 +48,16 @@ class Property extends BaseListItem
         $this->valueType = $type;
     }
 
+    public function getFactory(): string
+    {
+        return $this->factory;
+    }
+
+    public function setFactory(string $factory)
+    {
+        $this->factory = $factory;
+    }
+
     public function getFlag(string $key): bool
     {
         return array_key_exists($key, $this->flags) ? $this->flags[$key] : false;
@@ -56,25 +68,21 @@ class Property extends BaseListItem
         $this->flags[$key] = $bool;
     }
 
-    public function getValidationRuls(string $key, bool $bool): bool
+    public function getValidationRules(string $key): bool
     {
         return array_key_exists($key, $this->validationRules) ? $this->validationRules[$key] : false;
     }
 
-    public function setValidationRules(string $key, str $args = null)
+    public function setValidationRules(string $key, string $args = null)
     {
-        $this->validationRules[] = $key.$args;
+        $this->validationRules[$key] = $args;
     }
 
     public function resolve($keys)
     {
-        //print_r("Property->resolve\n");
-
         if(gettype($keys) == "string") {
             $keys = explode('.', $keys);
         }
-
-        //print_r(implode('.', $keys)."\n");
 
         if(empty($keys)) {
             return $this;
@@ -86,6 +94,7 @@ class Property extends BaseListItem
             "name",
             "columnType",
             "valueType",
+            "factory",
             "validationRules",
         ];
 
