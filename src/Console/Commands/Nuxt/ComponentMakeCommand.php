@@ -28,7 +28,7 @@ class ComponentMakeCommand extends NuxtCommand
 
     protected function getStub()
     {
-        $type = $this->model->getType();
+        $type = $this->model->get_type();
 
         $name = "component." . lcfirst($this->argument("name"));
 
@@ -41,7 +41,7 @@ class ComponentMakeCommand extends NuxtCommand
 
     protected function updateName($name)
     {
-        $type = $this->model->getType();
+        $type = $this->model->get_type();
 
         return "$type/$name";
     }

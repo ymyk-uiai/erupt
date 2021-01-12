@@ -8,16 +8,28 @@ use Erupt\Models\Constructors\Lists\Models\ModelList;
 use Erupt\Migrations\Lists\Migrations\MigrationList;
 use Erupt\Generators\LaravelGenerator\LaravelGenerator;
 use Erupt\Generators\NuxtGenerator\NuxtGenerator;
+use Erupt\Models\Lists\Files\FileList;
+use Erupt\Specifications\Specifications\Lists\SpecificationList;
+use Erupt\Specifications\Makers\Lists\FileMakerList;
+use Erupt\Specifications\Makers\Lists\MigrationMakerList;
+use Erupt\Abstracts\Foundations\GenericList;
+use Erupt\Generators\Lists\GeneratorList;
+use Erupt\Interfaces\MigrationMaker;
+use Erupt\Interfaces\FileMaker;
 
 class Application
 {
     protected $models;
 
-    protected $migrations;
+    protected FileList $files;
 
-    // protected array $generatorStack = [];
+    protected GeneratorList $generators;
 
     protected array $events;
+
+    protected SpecificationList $file_specs;
+
+    protected SpecificationList $migration_specs;
 
     public function __construct($config)
     {
@@ -29,21 +41,29 @@ class Application
 
         $this->front = $front;
 
+        $this->files = new FileList;
+
+        $this->generators = new GeneratorList;
+
+        $this->generators->add(new LaravelGenerator);
+
         $this->events["test"] = function ($args) {
             print_r("\n$args\n");
         };
 
-        $relationships = RelationshipList::build($config);
-
-        //print_r($relationships);
+        $relationships = RelationshipList::build($config, $this);
 
         $plans = PlanList::build($config, $relationships);
 
-        //print_r($plans);
+        $this->models = ModelList::build($plans, $relationships, $server, $front, $this);
 
-        $this->models = ModelList::build($plans, $relationships, $server, $front);
+        $file_makers = $this->make_file_makers($this->models, $relationships);
 
-        //$this->migrations = new MigrationList($plans, $relationships);
+        $migration_makers = $this->make_migration_makers($this->models, $relationships);
+
+        $this->file_specs = $this->make_file_specifications($file_makers);
+
+        $this->migration_specs = $this->make_migration_specifications($migration_makers);
     }
 
     public function getModels()
@@ -54,6 +74,21 @@ class Application
     public function getMigrations()
     {
         return $this->migrations;
+    }
+
+    public function set_generators(GeneratorList $generators)
+    {
+        return $this->generators = $generators;
+    }
+
+    public function get_generators(): GeneratorList
+    {
+        return $this->generators;
+    }
+
+    public function get_files(): FileList
+    {
+        return $this->files;
     }
 
     protected function makeGeneratorList($config)
@@ -94,6 +129,72 @@ class Application
         }
 
         return $model_list;
+    }
+
+    protected function make_file_makers($models, $relationships): FileMakerList
+    {
+        $list = new GenericList;
+        $makers = new FileMakerList;
+
+        $list->add($models);
+        $list->add($relationships);
+
+        foreach($list as $item) {
+            if($item instanceof FileMaker) {
+                $makers->add($item);
+            }
+        }
+
+        return $makers;
+    }
+
+    protected function make_file_specifications($list): SpecificationList
+    {
+        $specs = new SpecificationList;
+
+        foreach($list as $item) {
+            $specs->add($this->generators->make_file_specifications($item));
+        }
+
+        return $specs;
+    }
+
+    protected function make_migration_makers($models, $relationships): MigrationMakerList
+    {
+        $list = new GenericList;
+        $makers = new MigrationMakerList;
+
+        $list->add($models);
+        $list->add($relationships);
+
+        foreach($list as $item) {
+            if($item instanceof MigrationMaker) {
+                $makers->add($item);
+            }
+        }
+
+        return $makers;
+    }
+
+    protected function make_migration_specifications($list): SpecificationList
+    {
+        $specs = new SpecificationList;
+
+        foreach($list as $item) {
+            $specs->add($item->make_migration_specification());
+        }
+
+        return $specs;
+    }
+
+    protected function get_file_specs(): SpecificationList
+    {
+        return $this->file_specs;
+    }
+
+    protected function get_migration_specs(): SpecificationList
+    {
+        return $this->migration_specs;
     }
 
     protected function makeMigrationList($plans, $relationships)

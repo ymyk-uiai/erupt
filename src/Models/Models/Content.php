@@ -6,8 +6,6 @@ use Erupt\Abstracts\Models\Models\Model as AbstractModel;
 
 class Content extends AbstractModel
 {
-    protected $type = "content";
-
     public function getCommandSeedKeys()
     {
         return [
@@ -22,5 +20,10 @@ class Content extends AbstractModel
             "seeder",
             "migration",
         ];
+    }
+
+    protected function get_model_type(): string
+    {
+        return "content";
     }
 }

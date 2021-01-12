@@ -1,0 +1,15 @@
+public function down()
+{
+    <!erupt
+        print("Schema::drop('{}')", 100)
+    !>
+}
+
+<data>
+{
+    "name": "down",
+    "use": [
+        "Illuminate\\Support\\Facades\\Schema"
+    ]
+}
+</data>

@@ -6,8 +6,6 @@ use Erupt\Abstracts\Models\Models\Model as AbstractModel;
 
 class Binder extends AbstractModel
 {
-    protected $type = "binder";
-
     public function getCommandSeedKeys()
     {
         return [
@@ -23,5 +21,10 @@ class Binder extends AbstractModel
             "migration",
             "component/card"
         ];
+    }
+
+    protected function get_model_type(): string
+    {
+        return "binder";
     }
 }

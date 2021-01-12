@@ -3,7 +3,7 @@
 !>
 
 <!erupt
-    print("factory({}::class, 50)->create()", modelFullClass)
+    print("factory({}::class, 50)->create();", modelFullClass)
 !>
 
 <data>

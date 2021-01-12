@@ -6,8 +6,6 @@ use Erupt\Abstracts\Models\Models\Model as AbstractModel;
 
 class Response extends AbstractModel
 {
-    protected $type = "response";
-
     public function getCommandSeedKeys()
     {
         return [
@@ -22,5 +20,10 @@ class Response extends AbstractModel
             "seeder",
             "migration",
         ];
+    }
+
+    protected function get_model_type(): string
+    {
+        return "response";
     }
 }

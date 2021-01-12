@@ -1,0 +1,20 @@
+public function up()
+{
+    <!erupt
+        foreach self.attributes.casts as method join ";" into result {
+            preprint("Schema::create('{}', function (Blueprint $table) {")
+            print("$table->{}", method.name)
+            postprint("});")
+        }
+    !>
+}
+
+<data>
+{
+    "name": "up",
+    "use": [
+        "Illuminate\\Database\\Schema\\Blueprint",
+        "Illuminate\\Support\\Facades\\Schema"
+    ]
+}
+</data>

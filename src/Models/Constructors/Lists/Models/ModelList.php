@@ -9,12 +9,10 @@ use Erupt\Models\Constructors\Models\Binder;
 use Erupt\Models\Constructors\Models\Response;
 use Erupt\Models\Constructors\Lists\Properties\PropertyList;
 use Erupt\Models\Constructors\Lists\Relationships\RelationshipList;
-use Erupt\Models\Constructors\Lists\Files\FileList;
-
 
 class ModelList
 {
-    public static function build($plans, $relationships, $server, $front): Product
+    public static function build($plans, $relationships, $server, $front, $app): Product
     {
         $modelList = new Product;
 
@@ -35,11 +33,11 @@ class ModelList
                 // Unknown model type
             }
 
+            $model->set_app($app);
+
             $model->setProperties(PropertyList::build($properties));
 
             $model->setRelationships(RelationshipList::build($model, $relationships));
-
-            $model->setFiles(FileList::build($model, $server, $front));
 
             $modelList->add($model);
         }

@@ -16,16 +16,14 @@ class FileList extends BaseList
         parent::add($file);
     }
 
-    public function resolve($keys, $app)
+    public function resolve($model, $keys, $app)
     {
         if(gettype($keys) == "string") {
             $keys = explode('.', $keys);
         }
 
-        foreach($this->list as $file) {
-            if($file->try($keys)) {
-                return $file->get($keys);
-            }
-        }
+        $result = $app->server->get_file($model, $keys);
+
+        return $result;
     }
 }

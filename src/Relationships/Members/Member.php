@@ -19,21 +19,19 @@ class Member extends AbstractMember
         //
     }
 
-    public static function build($name, $type, $args)
+    public static function build($str)
     {
-        $result = new Self;
+        $product = new Self;
 
-        $constructor = new MemberConstructor($name, $type, $args);
+        $pattern = "/^(?P<name>[a-zA-Z0-9]+)(?::(?P<args>[a-z]+(?:,[a-z]+)*))?/";
 
-        $result->setName($constructor->name);
+        preg_match($pattern, $str, $matches);
 
-        $result->setType($constructor->type);
+        $product->setName($matches["name"]);
 
-        $result->setUpdaters($constructor->updaters);
+        $product->setUpdaters(UpdaterList::build(array_key_exists("args", $matches) ? $matches["args"] : ""));
 
-        return $result;
-
-        //  return MemberConstructor::build($name, $type, $args);
+        return $product;
     }
 
     public function getName()

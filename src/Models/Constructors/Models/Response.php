@@ -6,6 +6,8 @@ use Erupt\Models\Models\Response as Product;
 
 class Response
 {
+    protected static $type = "response";
+
     public static function build($name): Product
     {
         $product = new Product;

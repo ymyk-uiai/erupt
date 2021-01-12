@@ -7,22 +7,39 @@ use Erupt\Relationships\Constructors\Lists\Updaters\UpdaterListConstructor;
 
 class UpdaterList extends BaseList
 {
-    public function __construct()
-    {
-        //
-    }
+    protected static array $updaters = [
+        "flag",
+    ];
 
     public static function build($args)
     {
-        $result = new Self;
+        $args = array_filter(explode(':', trim($args)));
 
-        $constructor = new UpdaterListConstructor($args);
+        $list = new UpdaterList;
 
-        $result->add($constructor->list);
+        $namespace = "Erupt\Relationships\Updaters";
 
-        return $result;
+        foreach($args as $arg) {
+            $exp = explode(',', $arg);
+            
+            $name = $exp[0];
+            $ags = array_slice($exp, 1);
 
-        //  return $constructor->result;
+            $arg = trim($arg);
+
+            if(in_array($arg, Self::$updaters)) {
+                $className = "$namespace\\".ucfirst($name)."Updater";
+            } else {
+                $className = "$namespace\\FlagUpdater";
+                array_unshift($ags, $name);
+            }
+
+            $updater = new $className($ags);
+
+            $list->add($updater);
+        }
+
+        return $list;
     }
 
     public function add($updater)

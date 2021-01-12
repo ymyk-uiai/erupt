@@ -39,8 +39,8 @@ class EruptLang
         $scope = Scope::init([
             "self" => $self,
             "auth" => $auth,
-            "className" => $self->getFiles()->resolve("$type.className", $this->app),
-            "namespace" => $self->getFiles()->resolve("$type.namespace", $this->app),
+            "className" => $this->app->get_files()->resolve($self, "$type.className", $this->app),
+            "namespace" => $this->app->get_files()->resolve($self, "$type.namespace", $this->app),
         ]);
 
         while(preg_match($pattern, $template, $matches, PREG_OFFSET_CAPTURE, $offset)) {
@@ -101,7 +101,7 @@ class EruptLang
 
         $str_namespaces = implode("\n", $namespaces);
 
-        $result = preg_replace("/class/", "$str_namespaces\n\nclass", $result);
+        $result = preg_replace("/\nclass/", "$str_namespaces\n\nclass", $result);
 
         return $result;
     }

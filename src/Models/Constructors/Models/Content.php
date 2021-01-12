@@ -6,6 +6,8 @@ use Erupt\Models\Models\Content as Product;
 
 class Content
 {
+    protected static $type = "content";
+
     public static function build($name): Product
     {
         $product = new Product;

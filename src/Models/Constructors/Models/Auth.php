@@ -6,6 +6,8 @@ use Erupt\Models\Models\Auth as Product;
 
 class Auth
 {
+    protected static $type = "auth";
+
     public static function build($name): Product
     {
         $product = new Product;

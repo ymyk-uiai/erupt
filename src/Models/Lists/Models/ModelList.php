@@ -30,7 +30,7 @@ class ModelList extends BaseList
     public function getByType($type)
     {
         foreach($this->list as $model) {
-            if($model->getType() == $type) {
+            if($model->get_type() == $type) {
                 return $model;
             }
         }

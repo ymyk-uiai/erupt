@@ -2,13 +2,14 @@
 
 namespace Erupt\Generators;
 
+use Erupt\Abstracts\Foundations\BaseListItem;
 use Erupt\Models\Lists\Files\FileList;
 use Erupt\Models\Models\Auth;
 use Erupt\Models\Models\Content;
 use Erupt\Models\Models\Binder;
 use Erupt\Models\Models\Response;
 
-class BaseGenerator
+class BaseGenerator extends BaseListItem
 {
     public function getCommandSeeds($commandSeedKeys, $name)
     {
@@ -201,6 +202,17 @@ class BaseGenerator
         }
 
         return $fileList;
+    }
+
+    public function get_file($model, $keys)
+    {
+        $files = $this->getFiles($model);
+
+        foreach($files as $file) {
+            if($file->try($keys)) {
+                return $file->get($keys);
+            }
+        }
     }
 
     public function getTemplatePath($modelType, $classType)

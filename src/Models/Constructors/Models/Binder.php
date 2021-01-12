@@ -6,6 +6,8 @@ use Erupt\Models\Models\Binder as Product;
 
 class Binder
 {
+    protected static $type = "binder";
+
     public static function build($name): Product
     {
         $product = new Product;

@@ -6,8 +6,6 @@ use Erupt\Abstracts\Models\Models\Model as AbstractModel;
 
 class Auth extends AbstractModel
 {
-    protected $type = "auth";
-
     public function getCommandSeedKeys()
     {
         return [
@@ -22,5 +20,10 @@ class Auth extends AbstractModel
             "migration",
             "component/card"
         ];
+    }
+
+    protected function get_model_type(): string
+    {
+        return "auth";
     }
 }

@@ -22,14 +22,16 @@ class EruptCommand extends Command
     {
         $seeds = $this->app->getCommandSeeds();
 
+        /*
         foreach($seeds as $seed) {
             $command = $this->makeCommand($seed);
             $argsAndOptions = $this->makeArgsAndOptions($seed);
 
             $this->call($command, $argsAndOptions);
         }
+        */
 
-        //print_r($this->app);
+        print_r($this->app);
     }
 
     protected function makeCommand($seed)

@@ -3,18 +3,49 @@
 namespace Erupt\Plans\Lists\Plans;
 
 use Erupt\Abstracts\Foundations\BaseList;
-use Erupt\Plans\Constructors\Lists\Plans\PlanListConstructor;
+use Erupt\Plans\Plans\Plan;
 
 class PlanList extends BaseList
 {
-    public function __construct()
+    public static function build($config, $relationships): PlanList
     {
-        //
+        $merged = Self::mergeRelationships($config, $relationships);
+
+        $planList = new PlanList;
+
+        foreach($merged as $name => $data) {
+            $plan = Plan::build($name, $data);
+
+            $planList->add($plan);
+        }
+
+        return $planList;
+    }
+    
+    protected static function mergeRelationships($config, $relationships)
+    {
+        $configModels = $config["models"];
+
+        foreach($config["models"] as $name => $data) {
+            $origPlans = $data["plans"];
+            $relationshipPlans = Self::getPlans($relationships, $name);
+            $configModels[$name]["plans"] = array_merge($origPlans, $relationshipPlans);
+        }
+
+        return $configModels;
     }
 
-    public static function build($config, $relationships): Self
+    protected static function getPlans($relationships, $name)
     {
-        return  PlanListConstructor::build($config, $relationships);
+        $result = [];
+
+        foreach($relationships as $relationship) {
+            if($plan = $relationship->tryGettingPlan($name)) {
+                $result[] = $plan;
+            }
+        }
+
+        return $result;
     }
 
     public function add($plan)

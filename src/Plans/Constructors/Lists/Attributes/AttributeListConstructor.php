@@ -12,12 +12,14 @@ class AttributeListConstructor
 
         $attributeList = new AttributeList;
 
-        $ns = "Erupt\\Plans\\Attributes";
+        //$ns = "Erupt\\Plans\\Attributes";
+
+        $ns = "Erupt\\Plans\\Tools";
 
         foreach($attributes as $attribute) {
             $exploded = explode(':', $attribute);
 
-            $cn = "{$ns}\\".ucfirst($exploded[0])."Attribute";
+            $cn = "{$ns}\\".ucfirst($exploded[0])."\\Attribute";
 
             $args = array_key_exists(1, $exploded) ? $exploded[1] : "";
 

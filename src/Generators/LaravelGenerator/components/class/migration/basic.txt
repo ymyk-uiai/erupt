@@ -1,12 +1,23 @@
 <?php
 
-class Migration
+@use
+
+class <!erupt className !> extents Migration
 {
-    //
+    @methods/migrations/up
+
+    @methods/migrations/down
 }
 
 <data>
 {
-    "name": "basic"
+    "name": "basic",
+    "components": [
+        "methods/migrations/up",
+        "methods/migrations/down"
+    ],
+    "use": [
+        "Illuminate\\Database\\Migrations\\Migration"
+    ]
 }
 </data>

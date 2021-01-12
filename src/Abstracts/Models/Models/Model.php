@@ -7,22 +7,28 @@ use Erupt\Models\Lists\Properties\PropertyList;
 use Erupt\Models\Lists\Files\FileList;
 use Erupt\Interfaces\Commanding;
 use Erupt\Interfaces\Migrating;
+use Erupt\Interfaces\FileMaker;
+use Erupt\Interfaces\MigrationMaker;
+use Erupt\Application;
 
-abstract class Model extends BaseListItem implements Commanding, Migrating
+abstract class Model extends BaseListItem implements Commanding, Migrating, FileMaker, MigrationMaker
 {
-    protected $name;
+    protected Application $app;
 
-    protected $type;
+    protected string $name;
 
-    protected $properties;
+    protected PropertyList $properties;
 
     protected $relationships;
 
-    protected $files;
-
-    public function __construct()
+    public function set_app(Application $app)
     {
-        //
+        $this->app = $app;
+    }
+
+    public function get_app(): Application
+    {
+        return $this->app;
     }
 
     public function getName()
@@ -35,9 +41,14 @@ abstract class Model extends BaseListItem implements Commanding, Migrating
         $this->name = $name;
     }
 
-    public function getType()
+    public function get_type(): string
     {
-        return $this->type;
+        return $this->get_model_type();
+    }
+
+    protected function get_model_type(): string
+    {
+        return "unknown";
     }
 
     public function getProperties()
@@ -65,9 +76,30 @@ abstract class Model extends BaseListItem implements Commanding, Migrating
         return $this->files;
     }
 
-    public function setFiles($files)
+    public function setFiles(FileList $files)
     {
         $this->files = $files;
+    }
+
+    public function make_file_specification()
+    {
+        //
+    }
+
+    public function make_migration_specification()
+    {
+        return $this->app->get_generators()->make_migration_specifications($this);
+    }
+
+    public function get_table_name()
+    {
+        //  $this->table_name()
+        return $this->name;
+    }
+
+    public function get_command(): string
+    {
+        return "create_{$this->name}_table";
     }
 
     public function resolve($keys, $app)
@@ -85,7 +117,8 @@ abstract class Model extends BaseListItem implements Commanding, Migrating
         } else if($key == "relationship") {
             return $this->getRelationships()->resolve1($keys, $app);
         } else if($key == "files") {
-            return $this->getFiles()->resolve($keys, $app);
+            return $app->get_files()->resolve($this, $keys, $app);
+            //return $this->getFiles()->resolve($this, $keys, $app);
         } else {
             $props = [
                 "name",

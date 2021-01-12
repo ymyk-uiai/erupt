@@ -5,6 +5,11 @@ namespace Erupt\Generators\LaravelGenerator;
 use Erupt\Models\Files\LaravelFile;
 use Erupt\Models\Lists\Files\FileList;
 use Erupt\Generators\BaseGenerator;
+use Erupt\Specifications\Specifications\Items\MigrationSpecification;
+use Erupt\Specifications\Specifications\Items\FileSpecification;
+use Erupt\Specifications\Specifications\Lists\SpecificationList;
+use Erupt\Interfaces\MigrationMaker;
+use Erupt\Interfaces\FileMaker;
 
 class LaravelGenerator extends BaseGenerator
 {
@@ -200,5 +205,41 @@ class LaravelGenerator extends BaseGenerator
     public function getComponentDirName()
     {
         return "components";
+    }
+
+    public function make_file_specifications(FileMaker $maker): SpecificationList
+    {
+        $spec_list = new SpecificationList;
+
+        $commandSeedKeys = $maker->getCommandSeedKeys();
+
+        // foreach($this->generators as $generator) { ... }
+
+        $name = ucfirst($maker->getName());
+        
+        $commands = $this->getCommandSeeds($commandSeedKeys, $name);
+
+        foreach($commands as $command) {
+            $spec = FileSpecification::build($command);
+
+            $spec_list->add($spec);
+        }
+
+        return $spec_list;
+    }
+
+    public function make_migration_specifications(MigrationMaker $maker)
+    {
+        $table_name = $maker->get_table_name();
+
+        $command = $maker->get_command();
+
+        $spec = new MigrationSpecification;
+
+        $spec->set_table_name($table_name);
+
+        $spec->set_command($command);
+
+        return $spec;
     }
 }

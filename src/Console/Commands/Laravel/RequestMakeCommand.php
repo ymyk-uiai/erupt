@@ -26,7 +26,7 @@ class RequestMakeCommand extends LaravelCommand
 
     protected function getStub()
     {
-        $type = $this->model->getType();
+        $type = $this->model->get_type();
 
         $template = null;
 
