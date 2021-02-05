@@ -1,0 +1,23 @@
+<!erupt
+    authClass = auth.files.model.class_name
+    authInstance = auth.files.model.instance
+!>
+
+<!erupt
+    print("public function create({} ${})", authClass, authInstance)
+!>
+{
+    return Auth::check();
+}
+
+<data>
+{
+    "name": "create",
+    "type": "php_class",
+    "components": [],
+    "use": [
+        "<!erupt auth.files.model.fullClassName !>",
+        "Illuminate\\Support\\Facades\\Auth"
+    ]
+}
+</data>

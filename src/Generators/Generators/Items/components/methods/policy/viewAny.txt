@@ -1,0 +1,23 @@
+<!erupt
+    modelClass = self.files.model.class_name
+    modelInstance = self.files.model.instance
+!>
+
+<!erupt
+    print("public function viewAny({} ${})", modelClass, modelInstance)
+!>
+{
+    return true;
+}
+
+<data>
+{
+    "name": "viewAny",
+    "type": "php_class",
+    "components": [],
+    "use": [
+        "<!erupt auth.files.model.fullClassName !>",
+        "<!erupt self.files.model.fullClassName !>"
+    ]
+}
+</data>

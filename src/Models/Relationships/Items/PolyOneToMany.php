@@ -2,17 +2,17 @@
 
 namespace Erupt\Models\Relationships\Items;
 
-use Erupt\Models\Relationships\Bases\BaseRelationship;
-use Erupt\Relationships\Members\Member;
-use Erupt\Interfaces\MigrationMaker;
+use Erupt\Models\Relationships\BaseRelationship;
+use Erupt\Relationships\Members\Items\Member;
+use Erupt\Interfaces\Makers\Items\MigrationMaker;
 
 class PolyOneToMany extends BaseRelationship implements MigrationMaker
 {
-    public static function build(Member $member, bool $owner)
+    public static function build(Member $member, bool $owner): Self
     {
         $product = new Self;
 
-        $product->set_name($member->getName());
+        $product->set_name($member->get_name());
 
         $product->set_is_owner($owner);
 

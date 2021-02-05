@@ -3,7 +3,7 @@
 namespace Erupt\Console\Commands\Laravel;
 
 use Erupt\Console\Commands\BaseCommand;
-use Erupt\Generators\LaravelGenerator\LaravelGenerator as Generator;
+use Erupt\Generators\Generators\Items\LaravelGenerator as Generator;
 use Illuminate\Filesystem\Filesystem;
 use Erupt\Application;
 

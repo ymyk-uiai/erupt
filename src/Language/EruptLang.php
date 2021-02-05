@@ -34,13 +34,13 @@ class EruptLang
         $offset = 0;
         $prevOffset = 0;
         
-        $self = $this->app->getModels()->get($modelName);
-        $auth = $this->app->getModels()->getByType("auth");
+        $self = $this->app->get_models()->get($modelName);
+        $auth = $this->app->get_models()->get_by_type("auth");
         $scope = Scope::init([
             "self" => $self,
             "auth" => $auth,
-            "className" => $this->app->get_files()->resolve($self, "$type.className", $this->app),
-            "namespace" => $this->app->get_files()->resolve($self, "$type.namespace", $this->app),
+            "class_name" => $self->resolve("files.$type.class_name"),
+            "namespace" => $self->resolve("files.$type.namespace"),
         ]);
 
         while(preg_match($pattern, $template, $matches, PREG_OFFSET_CAPTURE, $offset)) {

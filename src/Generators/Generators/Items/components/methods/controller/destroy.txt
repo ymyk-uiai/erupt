@@ -1,0 +1,36 @@
+<!erupt
+    model = self.files.model.class_name
+    modelInstance = self.files.model.instance
+    resourceUseAs = self.files.resource.use_as
+    requestUpdateClass = self.files.request@update.class_name
+!>
+
+<!erupt
+    print("public function destroy({} $request, {} ${})", requestUpdateClass, model, modelInstance)
+!>
+{
+    <!erupt
+        print("$this->authorize('delete', ${})", modelInstance)
+    !>
+
+    <!erupt
+        print("${}->delete()", modelInstance)
+    !>
+
+    <!erupt
+        print("return new {}(${})", resourceUseAs, modelInstance)
+    !>
+}
+
+<data>
+{
+    "name": "controller_destroy",
+    "type": "php_class",
+    "components": [],
+    "use": [
+        "<!erupt self.files.model.fullClassName !>",
+        "<!erupt self.files.request@update.fullClassName !>",
+        "<!erupt self.files.resource.full_use_as !>"
+    ]
+}
+</data>

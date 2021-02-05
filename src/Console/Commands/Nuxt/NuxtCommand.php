@@ -3,7 +3,7 @@
 namespace Erupt\Console\Commands\Nuxt;
 
 use Erupt\Console\Commands\BaseCommand;
-use Erupt\Generators\NuxtGenerator\NuxtGenerator as Generator;
+use Erupt\Generators\Generators\Items\NuxtGenerator as Generator;
 use Illuminate\Filesystem\Filesystem;
 use Erupt\Application;
 

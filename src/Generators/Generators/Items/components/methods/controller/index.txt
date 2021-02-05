@@ -1,0 +1,28 @@
+<!erupt
+    model = self.files.model.class_name
+    collection = self.files.collection.class_name
+    collectionInstance = self.files.collection.instance
+!>
+
+public function index()
+{
+    <!erupt
+        print("${} = {}::take(10)->get();", collectionInstance, model)
+    !>
+
+    <!erupt
+        print("return new {}(${})", collection, collectionInstance)
+    !>
+}
+
+<data>
+{
+    "name": "controller_index",
+    "type": "php_class",
+    "components": [],
+    "use": [
+        "<!erupt self.files.collection.fullClassName !>",
+        "<!erupt self.files.model.fullClassName !>"
+    ]
+}
+</data>

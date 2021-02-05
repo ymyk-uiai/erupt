@@ -1,0 +1,37 @@
+<?php
+
+namespace <!erupt namespace !>;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+@use
+
+class <!erupt class_name !> extends Authenticatable
+{
+    use HasFactory, Notifiable;
+
+    @props/fillable
+
+    @props/hidden
+
+    @props/casts
+}
+
+<data>
+{
+    "name": "model",
+    "type": "php_class",
+    "components": [
+        "props/fillable",
+        "props/hidden",
+        "props/casts"
+    ],
+    "use": [],
+    "events": [
+        "test:auth_model"
+    ]
+}
+</data>

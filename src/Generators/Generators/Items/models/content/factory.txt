@@ -1,0 +1,30 @@
+<?php
+
+namespace Database\Factories;
+
+@use
+
+<!erupt
+    print("class {} extends Factory", class_name)
+!>
+{
+    @methods/factory/model
+
+    @methods/factory/definition
+}
+
+<data>
+{
+    "name": "factory",
+    "type": "php_class",
+    "components": [
+        "methods/factory/model",
+        "methods/factory/definition"
+    ],
+    "use": [
+        "<!erupt self.files.model.fullClassName !>",
+        "Illuminate\\Database\\Eloquent\\Factories\\Factory",
+        "Illuminate\\Support\\Str"
+    ]
+}
+</data>

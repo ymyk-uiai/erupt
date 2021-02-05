@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Seeder;
+
+<!erupt
+    print("class {} extends Seeder", class_name)
+!>
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        @methods/seeds/create
+
+        @statements/seeds/getAllInstances
+
+        @statements/seeds/getAllRelatedInstances
+    }
+}
+
+<data>
+{
+    "name": "seeder",
+    "type": "php_class",
+    "components": [
+        "methods/seeds/create",
+        "statements/seeds/getAllInstances",
+        "statements/seeds/getAllRelatedInstances"
+    ],
+    "use": []
+}
+</data>

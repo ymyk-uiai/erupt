@@ -1,0 +1,25 @@
+<!erupt
+    model = self.files.model.class_name
+    modelInstance = self.files.model.instance
+    resourceUseAs = self.files.resource.use_as
+!>
+
+<!erupt
+    print("public function show({} ${})", model, modelInstance)
+!>
+{
+    <!erupt
+        print("return new {}(${})", resourceUseAs, modelInstance)
+    !>
+}
+
+<data>
+{
+    "name": "controller_show",
+    "type": "php_class",
+    "components": [],
+    "use": [
+        "<!erupt self.files.model.fullClassName !>"
+    ]
+}
+</data>

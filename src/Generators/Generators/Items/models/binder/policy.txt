@@ -1,0 +1,43 @@
+<?php
+
+namespace <!erupt namespace !>;
+
+@use
+
+class <!erupt class_name !>
+{
+    use HandlesAuthorization;
+
+    @methods/policy/viewAny
+
+    @methods/policy/view
+
+    @methods/policy/create
+
+    @methods/policy/update
+
+    @methods/policy/delete
+
+    @methods/policy/restore
+
+    @methods/policy/forceDelete
+}
+
+<data>
+{
+    "name": "policy",
+    "type": "php_class",
+    "components": [
+        "methods/policy/viewAny",
+        "methods/policy/view",
+        "methods/policy/create",
+        "methods/policy/update",
+        "methods/policy/delete",
+        "methods/policy/restore",
+        "methods/policy/forceDelete"
+    ],
+    "use": [
+        "Illuminate\\Auth\\Access\\HandlesAuthorization"
+    ]
+}
+</data>

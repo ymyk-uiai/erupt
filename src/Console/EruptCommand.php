@@ -20,18 +20,13 @@ class EruptCommand extends Command
     
     public function handle()
     {
-        $seeds = $this->app->getCommandSeeds();
-
-        /*
-        foreach($seeds as $seed) {
-            $command = $this->makeCommand($seed);
-            $argsAndOptions = $this->makeArgsAndOptions($seed);
-
-            $this->call($command, $argsAndOptions);
-        }
-        */
-
         print_r($this->app);
+
+        $file_specs = $this->app->get_file_specs();
+
+        foreach($file_specs as $spec) {
+            $this->call("erupt:make", $spec->get_args_and_options());
+        }
     }
 
     protected function makeCommand($seed)

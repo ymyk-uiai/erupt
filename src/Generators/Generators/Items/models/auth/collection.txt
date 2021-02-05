@@ -1,0 +1,23 @@
+<?php
+
+namespace <!erupt namespace !>;
+
+@use
+
+use Illuminate\Http\Resources\Json\ResourceCollection;
+
+class <!erupt class_name !> extends ResourceCollection
+{
+    @methods/collection
+}
+
+<data>
+{
+    "name": "auth.collection",
+    "type": "php_class",
+    "components": [
+        "methods/collection"
+    ],
+    "use": []
+}
+</data>

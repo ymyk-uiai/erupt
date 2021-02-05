@@ -1,0 +1,29 @@
+<?php
+
+namespace <!erupt namespace !>;
+
+@use
+
+use Illuminate\Database\Eloquent\Model;
+
+class <!erupt class_name !> extends Model
+{
+    @props/fillable
+
+    @props/hidden
+
+    @props/casts
+}
+
+<data>
+{
+    "name": "model",
+    "type": "php_class",
+    "components": [
+        "props/fillable",
+        "props/hidden",
+        "props/casts"
+    ],
+    "use": []
+}
+</data>
