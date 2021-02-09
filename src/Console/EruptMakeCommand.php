@@ -28,7 +28,7 @@ class EruptMakeCommand extends GeneratorCommand
 
         $template = $this->option("template");
 
-        $path = $this->get_path($file["path"]);
+        $path = $this->get_path($file["path"], $file["class_name"]);
 
         $this->makeDirectory($path);
 
@@ -37,9 +37,9 @@ class EruptMakeCommand extends GeneratorCommand
         $this->info(' created successfully.');
     }
 
-    protected function get_path($path): string
+    protected function get_path($path, $name): string
     {
-        return trim($this->laravel->basePath(), "/\\") . "/" . trim($path, "/\\");
+        return trim($path, "/\\")."/".$name.".php";
     }
 
     protected function build($model, $file)
