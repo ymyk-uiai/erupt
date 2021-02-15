@@ -4,6 +4,7 @@ namespace Erupt\Plans\Methods\Items\Nullable;
 
 use Erupt\Plans\Methods\BaseUpdater;
 use Erupt\Models\Properties\Items\Property;
+use Erupt\Models\ValidationRules\Items\NullableRule;
 
 class Updater extends BaseUpdater
 {
@@ -14,10 +15,8 @@ class Updater extends BaseUpdater
         return $product;
     }
 
-    public function run(Property $property)
+    public function run(Property $property): void
     {
-        //  $property->setFlag("nullable", true);
-
-        //  $property->setValidationRule("nullable", true);
+        $property->get_validation_rules()->add(NullableRule::build());
     }
 }

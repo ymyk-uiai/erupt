@@ -80,18 +80,6 @@ abstract class BaseModel extends BaseListItem implements FileMaker, MigrationMak
         $this->relationships = $relationships;
     }
 
-    //  delete?
-    public function make_file_specification()
-    {
-        //
-    }
-
-    //  delete?
-    public function make_migration_specification()
-    {
-        return $this->app->get_generators()->make_migration_specifications($this);
-    }
-
     public function set_table_name(string $table_name)
     {
         $this->table_name = $table_name;
@@ -132,26 +120,5 @@ abstract class BaseModel extends BaseListItem implements FileMaker, MigrationMak
                 return $this->{$key};
             }
         }
-    }
-
-    //  delete?
-    public function getCommandSeeds($app)
-    {
-        $commandSeedKeys = $this->getCommandSeedKeys();
-
-        // foreach($this->generators as $generator) { ... }
-
-        $name = ucfirst($this->name);
-
-        $commandSeeds1 = $app->server->getCommandSeeds($commandSeedKeys, $name);
-        $commandSeeds2 = $app->front->getCommandSeeds($commandSeedKeys, $name);
-
-        return array_merge($commandSeeds1, $commandSeeds2);
-    }
-
-    //  delete?
-    public function getMigrationCommandSeeds($app)
-    {
-        //
     }
 }

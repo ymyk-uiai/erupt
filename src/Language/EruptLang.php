@@ -5,9 +5,7 @@ namespace Erupt\Language;
 use Erupt\Language\Parser;
 use Erupt\Language\Evaluator;
 use Ds\Set;
-use PhpParser\PrettyPrinter;
-use PhpParser\Error;
-use PhpParser\ParserFactory;
+use PhpParser\{ParserFactory, PrettyPrinter};
 
 class EruptLang
 {
@@ -26,7 +24,7 @@ class EruptLang
         $this->app = $app;
     }
 
-    public function exec($template, $modelName, $type)
+    public function exec($template, $modelName, $type, $io_t, $io_r)
     {
         $result = "";
 
@@ -63,20 +61,28 @@ class EruptLang
         $result = $this->removeDuplicatedUses($result);
 
         /*
-        $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
-        try {
-            $ast = $parser->parse($result);
-            $prettyPrinter = new PrettyPrinter\Standard;
-            $result = $prettyPrinter->prettyPrintFile($ast);
-        } catch (Error $error) {
-            echo "Parse error: {$error->getMessage()}\n";
-            return;
+        if($file_type == "php") {
+            $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+            try {
+                $ast = $parser->parse($result);
+                $prettyPrinter = new PrettyPrinter\Standard;
+                $result = $prettyPrinter->prettyPrintFile($ast);
+            } catch (Error $error) {
+                echo "Parse error: {$error->getMessage()}\n";
+                return;
+            }
         }
         */
 
-        print_r("\033[31m$modelName $type\033[0m\n");
-        print_r("\033[33m".trim($template)."\033[0m\n");
-        print_r("\033[32m".trim($result)."\033[0m\n");
+        if($io_t || $io_r) {
+            print_r("\033[31m$modelName $type\033[0m\n");
+        }
+        if($io_t) {
+            print_r("\033[33m".trim($template)."\033[0m\n");
+        }
+        if($io_r) {
+            print_r("\033[32m".trim($result)."\033[0m\n");
+        }
 
         //$ast = $this->parser->parse($template);
 

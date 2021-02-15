@@ -5,7 +5,7 @@ public function rules()
             preprint("return [")
             foreach fillable.validation_rules as rule join "|" into resu {
                 preprint("'")
-                print("{}", rule)
+                print("{}", rule.name)
                 postprint("'")
             }
             print("'{}' => {}", fillable.name, resu)

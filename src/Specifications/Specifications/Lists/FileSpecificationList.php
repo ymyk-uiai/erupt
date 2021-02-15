@@ -51,6 +51,7 @@ class FileSpecificationList extends BaseSpecificationList
                 }
             }
         }
-    }
 
+        throw new \Error("file spec not found. \$key = {$key}");
+    }
 }

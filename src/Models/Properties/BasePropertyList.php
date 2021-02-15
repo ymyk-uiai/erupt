@@ -39,7 +39,7 @@ abstract class BasePropertyList extends BaseList
         }
 
         foreach($rootContainer as $list) {
-            $modelProperty = new ModelProperty;
+            $modelProperty = ModelProperty::build();
 
             foreach($list as $item) {
                 $item->run($modelProperty);

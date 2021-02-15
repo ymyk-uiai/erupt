@@ -1,7 +1,7 @@
 <!erupt
     model = self.files.model.class_name
     modelInstance = self.files.model.instance
-    modelFullClass = self.files.model.fullClassName
+    modelFullClass = self.files.model.class_name
     resourceUseAs = self.files.resource.use_as
     requestUpdateClass = self.files.request@update.class_name
     authInstance = auth.files.model.instance
@@ -38,8 +38,8 @@
     "type": "php_class",
     "components": [],
     "use": [
-        "<!erupt self.files.request@update.fullClassName !>",
-        "<!erupt self.files.model.fullClassName !>",
+        "<!erupt self.files.request@update.class_name !>",
+        "<!erupt self.files.model.class_name !>",
         "<!erupt self.files.resource.full_use_as !>"
     ]
 }

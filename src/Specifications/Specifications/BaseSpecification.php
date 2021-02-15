@@ -36,5 +36,5 @@ abstract class BaseSpecification extends BaseListItem
         }
     }
 
-    abstract public function get_args_and_options(): array;
+    abstract public function get_args_and_options($t, $r): array;
 }

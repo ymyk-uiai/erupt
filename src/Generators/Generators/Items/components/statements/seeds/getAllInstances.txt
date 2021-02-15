@@ -1,10 +1,10 @@
 <!erupt
     instances = self.files.model.instances
-    fullClassName = self.files.model.fullClassName
+    class_name = self.files.model.class_name
 !>
 
 <!erupt
-    print("${} = {}::all();", instances, fullClassName)
+    print("${} = {}::all();", instances, class_name)
 !>
 
 <data>

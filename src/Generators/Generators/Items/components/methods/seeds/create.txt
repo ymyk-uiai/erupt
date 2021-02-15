@@ -1,5 +1,5 @@
 <!erupt
-    modelFullClass = self.files.model.fullClassName
+    modelFullClass = self.files.model.class_name
 !>
 
 <!erupt

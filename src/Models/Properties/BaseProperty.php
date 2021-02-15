@@ -3,6 +3,7 @@
 namespace Erupt\Models\Properties;
 
 use Erupt\Foundations\Lists\BaseListItem;
+use Erupt\Models\ValidationRules\Lists\ValidationRuleList;
 
 abstract class BaseProperty extends BaseListItem
 {
@@ -14,7 +15,7 @@ abstract class BaseProperty extends BaseListItem
 
     protected string $factory = "";
 
-    protected array $validation_rules = [];
+    protected ValidationRuleList $validation_rules;
 
     protected array $flags = [];
 
@@ -68,16 +69,17 @@ abstract class BaseProperty extends BaseListItem
         return array_key_exists($key, $this->flags) ? $this->flags[$key] : false;
     }
 
-    public function set_validation_rules(array $validation_rules)
+    public function set_validation_rules(ValidationRuleList $validation_rules)
     {
         $this->validation_rules = $validation_rules;
     }
 
-    public function get_validation_rules(): array
+    public function get_validation_rules(): ValidationRuleList
     {
         return $this->validation_rules;
     }
 
+    /* delete?
     public function set_validation_rule(string $key, string $args = null)
     {
         $this->validation_rules[$key] = $args;
@@ -89,6 +91,7 @@ abstract class BaseProperty extends BaseListItem
             ? $this->validation_rules[$key]
             : false;
     }
+    */
 
     public function resolve($keys)
     {

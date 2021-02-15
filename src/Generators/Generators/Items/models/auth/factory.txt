@@ -22,7 +22,7 @@ namespace Database\Factories;
         "methods/factory/definition"
     ],
     "use": [
-        "<!erupt self.files.model.fullClassName !>",
+        "<!erupt self.files.model.class_name !>",
         "Illuminate\\Database\\Eloquent\\Factories\\Factory",
         "Illuminate\\Support\\Str"
     ]

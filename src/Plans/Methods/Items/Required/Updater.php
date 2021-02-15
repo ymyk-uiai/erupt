@@ -4,6 +4,7 @@ namespace Erupt\Plans\Methods\Items\Required;
 
 use Erupt\Plans\Methods\BaseUpdater;
 use Erupt\Models\Properties\Items\Property;
+use Erupt\Models\ValidationRules\Items\RequiredRule;
 
 class Updater extends BaseUpdater
 {
@@ -14,8 +15,8 @@ class Updater extends BaseUpdater
         return $product;
     }
 
-    public function run(Property $property)
+    public function run(Property $property): void
     {
-        $property->set_validation_rule("required", true);
+        $property->get_validation_rules()->add(RequiredRule::build());
     }
 }

@@ -2,9 +2,9 @@
     foreach self.relationships.seeds as seed join "\n" into result {
  
         instances = seed.files.model.instances
-        fullClassName = seed.files.model.fullClassName
+        class_name = seed.files.model.class_name
  
-        print("${} = {}::all();", instances, fullClassName)
+        print("${} = {}::all();", instances, class_name)
     }
 !>
 

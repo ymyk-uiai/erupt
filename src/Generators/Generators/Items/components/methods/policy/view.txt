@@ -18,8 +18,8 @@
     "type": "php_class",
     "components": [],
     "use": [
-        "<!erupt auth.files.model.fullClassName !>",
-        "<!erupt self.files.model.fullClassName !>"
+        "<!erupt auth.files.model.class_name !>",
+        "<!erupt self.files.model.class_name !>"
     ]
 }
 </data>

@@ -21,8 +21,8 @@ public function index()
     "type": "php_class",
     "components": [],
     "use": [
-        "<!erupt self.files.collection.fullClassName !>",
-        "<!erupt self.files.model.fullClassName !>"
+        "<!erupt self.files.collection.class_name !>",
+        "<!erupt self.files.model.class_name !>"
     ]
 }
 </data>

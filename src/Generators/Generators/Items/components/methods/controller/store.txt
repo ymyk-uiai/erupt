@@ -1,7 +1,7 @@
 <!erupt
     model = self.files.model.class_name
     modelInstance = self.files.model.instance
-    modelFullClass = self.files.model.fullClassName
+    modelFullClass = self.files.model.class_name
     resourceUseAs = self.files.resource.use_as
     storeRequestClass = self.files.request@store.class_name
     authInstance = auth.files.model.instance

@@ -9,7 +9,7 @@ use Erupt\Language\EruptLang;
 
 class EruptMakeCommand extends GeneratorCommand
 {
-    protected $signature = 'erupt:make {model*} {--file=*} {--template=*} {--generator=*}';
+    protected $signature = 'erupt:make {model*} {--data=*} {--file=*} {--template=*} {--generator=*} {--io_template} {--io_result}';
 
     protected $description = 'make a laravel component';
 
@@ -28,13 +28,13 @@ class EruptMakeCommand extends GeneratorCommand
 
         $template = $this->option("template");
 
-        $path = $this->get_path($file["path"], $file["class_name"]);
+        $path = $file["path"];
 
         $this->makeDirectory($path);
 
         $this->files->put($path, $this->build($model, $file));
 
-        $this->info(' created successfully.');
+        $this->info("{$file['name']} created successfully.");
     }
 
     protected function get_path($path, $name): string
@@ -63,12 +63,15 @@ class EruptMakeCommand extends GeneratorCommand
         $model = $this->argument("model");
 
         $op_template = $this->option("template");
-
-        $type = lcfirst($op_template["key"]);
+        $data = $this->option("data");
+        $resolve_key = $data["resolve_key"];
 
         $eruptLang = new EruptLang($this->app);
 
-        return $eruptLang->exec($template, $model["name"], $type);
+        $io_template = $this->option("io_template");
+        $io_result = $this->option("io_result");
+
+        return $eruptLang->exec($template, $model["name"], $resolve_key, $io_template, $io_result);
     }
 
     protected function getStub()
@@ -76,11 +79,7 @@ class EruptMakeCommand extends GeneratorCommand
         $model = $this->argument("model");
         $template = $this->option("template");
 
-        $base_path = trim($template["base_path"], "/\\");
-        $model_type = trim($model["type"], "/\\");
-        $template_name = trim($template["name"], "/\\");
-
-        return "/$base_path/models/$model_type/$template_name.txt";
+        return $template["path"];
     }
 
     protected function make_template(string $component): string

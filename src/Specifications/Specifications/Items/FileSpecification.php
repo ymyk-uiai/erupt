@@ -11,53 +11,93 @@ class FileSpecification extends BaseSpecification
         "{Name}",
         "{variant}",
         "{Variant}",
+        "{key}",
+        "{Key}",
     ];
 
-    protected string $model_name;
+    protected array $data;
 
-    protected string $model_type;
-
-    protected string $file_type;
-
-    protected string $file_class_name;
-
-    protected string $file_namespace;
-
-    protected string $file_path;
-
-    protected string $template_name;
-
-    protected string $template_base_path;
-
-    protected string $template_key;
-
-    protected string $generator_name;
-
-    public static function build($file_model, $maker): Self
+    public static function build($data, $maker): Self
     {
         $product = new Self;
 
-        $product->model_name = $maker->get_name();
+        ksort($data);
+        //print_r($data);
 
-        $product->model_type = $maker->get_model_type();
-
-        $product->file_type = Self::replace($maker, $file_model, $file_model["file_type"]);
-
-        $product->file_class_name = Self::replace($maker, $file_model, $file_model["class_name"]);
-
-        $product->file_namespace = Self::replace($maker, $file_model, $file_model["namespace"]);
-
-        $product->file_path = Self::make_file_path($product);
-
-        $product->template_name = Self::replace($maker, $file_model, $file_model["template"]);
-
-        $product->template_base_path = $file_model["template_base_path"];
-
-        $product->template_key = $file_model["template_key"];
-
-        $product->generator_name = $file_model["generator_name"];
+        $product->data = $data;
 
         return $product;
+    }
+
+    protected function finish($data, $maker, $my_str): string
+    {
+        $replaces = $this->make_replace($maker, $data);
+
+        $pattern = "/<(?:[\w]+)(?:|[\w]+)*>/";
+
+        if(preg_match($pattern, $my_str, $matches) === 0) {
+            return str_replace(Self::$search, $replaces, $my_str);
+        } else {
+            $pattern = "/{\w+<(?:[\w]+)(?:|[\w]+)*>}/";
+            if(strpos($matches[0], $data["variant"]) >= 0) {
+                $my_str = str_replace($matches[0], "", $my_str);
+                return str_replace(Self::$search, $replaces, $my_str);
+            } else {
+                $my_str = preg_replace($pattern, "", $my_str);
+                return str_replace(Self::$search, $replaces, $my_str);
+            }
+        }
+    }
+
+    protected function init_matches($matches)
+    {
+        $named_subpatterns = [
+            "name" => 0,
+            "variants" => "",
+            "pre" => "",
+        ];
+
+        foreach($named_subpatterns as $key => $value) {
+            if(!array_key_exists($key, $matches)) {
+                $matches[$key] = $value;
+            }
+        }
+
+        return $matches;
+    }
+
+    protected function right(string $my_str): string
+    {
+        return match(true) {
+            strpos($my_str, '/') !== false => implode('/', array_slice(explode('/', $my_str), -1)),
+            strpos($my_str, '\\') !== false => implode('\\', array_slice(explode('\\', $my_str), -1)),
+            default => $my_str,
+        };
+    }
+
+    protected function rm_right(string $my_str): string
+    {
+        return match(true) {
+            strpos($my_str, '/') !== false => implode('/', array_slice(explode('/', $my_str), 0, -1)),
+            strpos($my_str, '\\') !== false => implode('\\', array_slice(explode('\\', $my_str), 0, -1)),
+            default => $my_str,
+        };
+    }
+
+    protected function make_replace($maker, $model): array
+    {
+        $name = strtolower($maker->get_name());
+        $variant = strtolower($model["variant"]);
+        $key = strtolower($model["key"]);
+
+        return [
+            lcfirst($name),
+            ucfirst($name),
+            lcfirst($variant),
+            ucfirst($variant),
+            lcfirst($key),
+            ucfirst($key),
+        ];
     }
 
     protected static function replace($maker, $file_model, $subject): string
@@ -91,75 +131,53 @@ class FileSpecification extends BaseSpecification
         return array_key_exists("variant", $file_model) ? $file_model["variant"] : "";
     }
 
-    protected static function make_replace($maker, $model): array
-    {
-        $name = strtolower($maker->get_name());
-        $variant = strtolower(array_key_exists("variant", $model) ? $model["variant"] : "");
-
-        return [
-            lcfirst($name),
-            ucfirst($name),
-            lcfirst($variant),
-            ucfirst($variant),
-        ];
-    }
-
-    protected static function make_file_path($spec): string
-    {
-        return str_replace(
-            [
-                "Application",
-                "\\",
-            ],
-            [
-                "app",
-                "/"
-            ],
-            $spec->file_namespace
-        );
-    }
-    
     public function get_model_name(): string
     {
-        return $this->model_name;
+        return $this->data["model_name"];
     }
     
     public function get_model_type(): string
     {
-        return $this->model_type;
+        return $this->data["model_type"];
     }
 
     public function get_template_name(): string
     {
-        return $this->template_name;
+        return $this->data["template_name"];
     }
 
     public function get_template_key(): string
     {
-        return $this->template_key;
+        return $this->data["data_resolve_key"];
     }
 
-    public function get_args_and_options(): array
+    public function get_args_and_options($template, $result): array
     {
         return [
             "model" => [
-                "name" => $this->model_name,
-                "type" => $this->model_type,
+                "name" => $this->data["model_name"],
+                "type" => $this->data["model_type"],
+            ],
+            "--data" => [
+                "resolve_key" => $this->data["data_resolve_key"],
+                "short_name" => $this->data["data_short_name"],
+                "class_name" => $this->data["data_class_name"],
+                "namespace" => $this->data["data_namespace"],
             ],
             "--file" => [
-                "type" => $this->file_type,
-                "class_name" => $this->file_class_name,
-                "namespace" => $this->file_namespace,
-                "path" => $this->file_path,
+                "name" => $this->data["output_name"],
+                "path" => $this->data["output_path"],
             ],
             "--template" => [
-                "name" => $this->template_name,
-                "base_path" => $this->template_base_path,
-                "key" => $this->template_key,
+                "name" => $this->data["template_name"],
+                "path" => $this->data["template_path"],
+                "base_path" => $this->data["template_base_path"],
             ],
             "--generator" => [
-                "name" => $this->generator_name,
-            ]
+                "class_name" => $this->data["generator_class_name"],
+            ],
+            "--io_template" => $template,
+            "--io_result" => $result,
         ];
     }
 
@@ -172,14 +190,13 @@ class FileSpecification extends BaseSpecification
         $key = array_shift($keys);
 
         $values = [
-            "class_name" => $this->file_class_name,
-            "fullClassName" => "{$this->file_namespace}\\{$this->file_class_name}",
-            "full_class_name" => "{$this->file_namespace}\\{$this->file_class_name}",
-            "namespace" => $this->file_namespace,
-            "instance" => lcfirst($this->model_name),
-            "full_use_as" => "{$this->file_namespace}\\{$this->file_class_name}",
-            "use_as" => "{$this->file_namespace}\\{$this->file_class_name}",
-            "instances" => lcfirst($this->model_name)."s",
+            "short_name" => $this->data["data_short_name"],
+            "class_name" => $this->data["data_class_name"],
+            "namespace" => $this->data["data_namespace"],
+            "use_as" => $this->data["data_use_as"],
+            "full_use_as" => $this->data["data_class_name"],
+            "instance" => $this->data["model_name"],
+            "instances" => $this->data["model_name"]."s",
         ];
 
         return $values[$key];

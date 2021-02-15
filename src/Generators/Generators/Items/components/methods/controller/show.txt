@@ -19,7 +19,7 @@
     "type": "php_class",
     "components": [],
     "use": [
-        "<!erupt self.files.model.fullClassName !>"
+        "<!erupt self.files.model.class_name !>"
     ]
 }
 </data>

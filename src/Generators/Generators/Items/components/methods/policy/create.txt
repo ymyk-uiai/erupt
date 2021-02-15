@@ -16,7 +16,7 @@
     "type": "php_class",
     "components": [],
     "use": [
-        "<!erupt auth.files.model.fullClassName !>",
+        "<!erupt auth.files.model.class_name !>",
         "Illuminate\\Support\\Facades\\Auth"
     ]
 }

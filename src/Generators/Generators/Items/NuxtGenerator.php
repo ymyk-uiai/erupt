@@ -191,7 +191,7 @@ class NuxtGenerator extends BaseGenerator
             "variant",
             "class_name",
             "namespace",
-            "fullClassName",
+            "class_name",
             "use_as",
             "full_use_as",
             "instance",

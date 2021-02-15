@@ -7,7 +7,7 @@ use Erupt\Application;
 
 class EruptCommand extends Command
 {
-    protected $signature = 'erupt';
+    protected $signature = 'erupt {--app} {--template} {--result}';
 
     protected $description = 'Create your Laravel app';
 
@@ -20,12 +20,17 @@ class EruptCommand extends Command
     
     public function handle()
     {
-        print_r($this->app);
+        if($this->option("app")) {
+            print_r($this->app);
+        }
 
         $file_specs = $this->app->get_file_specs();
 
+        $op_template = $this->option("template");
+        $op_result = $this->option("result");
+
         foreach($file_specs as $spec) {
-            $this->call("erupt:make", $spec->get_args_and_options());
+            $this->call("erupt:make", $spec->get_args_and_options($op_template, $op_result));
         }
     }
 
