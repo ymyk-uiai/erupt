@@ -1,17 +1,19 @@
 <!erupt
-    model = self.files.model.class_name
-    collection = self.files.collection.class_name
+    model = self.files.model.short_name
+    modelName = self.files.model.model_name
+    modelInstances = self.files.model.instances
+    collection = self.files.collection.short_name
     collectionInstance = self.files.collection.instance
 !>
 
 public function index()
 {
     <!erupt
-        print("${} = {}::take(10)->get();", collectionInstance, model)
+        print("${} = {}::take(10)->get();", modelInstances, model)
     !>
 
     <!erupt
-        print("return new {}(${})", collection, collectionInstance)
+        print("return view('{}.index', ['{}' => ${}]);", modelInstances, modelInstances, modelInstances)
     !>
 }
 

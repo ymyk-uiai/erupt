@@ -1,7 +1,7 @@
 <!erupt
-    authClass = auth.files.model.class_name
+    authClass = auth.files.model.short_name
     authInstance = auth.files.model.instance
-    modelClass = self.files.model.class_name
+    modelClass = self.files.model.short_name
     modelInstance = self.files.model.instance
 !>
 

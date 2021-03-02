@@ -1,7 +1,7 @@
 <!erupt
     foreach self.attributes.casts as casts join ", " into result {
         preprint("protected $casts = [")
-        print("'{}' => '{}'", casts.name, casts.valueType)
+        print("'{}' => '{}'", casts.name, casts.value_type)
         postprint("];")
     }
 

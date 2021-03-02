@@ -5,6 +5,7 @@ namespace Erupt\Specifications\Specifications\Lists;
 use Erupt\Specifications\Specifications\BaseSpecificationList;
 use Erupt\Specifications\Specifications\BaseSpecification;
 use Erupt\Specifications\Makers\Lists\MakerList;
+use Erupt\Models\Models\Items\App;
 use Erupt\Application;
 use Erupt\Specifications\Makers\Lists\FileMakerList;
 
@@ -19,6 +20,12 @@ class FileSpecificationList extends BaseSpecificationList
         foreach($file_makers as $file_maker) {
             $specs->add($app->get_generators()->make_file_specs($file_maker));
         }
+
+        $app_spec = new App;
+
+        $app_spec->set_app($app);
+
+        $specs->add($app->get_generators()->make_file_specs($app_spec));
 
         return $specs;
     }

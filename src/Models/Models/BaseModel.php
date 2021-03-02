@@ -8,6 +8,7 @@ use Erupt\Interfaces\Makers\Items\MigrationMaker;
 use Erupt\Application;
 use Erupt\Models\Properties\Lists\PropertyList;
 use Erupt\Models\Relationships\Lists\RelationshipList;
+use Erupt\Models\Models\ValidationRules\List\ValidationRuleList;
 
 abstract class BaseModel extends BaseListItem implements FileMaker, MigrationMaker
 {
@@ -80,6 +81,11 @@ abstract class BaseModel extends BaseListItem implements FileMaker, MigrationMak
         $this->relationships = $relationships;
     }
 
+    public function get_validation_rules(): ValidationRuleList
+    {
+        return $this->validation_rules;
+    }
+
     public function set_table_name(string $table_name)
     {
         $this->table_name = $table_name;
@@ -93,6 +99,24 @@ abstract class BaseModel extends BaseListItem implements FileMaker, MigrationMak
     public function get_command(): string
     {
         return "create_{$this->name}_table";
+    }
+
+    public function set_schema_methods($plan): void
+    {
+        $schema_methods = "";
+
+        foreach($plan->get_properties() as $property) {
+            $schema_methods .= "\$table->";
+            $schema_methods .= $property->get_method();
+            $schema_methods .= ";\n";
+        }
+
+        $this->schema_methods = $schema_methods;
+    }
+
+    public function get_migration(): string
+    {
+        return $this->schema_methods;
     }
 
     public function resolve($keys)
@@ -111,6 +135,8 @@ abstract class BaseModel extends BaseListItem implements FileMaker, MigrationMak
             return $this->get_relationships()->resolve1($keys, $this->app);
         } else if($key == "files") {
             return $this->app->get_file_specs()->resolve($this, $keys);
+        } else if($key == "validation_rules") {
+            return $this->get_validation_rules()->resolve($keys);
         } else {
             $props = [
                 "name",

@@ -5,8 +5,9 @@ namespace Erupt\Plans\Methods\Items\UnsignedBigInteger;
 use Erupt\Plans\Methods\BaseAttribute;
 use Erupt\Plans\Methods\Lists\UpdaterList;
 use Erupt\Plans\Methods\Items\UnsignedBigInteger\Updater as UnsignedBigIntegerUpdater;
+use Erupt\Interfaces\SchemaMethod;
 
-class Attribute extends BaseAttribute
+class Attribute extends BaseAttribute implements SchemaMethod
 {
     protected $name;
 
@@ -31,5 +32,10 @@ class Attribute extends BaseAttribute
         $updater = UnsignedBigIntegerUpdater::build(["name" => $this->name]);
 
         return $updater;
+    }
+
+    public function get_schema_method(): string
+    {
+        return "unsignedBigInteger('{$this->name}')";
     }
 }

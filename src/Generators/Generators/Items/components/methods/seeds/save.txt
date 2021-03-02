@@ -1,0 +1,14 @@
+<!erupt
+    modelInstances = self.files.model.instances
+    modelShortName = self.files.model.short_name
+!>
+
+<!erupt
+    print("${}->save();", modelInstances)
+!>
+
+<data>
+{
+    "name": "seeds/save"
+}
+</data>

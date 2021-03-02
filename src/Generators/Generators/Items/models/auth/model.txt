@@ -2,14 +2,9 @@
 
 namespace <!erupt namespace !>;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-
 @use
 
-class <!erupt class_name !> extends Authenticatable
+class <!erupt short_name !> extends Authenticatable
 {
     use HasFactory, Notifiable;
 
@@ -18,6 +13,14 @@ class <!erupt class_name !> extends Authenticatable
     @props/hidden
 
     @props/casts
+
+    @models/methods/relationships
+
+    @models/methods/rinverse
+
+    @models/methods/mrelationships
+
+    @models/methods/minverse
 }
 
 <data>
@@ -27,11 +30,17 @@ class <!erupt class_name !> extends Authenticatable
     "components": [
         "props/fillable",
         "props/hidden",
-        "props/casts"
+        "props/casts",
+        "models/methods/relationships",
+        "models/methods/rinverse",
+        "models/methods/mrelationships",
+        "models/methods/minverse"
     ],
-    "use": [],
-    "events": [
-        "test:auth_model"
+    "use": [
+        "Illuminate\\Database\\Eloquent\\Factories\\HasFactory",
+        "Illuminate\\Contracts\\Auth\\MustVerifyEmail",
+        "Illuminate\\Foundation\\Auth\\User as Authenticatable",
+        "Illuminate\\Notifications\\Notifiable"
     ]
 }
 </data>

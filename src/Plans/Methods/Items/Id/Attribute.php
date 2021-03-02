@@ -5,8 +5,9 @@ namespace Erupt\Plans\Methods\Items\Id;
 use Erupt\Plans\Methods\BaseAttribute;
 use Erupt\Plans\Methods\Lists\UpdaterList;
 use Erupt\Plans\Methods\Items\BigIncrements\Attribute as BigIncrementsAttribute;
+use Erupt\Interfaces\SchemaMethod;
 
-class Attribute extends BaseAttribute
+class Attribute extends BaseAttribute implements SchemaMethod
 {
     public static function build(): Self
     {
@@ -22,5 +23,10 @@ class Attribute extends BaseAttribute
         $fl = $m->run();
 
         return $fl;
+    }
+
+    public function get_schema_method(): string
+    {
+        return "id()";
     }
 }

@@ -31,7 +31,7 @@ class EruptLang
         $pattern = "/<!erupt(.*)!>/sUm";
         $offset = 0;
         $prevOffset = 0;
-        
+
         $self = $this->app->get_models()->get($modelName);
         $auth = $this->app->get_models()->get_by_type("auth");
         $scope = Scope::init([
@@ -39,6 +39,7 @@ class EruptLang
             "auth" => $auth,
             "class_name" => $self->resolve("files.$type.class_name"),
             "namespace" => $self->resolve("files.$type.namespace"),
+            "short_name" => $self->resolve("files.$type.short_name"),
         ]);
 
         while(preg_match($pattern, $template, $matches, PREG_OFFSET_CAPTURE, $offset)) {
@@ -48,7 +49,7 @@ class EruptLang
             $ast = $this->parser->parse($matches[1][0]);
 
             $result .= $this->evaluator->evaluate($ast, $scope);
-            
+
             //$this->evaluator->init();
 
             $scope->emptyStd();
@@ -95,11 +96,11 @@ class EruptLang
     {
         $pattern = "/^use\s+[a-zA-Z\\\\]+(\s+as\s+[a-zA-Z\\\\]+)?;/m";
 
-        $lines = array_map("trim", array_map("addslashes", explode(PHP_EOL, $result)));
+        $lines = array_map("addslashes", explode(PHP_EOL, $result));
 
-        $namespaces = preg_grep($pattern, $lines);
+        $namespaces = array_map("trim", preg_grep($pattern, $lines));
 
-        $namespaces = array_unique($namespaces);
+        $namespaces = array_map("trim", array_unique($namespaces));
 
         sort($namespaces);
 

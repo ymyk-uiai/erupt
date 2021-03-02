@@ -4,7 +4,7 @@ namespace Erupt\Plans\Methods\Items\Nullable;
 
 use Erupt\Plans\Methods\BaseUpdater;
 use Erupt\Models\Properties\Items\Property;
-use Erupt\Models\ValidationRules\Items\NullableRule;
+use Erupt\Models\ValidationRules\Items\IsRequiredRule;
 
 class Updater extends BaseUpdater
 {
@@ -17,6 +17,6 @@ class Updater extends BaseUpdater
 
     public function run(Property $property): void
     {
-        $property->get_validation_rules()->add(NullableRule::build());
+        $property->get_validation_rules()->add(IsRequiredRule::build(false));
     }
 }

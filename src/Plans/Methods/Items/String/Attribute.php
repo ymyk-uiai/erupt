@@ -5,12 +5,15 @@ namespace Erupt\Plans\Methods\Items\String;
 use Erupt\Plans\Methods\BaseAttribute;
 use Erupt\Plans\Methods\Lists\UpdaterList;
 use Erupt\Plans\Methods\Items\String\Updater as StringUpdater;
+use Erupt\Interfaces\SchemaMethod;
 
-class Attribute extends BaseAttribute
+class Attribute extends BaseAttribute implements SchemaMethod
 {
+    //  protected string $params = "name :string, length? :int";
+
     protected $name;
 
-    protected $length;
+    protected $length = 100;
 
     public static function build($args): Self
     {
@@ -32,7 +35,7 @@ class Attribute extends BaseAttribute
 
     public function set_length($length)
     {
-        $this->length = $length;
+        $this->length = $length ?? $this->length;
     }
 
     public function run()
@@ -44,5 +47,10 @@ class Attribute extends BaseAttribute
         $updaterList->add($updater);
 
         return $updaterList;
+    }
+
+    public function get_schema_method(): string
+    {
+        return "string('{$this->name}', {$this->length})";
     }
 }

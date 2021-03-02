@@ -52,13 +52,22 @@ class EruptMakeCommand extends GeneratorCommand
 
         $template = $this->get_template($updated_template);
 
-        /*
-        $events = $json["events"];
+        $events = $data_json["events"];
 
         foreach($events as $event) {
-            $this->app->dispatch($event);
+            print_r("$event\n");
+            $args = explode(":", $event);
+            
+            $eruptLang = new EruptLang($this->app);
+            $io_template = $this->option("io_template");
+            $io_result = $this->option("io_result");
+            $model = $this->argument("model");
+            $data = $this->option("data");
+            $resolve_key = $data["resolve_key"];
+            $args[1] = $eruptLang->exec($args[1], $model["name"], $resolve_key, $io_template, $io_result);
+
+            $this->app->dispatch($args[0], $args[1]);
         }
-        */
 
         $model = $this->argument("model");
 
@@ -180,7 +189,7 @@ class EruptMakeCommand extends GeneratorCommand
         ];
 
         foreach($targets as $target) {
-            $parent[$target] = array_merge($parent["use"], $child["use"]);
+            $parent[$target] = array_merge($parent[$target], $child[$target]);
         }
 
         return $parent;

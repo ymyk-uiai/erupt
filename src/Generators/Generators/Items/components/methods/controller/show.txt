@@ -1,6 +1,7 @@
 <!erupt
-    model = self.files.model.class_name
+    model = self.files.model.short_name
     modelInstance = self.files.model.instance
+    modelInstances = self.files.model.instances
     resourceUseAs = self.files.resource.use_as
 !>
 
@@ -9,7 +10,7 @@
 !>
 {
     <!erupt
-        print("return new {}(${})", resourceUseAs, modelInstance)
+        print("return view('{}.show', ['{}' => ${}]);", modelInstances, modelName, modelInstance)
     !>
 }
 

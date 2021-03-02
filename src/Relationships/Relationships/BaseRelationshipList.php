@@ -14,7 +14,7 @@ class BaseRelationshipList extends BaseList
 
         $list = new Self;
 
-        foreach($relationship_plans as $plan) {
+        foreach($relationship_plans as $index => $plan) {
             $delimiter = Self::get_delimiter($plan);
 
             [$lhs, $rhs] = explode($delimiter, $plan);
@@ -22,12 +22,12 @@ class BaseRelationshipList extends BaseList
             if($delimiter == "->") {
                 // one to one
             } else if($delimiter == "=>") {
-                $relationships = Self::mono_one_to_many($lhs, $rhs);
+                $relationships = Self::mono_one_to_many($index, $lhs, $rhs);
             } else if($delimiter == "<=>") {
                 // many to many
             } else if($delimiter == "~>") {
                 // polymorphic one to many
-                $relationships = Self::poly_one_to_many($lhs, $rhs, $app);
+                $relationships = Self::poly_one_to_many($index, $lhs, $rhs, $app);
             } else {
                 throw new Exception("Unknown delimiter");
             }
@@ -52,7 +52,7 @@ class BaseRelationshipList extends BaseList
         //
     }
 
-    protected static function mono_one_to_many($lhs, $rhs)
+    protected static function mono_one_to_many($index, $lhs, $rhs)
     {
         $l = $lhs;
         $rs = explode('#', $rhs);
@@ -60,7 +60,7 @@ class BaseRelationshipList extends BaseList
         $list = new Self;
 
         foreach($rs as $r) {
-            $list->add(MonoOneToMany::build($l, $r));
+            $list->add(MonoOneToMany::build($index, $l, $r));
         }
 
         return $list;
@@ -76,14 +76,14 @@ class BaseRelationshipList extends BaseList
         //
     }
 
-    protected static function poly_one_to_many($lhs, $rhs, $app)
+    protected static function poly_one_to_many($index, $lhs, $rhs, $app)
     {
         $ls = explode('#', $lhs);
         $r = $rhs;
 
         $list = new Self;
 
-        $list->add(PolyOneToMany::build($ls, $r, $app));
+        $list->add(PolyOneToMany::build($index, $ls, $r, $app));
 
         return $list;
     }

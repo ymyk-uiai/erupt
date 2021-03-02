@@ -1,13 +1,17 @@
 <!erupt
-    modelFullClass = self.files.model.class_name
+    modelInstances = self.files.model.instances
+    modelShortName = self.files.model.short_name
 !>
 
 <!erupt
-    print("factory({}::class, 50)->create();", modelFullClass)
+    print("${} = {}::factory()->count(50)->create();", modelInstances, modelShortName)
 !>
 
 <data>
 {
-    "name": "seeds/create"
+    "name": "seeds/create",
+    "use": [
+        "<!erupt self.files.model.class_name !>"
+    ]
 }
 </data>

@@ -4,7 +4,7 @@ namespace <!erupt namespace !>;
 
 @use
 
-class <!erupt class_name !>
+class <!erupt short_name !>
 {
     use HandlesAuthorization;
 
@@ -38,6 +38,9 @@ class <!erupt class_name !>
     ],
     "use": [
         "Illuminate\\Auth\\Access\\HandlesAuthorization"
+    ],
+    "events": [
+        "make_policy:<!erupt self.files.model.class_name !>, <!erupt self.files.policy.class_name !>"
     ]
 }
 </data>

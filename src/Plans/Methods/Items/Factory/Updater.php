@@ -10,7 +10,7 @@ class Updater extends BaseUpdater
     protected $name;
 
     protected $methods = [
-        "email" => "safeEmail()",
+        "email" => "faker->safeEmail()",
     ];
 
     public static function build($args): Self

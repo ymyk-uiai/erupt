@@ -2,7 +2,9 @@
 
 namespace Erupt\Models\Models;
 
+use Erupt\Application;
 use Erupt\Foundations\Lists\BaseList;
+use Erupt\Models\Models\Items\App;
 use Erupt\Models\Models\Items\Auth;
 use Erupt\Models\Models\Items\Content;
 use Erupt\Models\Models\Items\Binder;
@@ -12,9 +14,13 @@ use Erupt\Models\Relationships\Lists\RelationshipList;
 
 abstract class BaseModelList extends BaseList
 {
+    protected Application $app;
+
     public static function build($plans, $relationships, $app): Self
     {
         $modelList = new Static;
+
+        $modelList->set_app($app);
 
         foreach($plans as $plan) {
             $name = $plan->get_name();
@@ -35,14 +41,26 @@ abstract class BaseModelList extends BaseList
 
             $model->set_app($app);
 
+            $model->set_schema_methods($plan);
+
             $model->set_properties(PropertyList::build($properties));
 
-            $model->set_relationships(RelationshipList::build($model, $relationships));
+            $model->set_relationships(RelationshipList::build($model, $relationships, $app));
 
             $modelList->add($model);
         }
 
         return $modelList;
+    }
+
+    public function set_app(Application $app): void
+    {
+        $this->app = $app;
+    }
+
+    public function get_app(): Application
+    {
+        return $this->app;
     }
 
     //  Unit Type BaseModel|BaseModelList
@@ -62,6 +80,14 @@ abstract class BaseModelList extends BaseList
             if($model->get_name() == $name) {
                 return $model;
             }
+        }
+
+        if($name == "app") {
+            $app = new App;
+
+            $app->set_app($this->get_app());
+
+            return $app;
         }
 
         return false;

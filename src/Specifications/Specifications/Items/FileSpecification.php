@@ -193,6 +193,8 @@ class FileSpecification extends BaseSpecification
             "short_name" => $this->data["data_short_name"],
             "class_name" => $this->data["data_class_name"],
             "namespace" => $this->data["data_namespace"],
+            "model_name" => $this->data["model_name"],
+            "spec_variant" => $this->data["data_spec_variant"],
             "use_as" => $this->data["data_use_as"],
             "full_use_as" => $this->data["data_class_name"],
             "instance" => $this->data["model_name"],

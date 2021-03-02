@@ -1,5 +1,5 @@
 <!erupt
-    modelClass = self.files.model.class_name
+    modelClass = self.files.model.short_name
     modelInstance = self.files.model.instance
 !>
 

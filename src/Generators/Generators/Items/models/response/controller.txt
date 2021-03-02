@@ -4,13 +4,17 @@ namespace <!erupt namespace !>;
 
 @use
 
-class <!erupt class_name !> extends Controller
+class <!erupt short_name !> extends Controller
 {
     @methods/controller/index
+
+    @methods/controller/create
 
     @methods/controller/store
 
     @methods/controller/show
+
+    @methods/controller/edit
 
     @methods/controller/update
 
@@ -23,13 +27,18 @@ class <!erupt class_name !> extends Controller
     "type": "php_class",
     "components": [
         "methods/controller/index",
+        "methods/controller/create",
         "methods/controller/store",
         "methods/controller/show",
+        "methods/controller/edit",
         "methods/controller/update",
         "methods/controller/destroy"
     ],
     "use": [
         "App\\Http\\Controllers\\Controller"
+    ],
+    "events": [
+        "make_route:<!erupt self.files.model.instances !>, <!erupt self.files.controller.class_name !>"
     ]
 }
 </data>

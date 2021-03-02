@@ -4,6 +4,7 @@ namespace Erupt\Plans\Methods\Items\String;
 
 use Erupt\Plans\Methods\BaseUpdater;
 use Erupt\Models\Properties\Items\Property;
+use Erupt\Models\ValidationRules\Items\IsRequiredRule;
 
 class Updater extends BaseUpdater
 {
@@ -39,5 +40,9 @@ class Updater extends BaseUpdater
         $property->set_column_type("VARCHAR");
 
         $property->set_value_type("string");
+
+        $property->get_validation_rules()->add(IsRequiredRule::build(true));
+
+        $property->set_factory("faker->sentence");
     }
 }

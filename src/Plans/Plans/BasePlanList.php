@@ -21,7 +21,7 @@ abstract class BasePlanList extends BaseList
 
         return $planList;
     }
-    
+
     protected static function merge_relationships($config, $relationships)
     {
         $configModels = $config["models"];

@@ -46,7 +46,7 @@ class LaravelGenerator extends BaseGenerator
             ],
         ],
         "resource" => [
-            "data_sup_class_name" => "Http\\Resources\\{Name}{Variant<collection>}",
+            "data_sup_class_name" => "Http\\Resources\\{Name}{Variant}",
             "template_stem" => "{variant}",
             "data_resolve_key" => "{variant}",
             "makers" => [
@@ -69,6 +69,8 @@ class LaravelGenerator extends BaseGenerator
         "factory" => [
             "data_sup_class_name" => "Factories\\{Name}Factory",
             "template_stem" => "factory",
+            "output_base_path" => "database",
+            "output_sup_path" => "factories",
             "makers" => [
                 "auth",
                 "content",
@@ -77,8 +79,11 @@ class LaravelGenerator extends BaseGenerator
             ]
         ],
         "seeder" => [
-            "data_sup_class_name" => "Seeds\\{Name}sTableSeeder",
+            "data_root_namespace" => "Database",
+            "data_sup_class_name" => "Seeders\\{Name}sTableSeeder",
             "template_stem" => "seeder",
+            "output_base_path" => "database",
+            "output_sup_path" => "seeders",
             "makers" => [
                 "auth",
                 "content",
@@ -90,12 +95,41 @@ class LaravelGenerator extends BaseGenerator
             "output_type" => "blade",
             "template_stem" => "{variant}",
             "template_sup_path" => "models/blade",
+            "output_sup_path" => "{name}s",
             "makers" => [
-                "auth:show",
-                "content:show",
-                "binder:show",
-                "response:show",
+                "auth:index,show,edit",
+                "content:index,create,show,edit",
+                "binder:index,create,show,edit",
+                "response:index,create,show,edit",
             ],
+        ],
+        "layout_blade" => [
+            "output_type" => "blade",
+            "template_stem" => "{variant}",
+            "template_sup_path" => "models/blade",
+            "output_sup_path" => "layouts",
+            "makers" => [
+                "app:navigation",
+            ],
+        ],
+        "base_blade" => [
+            "output_type" => "blade",
+            "template_stem" => "{variant}",
+            "template_sup_path" => "models/blade",
+            "makers" => [
+                "app:welcome,dashboard",
+            ],],
+    ];
+
+    protected static array $migration_spec_models = [
+        "table" => [
+            "name" => "table",
+            "makers" => [
+                "auth",
+                "content",
+                "binder",
+                "response",
+            ]
         ],
     ];
 
@@ -119,7 +153,7 @@ class LaravelGenerator extends BaseGenerator
             "output_extension" => "php",
         ],
         "blade" => [
-            "data_resolve_key" => "?",
+            "data_resolve_key" => "{key}{variant<*,@>}",
             "output_base_path" => "resources/views",
             "output_sup_stem" => "blade",
             "output_extension" => "php",
@@ -150,7 +184,7 @@ class LaravelGenerator extends BaseGenerator
             "data_use_as" => "@",
             "output_type" => "@",
             "output_base_path" => "@",
-            "output_sup_path" => "placeholder",
+            "output_sup_path" => "@",
             "output_parent_path" => "placeholder",
             "output_stem" => "placeholder",
             "output_sup_stem" => "@",
@@ -170,7 +204,9 @@ class LaravelGenerator extends BaseGenerator
           "output_sup_path" => "explode_pop_implode:\\,/,<data_sup_class_name>",
           "output_stem" => "explode_pop:\\,<data_sup_class_name>",
         ],
-        "blade" => [],
+        "blade" => [
+            "output_stem" => "<data_spec_variant>",
+        ],
     ];
 
     protected static array $processor = [
@@ -379,7 +415,8 @@ class LaravelGenerator extends BaseGenerator
     {
         $p = array_merge(
             $processor["common"],
-            $processor[$spec["output_type"]]
+            $processor[$spec["output_type"]],
+            array_filter($spec)
         );
 
         foreach($p as $k => $v) {
@@ -524,6 +561,18 @@ class LaravelGenerator extends BaseGenerator
     {
         $migration_specs = new MigrationSpecificationList;
 
+        foreach(Self::$migration_spec_models as $spec_key => $spec_value) {
+            foreach($spec_value["makers"] as $spec_maker) {
+                if(strpos($spec_maker, $maker->get_model_type()) === 0) {
+                    $migration_specs->add($this->make_migration_spec($spec_value, $maker));
+                }
+            }
+        }
         return $migration_specs;
+    }
+
+    protected function make_migration_spec($spec_value, $maker): MigrationSpecification
+    {
+        return MigrationSpecification::build($spec_value, $maker);
     }
 }

@@ -1,8 +1,8 @@
 <!erupt
-    model = self.files.model.class_name
+    model = self.files.model.short_name
     modelInstance = self.files.model.instance
     resourceUseAs = self.files.resource.use_as
-    requestUpdateClass = self.files.request@update.class_name
+    requestUpdateClass = self.files.request@update.short_name
 !>
 
 <!erupt
@@ -10,15 +10,15 @@
 !>
 {
     <!erupt
-        print("$this->authorize('delete', ${})", modelInstance)
+        print("$this->authorize('delete', ${});", modelInstance)
     !>
 
     <!erupt
-        print("${}->delete()", modelInstance)
+        print("${}->delete();", modelInstance)
     !>
 
     <!erupt
-        print("return new {}(${})", resourceUseAs, modelInstance)
+        print("return redirect('dashboard');")
     !>
 }
 

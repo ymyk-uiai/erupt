@@ -4,7 +4,7 @@ namespace <!erupt namespace !>;
 
 @use
 
-class <!erupt class_name !> extends FormRequest
+class <!erupt short_name !> extends FormRequest
 {
     @methods/authorize
 

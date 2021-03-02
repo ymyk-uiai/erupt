@@ -1,9 +1,11 @@
 <?php
 
-use Illuminate\Database\Seeder;
+namespace Database\Seeders;
+
+@use
 
 <!erupt
-    print("class {} extends Seeder", class_name)
+    print("class {} extends Seeder", short_name)
 !>
 {
     /**
@@ -13,11 +15,13 @@ use Illuminate\Database\Seeder;
      */
     public function run()
     {
-        @methods/seeds/create
+        @seeders/stmts/make
 
-        @statements/seeds/getAllInstances
+        @statements/seeds/set_author
 
-        @statements/seeds/getAllRelatedInstances
+        @seeders/stmts/set_target
+
+        @seeders/stmts/save
     }
 }
 
@@ -26,10 +30,16 @@ use Illuminate\Database\Seeder;
     "name": "seeder",
     "type": "php_class",
     "components": [
-        "methods/seeds/create",
-        "statements/seeds/getAllInstances",
-        "statements/seeds/getAllRelatedInstances"
+        "seeders/stmts/make",
+        "statements/seeds/set_author",
+        "seeders/stmts/set_target",
+        "seeders/stmts/save"
     ],
-    "use": []
+    "use": [
+        "Illuminate\\Database\\Seeder"
+    ],
+    "events": [
+        "make_seeder:<!erupt short_name !>"
+    ]
 }
 </data>

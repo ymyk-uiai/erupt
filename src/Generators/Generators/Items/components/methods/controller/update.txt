@@ -1,9 +1,10 @@
 <!erupt
-    model = self.files.model.class_name
+    model = self.files.model.short_name
     modelInstance = self.files.model.instance
+    modelInstances = self.files.model.instances
     modelFullClass = self.files.model.class_name
     resourceUseAs = self.files.resource.use_as
-    requestUpdateClass = self.files.request@update.class_name
+    requestUpdateClass = self.files.request@update.short_name
     authInstance = auth.files.model.instance
 !>
 
@@ -12,23 +13,26 @@
 !>
 {
     <!erupt
-        print("$this->authorize('update', ${})", modelInstance)
+        print("$this->authorize('update', ${});", modelInstance)
     !>
 
     $validated = $request->validated();
 
     <!erupt
-        foreach self.attributes.fillable as fillable {
-            print("${}->{} = $validated['{}']", modelInstance, fillable.name, fillable.name)
+        foreach self.attributes.fillable as fillable join "," into result {
+            preprint("${}->fill([", modelInstance, model)
+            print("'{}' => $validated['{}']", fillable.name, fillable.name)
+            postprint("]);")
         }
+        print("{}", result)
     !>
 
     <!erupt
-        print("$request->{}()->{}()->save(${})", authInstance, collectionInstance, modelInstance)
+        print("$request->{}()->{}()->save(${});", authInstance, modelInstances, modelInstance)
     !>
 
     <!erupt
-        print("return new {}(${})", resourceUseAs, modelInstance)
+        print("return redirect('dashboard');")
     !>
 }
 

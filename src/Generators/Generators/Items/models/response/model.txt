@@ -3,15 +3,24 @@
 namespace <!erupt namespace !>;
 
 @use
-use Illuminate\Database\Eloquent\Model;
 
-class <!erupt class_name !> extends Model
+class <!erupt short_name !> extends Model
 {
+    use HasFactory;
+
     @props/fillable
 
     @props/hidden
 
     @props/casts
+
+    @models/methods/relationships
+
+    @models/methods/rinverse
+
+    @models/methods/mrelationships
+
+    @models/methods/minverse
 }
 
 <data>
@@ -21,8 +30,15 @@ class <!erupt class_name !> extends Model
     "components": [
         "props/fillable",
         "props/hidden",
-        "props/casts"
+        "props/casts",
+        "models/methods/relationships",
+        "models/methods/rinverse",
+        "models/methods/mrelationships",
+        "models/methods/minverse"
     ],
-    "use": []
+    "use": [
+        "Illuminate\\Database\\Eloquent\\Factories\\HasFactory",
+        "Illuminate\\Database\\Eloquent\\Model"
+    ]
 }
 </data>

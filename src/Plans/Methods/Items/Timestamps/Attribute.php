@@ -7,8 +7,9 @@ use Erupt\Plans\Methods\Lists\UpdaterList;
 use Erupt\Plans\Methods\Containers\UpdaterContainer;
 use Erupt\Plans\Methods\Items\Timestamp\Attribute as TimestampAttribute;
 use Erupt\Plans\Methods\Items\Nullable\Attribute as NullableAttribute;
+use Erupt\Interfaces\SchemaMethod;
 
-class Attribute extends BaseAttribute
+class Attribute extends BaseAttribute implements SchemaMethod
 {
     protected $precision;
 
@@ -51,5 +52,10 @@ class Attribute extends BaseAttribute
         $list_2->add($m_2_2->run());
         
         return $container;
+    }
+
+    public function get_schema_method(): string
+    {
+        return "timestamps()";
     }
 }

@@ -10,7 +10,7 @@ abstract class BaseRelationship extends BaseListItem
 
     protected array $flags;
 
-    abstract public function get_model_relationships($model, $relationships);
+    abstract public function get_model_relationships($model, $relationships, $app);
 
     public function get_name(): string
     {

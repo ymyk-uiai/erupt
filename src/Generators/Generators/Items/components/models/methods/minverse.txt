@@ -1,0 +1,8 @@
+<!erupt
+    foreach self.relationships.morphBelongs as belongsTo join "" into result {
+        print("public function {}able() {", self.files.model.instance)
+        print("return $this->{}({});", belongsTo.r_method, belongsTo.r_method_args)
+        print("}")
+    }
+    print("{}", result)
+!>

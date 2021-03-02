@@ -1,6 +1,6 @@
 <!erupt
     instances = self.files.model.instances
-    class_name = self.files.model.class_name
+    class_name = self.files.model.short_name
 !>
 
 <!erupt

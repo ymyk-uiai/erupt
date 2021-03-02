@@ -32,17 +32,56 @@ abstract class BaseRelationship extends BaseListItem
         return $this->is_owner;
     }
 
-    public function set_flag(string $flag_name)
+    protected function init_flags(): void
     {
-        $this->flags[$flag_name] = true;
+        $default_flags = [
+            "has" => false,
+            "belongs" => false,
+            "morphHas" => false,
+            "morphBelongs" => false,
+        ];
+
+        foreach($default_flags as $key => $value) {
+            $this->set_flag($key, $value);
+        }
     }
 
-    public function get_flag(string $flag_name): bool
+    public function set_flag(string $key, bool $bool): void
     {
-        if(array_key_exists($flag_name, $this->flags)) {
-            return $this->flags[$flag_name];
-        } else {
-            return false;
+        $this->flags[$key] = $bool;
+    }
+
+    public function get_flag(string $key): bool
+    {
+        return array_key_exists($key, $this->flags) ? $this->flags[$key] : false;
+    }
+
+    public function get_impl_method_name(): string
+    {
+        return match($this->is_owner) {
+            true => $this->app->get_model($this->name)->get_name()."s",
+            false => $this->app->get_model($this->name)->get_name(),
+        };
+    }
+
+    public function resolve($keys)
+    {
+        if(gettype($keys) == "string") {
+            $keys = explode('.', $keys);
         }
+
+        if(empty($keys)) {
+            return $this;
+        }
+
+        $key = array_shift($keys);
+
+        return match($key) {
+            "model" => $this->app->get_model($this->name)->resolve($keys),
+            "r_method_name" => $this->get_impl_method_name(),
+            "r_method" => $this->get_r_method(),
+            "r_method_args" => $this->get_r_method_args(),
+            default => "unknown resolve key",
+        };
     }
 }

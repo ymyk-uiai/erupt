@@ -17,7 +17,9 @@ class PolyOneToMany extends BaseRelationship implements MigrationMaker
 
     protected Member $ob;
 
-    public static function build($ls, $r, $app): Self
+    protected int $index;
+
+    public static function build($index, $ls, $r, $app): Self
     {
         $product = new Self;
 
@@ -26,6 +28,8 @@ class PolyOneToMany extends BaseRelationship implements MigrationMaker
         $product->sbs = MemberList::build($ls);
 
         $product->ob = Member::build($r);
+
+        $product->index = $index;
 
         return $product;
     }
@@ -37,25 +41,36 @@ class PolyOneToMany extends BaseRelationship implements MigrationMaker
         }
     }
 
-    public function get_model_relationships($model, $relationships)
+    public function get_model_relationships($model, $relationships, $app)
     {
-        $check = false;
-
         foreach($this->sbs as $sb) {
             if($sb->get_name() == $model->get_name()) {
-                $check = true;
+                $relationships->add(ModelRelationship::build($this->index, $this->ob, true, $app));
             }
         }
 
+        if($this->ob_get_name() == $model->get_name()) {
+            foreach($this->sbs as $sb) {
+                $relationships->add(ModelRelationship::build($this->index, $sb, false, $app));
+            }
+        }
+
+        /*
         if($check) {
             $i = $this->ob;
-            $relationships->add(ModelRelationship::build($i, true));
+            $relationships->add(ModelRelationship::build($i, true, $app));
         } else if($this->ob->get_name() == $model->get_name()) {
             $is = $this->sbs;
             foreach($is as $i) {
-                $relationships->add(ModelRelationship::build($i, false));
+                $relationships->add(ModelRelationship::build($i, false, $app));
             }
         }
+        */
+    }
+
+    public function ob_get_name(): string
+    {
+        return $this->ob->get_name();
     }
 
     public function make_migration_specification()

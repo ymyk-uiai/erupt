@@ -5,8 +5,9 @@ namespace Erupt\Plans\Methods\Items\ForeignId;
 use Erupt\Plans\Methods\BaseAttribute;
 use Erupt\Plans\Methods\Lists\UpdaterList;
 use Erupt\Plans\Methods\Items\UnsignedBigInteger\Attribute as UnsignedBigIntegerAttribute;
+use Erupt\Interfaces\SchemaMethod;
 
-class Attribute extends BaseAttribute
+class Attribute extends BaseAttribute implements SchemaMethod
 {
     protected $name;
 
@@ -28,10 +29,19 @@ class Attribute extends BaseAttribute
     
     public function run()
     {
+        $updaterList = new UpdaterList;
+        
         $a = UnsignedBigIntegerAttribute::build(["name" => $this->name]);
 
         $u = $a->run();
 
-        return $u;
+        $updaterList->add($u);
+
+        return $updaterList;
+    }
+
+    public function get_schema_method(): string
+    {
+        return "foreignId('{$this->name}')->nullable()";
     }
 }

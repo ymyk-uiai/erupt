@@ -1,0 +1,27 @@
+<!erupt
+    model = self.files.model.short_name
+    modelName = self.files.model.model_name
+    modelInstance = self.files.model.instance
+    modelInstances = self.files.model.instances
+    resourceUseAs = self.files.resource.use_as
+!>
+
+<!erupt
+    print("public function edit({} ${})", model, modelInstance)
+!>
+{
+    <!erupt
+        print("return view('{}.edit', ['{}' => ${}]);", modelInstances, modelName, modelInstance)
+    !>
+}
+
+<data>
+{
+    "name": "controller_create",
+    "type": "php_class",
+    "components": [],
+    "use": [
+        "<!erupt self.files.model.class_name !>"
+    ]
+}
+</data>
