@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 
         <title>Laravel</title>
 
@@ -37,13 +38,18 @@
             @endif
 
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-                @foreach ($posts as $post)
-                    <div>
+                <div class="grid grid-cols-1 divide-y divide-gray-300">
+                    @foreach ($posts as $post)
                         <div>
-                            <a href="{{ route('posts.show', $post) }}">{{ $post->title }}</a>
+                            <div>
+                                <a href="{{ route('posts.show', $post) }}">{{ $post->title }}</a>
+                            </div>
+                            <div>
+                                <a href="{{ route('users.show', $post->user) }}">{{ $post->user->name }}</a>
+                            </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
         </div>
     </body>

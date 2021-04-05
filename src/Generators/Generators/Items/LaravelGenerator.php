@@ -103,6 +103,28 @@ class LaravelGenerator extends BaseGenerator
                 "response:index,create,show,edit",
             ],
         ],
+        "blade_component" => [
+            "data_sup_class_name" => "View\\Components\\{Name}{Variant}",
+            "template_stem" => "{variant}",
+            "makers" => [
+                "auth:full,heading,update,button",
+                "content:full,heading,store,update,button",
+                "binder:full,heading,store,update,button",
+                "response:full,heading,store,update,button",
+            ],
+        ],
+        "blade_template" => [
+            "output_type" => "blade",
+            "template_stem" => "{variant}",
+            "template_sup_path" => "models/blade",
+            "output_sup_path" => "components/{name}",
+            "makers" => [
+                "auth:full,heading,update,button",
+                "content:full,heading,store,update,button",
+                "binder:full,heading,store,update,button",
+                "response:full,heading,store,update,button",
+            ],
+        ],
         "layout_blade" => [
             "output_type" => "blade",
             "template_stem" => "{variant}",
@@ -118,7 +140,8 @@ class LaravelGenerator extends BaseGenerator
             "template_sup_path" => "models/blade",
             "makers" => [
                 "app:welcome,dashboard",
-            ],],
+            ],
+        ],
     ];
 
     protected static array $migration_spec_models = [

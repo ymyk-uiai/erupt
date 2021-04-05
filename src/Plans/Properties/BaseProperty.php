@@ -5,6 +5,7 @@ namespace Erupt\Plans\Properties;
 use Erupt\Foundations\Lists\BaseListItem;
 use Erupt\Plans\Methods\Lists\AttributeList;
 use Erupt\Interfaces\SchemaMethod;
+use Erupt\Models\SchemaMethods\Lists\SchemaMethodList;
 
 abstract class BaseProperty extends BaseListItem
 {
@@ -30,6 +31,19 @@ abstract class BaseProperty extends BaseListItem
         }
 
         return $method;
+    }
+
+    public function get_methods()
+    {
+        $methods = new SchemaMethodList;
+
+        foreach($this->attributes as $attribute) {
+            if($attribute instanceof SchemaMethod) {
+                $methods->add($attribute->get_schema_method_2());
+            }
+        }
+
+        return $methods;
     }
 
     public function get_attributes(): AttributeList

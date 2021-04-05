@@ -32,8 +32,13 @@ class MonoOneToMany extends BaseRelationship
         $sbName = $this->sb->get_name();
 
         if($this->ob->get_name() === $name) {
-            return "foreignId:{$sbName}_id";
+            if($this->sb->get_name() === "user") {
+                return "foreignId:{$sbName}_id&display&relationship";
+            } else if($this->ob->get_name() === "comment") {
+                return "foreignId:{$sbName}_id";
+            }
         }
+
     }
 
     public function get_model_relationships($model, $relationships, $app)

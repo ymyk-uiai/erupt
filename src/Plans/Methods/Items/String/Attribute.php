@@ -6,6 +6,7 @@ use Erupt\Plans\Methods\BaseAttribute;
 use Erupt\Plans\Methods\Lists\UpdaterList;
 use Erupt\Plans\Methods\Items\String\Updater as StringUpdater;
 use Erupt\Interfaces\SchemaMethod;
+use Erupt\Models\SchemaMethods\Items\String\Method as StringSchemaMethod;
 
 class Attribute extends BaseAttribute implements SchemaMethod
 {
@@ -52,5 +53,10 @@ class Attribute extends BaseAttribute implements SchemaMethod
     public function get_schema_method(): string
     {
         return "string('{$this->name}', {$this->length})";
+    }
+
+    public function get_schema_method_2()
+    {
+        return $this;
     }
 }

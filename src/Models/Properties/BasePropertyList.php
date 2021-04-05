@@ -12,7 +12,7 @@ use Erupt\Models\Properties\Items\Property;
 
 abstract class BasePropertyList extends BaseList
 {
-    public static function build(PlanProperties $planProperties): ModelProperties
+    public static function build(PlanProperties $planProperties, $app): ModelProperties
     {
         $propertyList = new ModelProperties;
 
@@ -39,7 +39,7 @@ abstract class BasePropertyList extends BaseList
         }
 
         foreach($rootContainer as $list) {
-            $modelProperty = ModelProperty::build();
+            $modelProperty = ModelProperty::build($app);
 
             foreach($list as $item) {
                 $item->run($modelProperty);

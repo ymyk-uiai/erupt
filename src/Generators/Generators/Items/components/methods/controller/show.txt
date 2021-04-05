@@ -10,6 +10,20 @@
 !>
 {
     <!erupt
+        foreach self.relationships.auth as auth join "," into result {
+            preprint("${}->load(", self.files.model.model_name)
+            print("'{}'", auth.name)
+        }
+        print("{}", result)
+        foreach self.relationships.content as content into result {
+            preprint(",")
+            print("'{}'", content.model.files.model.instances)
+            postprint(");")
+        }
+        print("{}", result)
+    !>
+
+    <!erupt
         print("return view('{}.show', ['{}' => ${}]);", modelInstances, modelName, modelInstance)
     !>
 }

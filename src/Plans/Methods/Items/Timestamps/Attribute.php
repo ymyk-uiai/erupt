@@ -8,6 +8,7 @@ use Erupt\Plans\Methods\Containers\UpdaterContainer;
 use Erupt\Plans\Methods\Items\Timestamp\Attribute as TimestampAttribute;
 use Erupt\Plans\Methods\Items\Nullable\Attribute as NullableAttribute;
 use Erupt\Interfaces\SchemaMethod;
+use Erupt\Models\SchemaMethods\Items\Timestamps\Method as TimestampsSchemaMethod;
 
 class Attribute extends BaseAttribute implements SchemaMethod
 {
@@ -57,5 +58,10 @@ class Attribute extends BaseAttribute implements SchemaMethod
     public function get_schema_method(): string
     {
         return "timestamps()";
+    }
+
+    public function get_schema_method_2()
+    {
+        return $this;
     }
 }

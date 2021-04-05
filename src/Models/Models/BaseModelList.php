@@ -43,7 +43,9 @@ abstract class BaseModelList extends BaseList
 
             $model->set_schema_methods($plan);
 
-            $model->set_properties(PropertyList::build($properties));
+            $model->set_schema_methods_test($plan);
+
+            $model->set_properties(PropertyList::build($properties, $app));
 
             $model->set_relationships(RelationshipList::build($model, $relationships, $app));
 

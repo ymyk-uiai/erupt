@@ -1,0 +1,58 @@
+<?php
+
+namespace App\View\Components;
+
+use Illuminate\View\Component;
+
+class <!erupt short_name !> extends Component
+{
+    <!erupt
+        foreach self.attributes.display as fillable into result {
+            print("public ${};", fillable.key)
+        }
+        print("{}", result)
+    !>
+
+    <!erupt
+        foreach self.relationships.content as content into result {
+            print("public ${};", content.model.files.model.instances)
+        }
+        print("{}", result)
+    !>
+
+    <!erupt
+        foreach self.attributes.display as fillable join "," into args {
+            print("${}", fillable.key)
+        }
+    !>
+
+    <!erupt
+        foreach self.relationships.content as content join "," into args2 {
+            print("${}", content.model.files.model.instances)
+        }
+    !>
+
+    public function __construct(<!erupt print("{}, {}", args, args2)!>)
+    {
+        <!erupt
+            foreach self.attributes.display as fillable into result {
+                print("$this->{} = ${};", fillable.key, fillable.key)
+            }
+            print("{}", result)
+        !>
+
+        <!erupt
+            foreach self.relationships.content as content into result {
+                print("$this->{} = ${};", content.model.files.model.instances, content.model.files.model.instances)
+            }
+            print("{}", result)
+        !>
+    }
+
+    public function render()
+    {
+        <!erupt
+            print("return view('components.{}.full');", self.files.model.model_name)
+        !>
+    }
+}

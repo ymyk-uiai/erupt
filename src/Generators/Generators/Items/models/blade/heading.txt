@@ -1,0 +1,10 @@
+<!erupt
+    print("<div class='{}-heading'>", self.files.model.model_name)
+!>
+    <!erupt
+        foreach self.attributes.fillable as fillable into result {
+            print("<div>{{ ${} }}</div>", fillable.name)
+        }
+        print("{}", result)
+    !>
+</div>

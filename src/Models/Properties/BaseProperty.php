@@ -9,6 +9,8 @@ abstract class BaseProperty extends BaseListItem
 {
     protected string $name;
 
+    protected string $key;
+
     protected string $column_type;
 
     protected string $value_type;
@@ -27,6 +29,19 @@ abstract class BaseProperty extends BaseListItem
     public function get_name(): string
     {
         return $this->name;
+    }
+
+    public function set_key(string $key)
+    {
+        $key = preg_replace("/_id$/", "", $key);
+        $key = preg_replace("/able$/", "", $key);
+
+        $this->key = $key;
+    }
+
+    public function get_key(): string
+    {
+        return $this->key;
     }
 
     public function set_column_type(string $column_type)
@@ -105,8 +120,17 @@ abstract class BaseProperty extends BaseListItem
 
         $key = array_shift($keys);
 
+        if(in_array($key, ["model", "attributes"])) {
+            if($key == "attributes") {
+                array_unshift($keys, $key);
+            }
+            print_r($this->key."\n");
+            return $this->app->get_models()->get($this->key)->resolve($keys);
+        }
+
         $props = [
             "name",
+            "key",
             "column_type",
             "value_type",
             "factory",

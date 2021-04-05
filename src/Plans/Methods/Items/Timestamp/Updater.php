@@ -36,6 +36,8 @@ class Updater extends BaseUpdater
     {
         $property->set_name($this->name);
 
+        $property->set_key($this->name);
+
         $property->set_column_type("TIMESTAMP");
 
         $property->set_value_type("string");

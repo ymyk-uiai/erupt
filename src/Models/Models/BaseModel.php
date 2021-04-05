@@ -9,6 +9,8 @@ use Erupt\Application;
 use Erupt\Models\Properties\Lists\PropertyList;
 use Erupt\Models\Relationships\Lists\RelationshipList;
 use Erupt\Models\Models\ValidationRules\List\ValidationRuleList;
+use Erupt\Models\SchemaMethods\Lists\SchemaMethodList;
+use Erupt\Models\SchemaMethods\Containers\SchemaMethodContainer;
 
 abstract class BaseModel extends BaseListItem implements FileMaker, MigrationMaker
 {
@@ -17,6 +19,8 @@ abstract class BaseModel extends BaseListItem implements FileMaker, MigrationMak
     protected string $name;
 
     protected string $table_name;
+
+    protected SchemaMethodContainer $schema_methods_test;
 
     protected PropertyList $properties;
 
@@ -101,6 +105,22 @@ abstract class BaseModel extends BaseListItem implements FileMaker, MigrationMak
         return "create_{$this->name}_table";
     }
 
+    public function set_schema_methods_test($plan): void
+    {
+        $schema_methods = new SchemaMethodContainer;
+
+        foreach($plan->get_properties() as $property) {
+            $schema_methods->add($property->get_methods());
+        }
+
+        $this->schema_methods_test = $schema_methods;
+    }
+
+    public function get_schema_methods_test(): SchemaMethodContainer
+    {
+        return $this->schema_methods_test;
+    }
+
     public function set_schema_methods($plan): void
     {
         $schema_methods = "";
@@ -137,6 +157,20 @@ abstract class BaseModel extends BaseListItem implements FileMaker, MigrationMak
             return $this->app->get_file_specs()->resolve($this, $keys);
         } else if($key == "validation_rules") {
             return $this->get_validation_rules()->resolve($keys);
+        } else if($key == "symbol") {
+            //  make $this->symbols
+            $symbols = [
+                "name" => $this->name,
+                "name_plural" => $this->name . "s",
+                "instance" => $this->name,
+                "instance_plural" => $this->name . "s",
+            ];
+
+            $key = array_shift($keys);
+
+            if(array_key_exists($key, $symbols)) {
+                return $symbols[$key];
+            }
         } else {
             $props = [
                 "name",

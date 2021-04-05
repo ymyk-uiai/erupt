@@ -22,6 +22,7 @@ class EruptCommand extends Command
     {
         if($this->option("app")) {
             print_r($this->app);
+            return;
         }
 
         if($this->option("reset")) {
@@ -81,11 +82,11 @@ class EruptCommand extends Command
         $route_file = file_get_contents("routes/web.php");
 
         $target = "return view('welcome');";
-        $replace = '$posts = App\Models\Post::all(); return view(\'welcome\', [\'posts\' => $posts]);';
+        $replace = '$posts = App\Models\Post::all(); $posts->load("user"); return view(\'welcome\', [\'posts\' => $posts]);';
         $route_file = str_replace($target, $replace, $route_file);
 
         $target = "return view('dashboard');";
-        $replace = '$posts = Auth::user()->posts; return view("dashboard", ["posts" => $posts]);';
+        $replace = '$posts = Auth::user()->posts; $books = Auth::user()->books; return view("dashboard", ["posts" => $posts, "books" => $books]);';
         $route_file = str_replace($target, $replace, $route_file);
 
         $pattern = "/$/";

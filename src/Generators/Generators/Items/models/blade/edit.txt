@@ -9,17 +9,14 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <form method="POST" action="{{ <!erupt print("route('{}.update', ${})", self.files.model.instances, self.files.model.instance)!> }}">
-                        @csrf
-                        @method('PUT')
-                        <!erupt
+                    <!erupt
                         foreach self.attributes.fillable as fillable into result {
-                            print("<input type='text' id='{}' name='{}' value='{{ ${}->{} }}'/>", fillable.name, fillable.name, self.files.model.instance, fillable.name)
+                            preprint("<x-{}-update ", self.files.model.model_name)
+                            print(":{}='${}->{}'", fillable.name, self.files.model.model_name, fillable.name)
+                            postprint(" :id='${}->id'></x-{}-update>", self.files.model.model_name, self.files.model.model_name)
                         }
                         print("{}", result)
-                        !>
-                        <button>Update</button>
-                    </form>
+                    !>
                 </div>
             </div>
         </div>

@@ -6,6 +6,7 @@ use Erupt\Plans\Methods\BaseAttribute;
 use Erupt\Plans\Methods\Lists\UpdaterList;
 use Erupt\Plans\Methods\Items\UnsignedBigInteger\Attribute as UnsignedBigIntegerAttribute;
 use Erupt\Interfaces\SchemaMethod;
+use Erupt\Models\SchemaMethods\Items\ForeignId\Method as ForeignIdSchemaMethod;
 
 class Attribute extends BaseAttribute implements SchemaMethod
 {
@@ -43,5 +44,10 @@ class Attribute extends BaseAttribute implements SchemaMethod
     public function get_schema_method(): string
     {
         return "foreignId('{$this->name}')->nullable()";
+    }
+
+    public function get_schema_method_2()
+    {
+        return $this;
     }
 }

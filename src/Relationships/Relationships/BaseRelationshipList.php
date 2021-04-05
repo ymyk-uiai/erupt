@@ -8,11 +8,11 @@ use Erupt\Relationships\Relationships\Items\PolyOneToMany;
 
 class BaseRelationshipList extends BaseList
 {
-    public static function build($config, $app): Self
+    public static function build($config, $app): Static
     {
         $relationship_plans = $config["relationships"];
 
-        $list = new Self;
+        $list = new Static;
 
         foreach($relationship_plans as $index => $plan) {
             $delimiter = Self::get_delimiter($plan);

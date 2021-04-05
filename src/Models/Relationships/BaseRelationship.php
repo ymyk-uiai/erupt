@@ -78,6 +78,7 @@ abstract class BaseRelationship extends BaseListItem
 
         return match($key) {
             "model" => $this->app->get_model($this->name)->resolve($keys),
+            "name" => $this->name,
             "r_method_name" => $this->get_impl_method_name(),
             "r_method" => $this->get_r_method(),
             "r_method_args" => $this->get_r_method_args(),

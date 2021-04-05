@@ -16,6 +16,8 @@ class Application
 {
     protected ModelList $models;
 
+    protected RelationshipList $relationships;
+
     protected GeneratorList $generators;
 
     protected FileSpecificationList $file_specs;
@@ -28,21 +30,15 @@ class Application
 
     public function __construct($config)
     {
-        $relationships = RelationshipList::build($config, $this);
+        $this->relationships = RelationshipList::build($config, $this);
 
-        $plans = PlanList::build($config, $relationships);
+        $plans = PlanList::build($config, $this->relationships);
 
-        $this->models = ModelList::build($plans, $relationships, $this);
+        $this->models = ModelList::build($plans, $this->relationships, $this);
 
         $this->generators = GeneratorList::build();
 
         $this->register_generator(new LaravelGenerator);
-
-        $makers = MakerList::build($this->models, $relationships);
-
-        $this->file_specs = FileSpecificationList::build($makers, $this);
-
-        $this->migration_specs = MigrationSpecificationList::build($makers, $this);
 
         $this->init_event_listeners();
     }
@@ -69,12 +65,16 @@ class Application
 
     public function get_file_specs(): FileSpecificationList
     {
-        return $this->file_specs;
+        $makers = MakerList::build($this->models, $this->relationships);
+
+        return FileSpecificationList::build($makers, $this);
     }
 
     public function get_migration_specs(): MigrationSpecificationList
     {
-        return $this->migration_specs;
+        $makers = MakerList::build($this->models, $this->relationships);
+
+        return MigrationSpecificationList::build($makers, $this);
     }
 
     protected function init_event_listeners(): void

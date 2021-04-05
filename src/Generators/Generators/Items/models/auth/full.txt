@@ -1,0 +1,38 @@
+<?php
+
+namespace App\View\Components;
+
+use Illuminate\View\Component;
+
+class <!erupt short_name !> extends Component
+{
+    <!erupt
+        foreach self.attributes.fillable as fillable into result {
+            print("public ${};", fillable.key)
+        }
+        print("{}", result)
+    !>
+
+    <!erupt
+        foreach self.attributes.fillable as fillable join "," into args {
+            print("${}", fillable.key)
+        }
+    !>
+
+    public function __construct(<!erupt print("{}", args)!>)
+    {
+        <!erupt
+            foreach self.attributes.fillable as fillable into result {
+                print("$this->{} = ${};", fillable.key, fillable.key)
+            }
+            print("{}", result)
+        !>
+    }
+
+    public function render()
+    {
+        <!erupt
+            print("return view('components.{}.full');", self.files.model.model_name)
+        !>
+    }
+}

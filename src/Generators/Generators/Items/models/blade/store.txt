@@ -1,0 +1,11 @@
+<form method="POST" action="{{ <!erupt print("route('{}.store')", self.files.model.instances)!> }}">
+    @csrf
+    <!erupt
+        foreach self.attributes.fillable as fillable into result {
+            print("<input type='text' id='{}' name='{}'/>", fillable.name, fillable.name)
+        }
+        print("{}", result)
+    !>
+    {{ $slot }}
+    <button type="submit">Store</button>
+</form>

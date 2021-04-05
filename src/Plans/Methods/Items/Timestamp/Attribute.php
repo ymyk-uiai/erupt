@@ -6,6 +6,7 @@ use Erupt\Plans\Methods\BaseAttribute;
 use Erupt\Plans\Methods\Lists\UpdaterList;
 use Erupt\Plans\Methods\Items\Timestamp\Updater as TimestampUpdater;
 use Erupt\Interfaces\SchemaMethod;
+use Erupt\Models\SchemaMethods\Items\Timestamp\Method as TimestampSchemaMethod;
 
 class Attribute extends BaseAttribute implements SchemaMethod
 {
@@ -50,5 +51,10 @@ class Attribute extends BaseAttribute implements SchemaMethod
     public function get_schema_method(): string
     {
         return $this->name == "email_verified_at" ? "timestamp('email_verified_at')->nullable()" : "timestamp('{$this->name}')";
+    }
+
+    public function get_schema_method_2()
+    {
+        return $this;
     }
 }

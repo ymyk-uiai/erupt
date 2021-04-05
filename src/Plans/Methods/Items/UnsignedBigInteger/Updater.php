@@ -22,10 +22,12 @@ class Updater extends BaseUpdater
     {
         $this->name = $name;
     }
-    
+
     public function run(Property $property)
     {
         $property->set_name($this->name);
+
+        $property->set_key($this->name);
 
         $property->set_column_type("UNSIGNED BIGINT");
 

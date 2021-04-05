@@ -1,0 +1,12 @@
+<form method="POST" action="{{ <!erupt print("route('{}.update', ['{}' => $id])", self.files.model.instances, self.files.model.instance, self.files.model.instance)!> }}">
+    @csrf
+    @method('PUT')
+    <!erupt
+        foreach self.attributes.fillable as fillable into result {
+            print("<input type='text' id='{}' name='{}' value='{{ ${} }}'/>", fillable.name, fillable.name, fillable.name)
+        }
+        print("{}", result)
+    !>
+    {{ $slot }}
+    <button type="submit">Update</button>
+</form>

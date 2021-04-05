@@ -9,7 +9,7 @@ use Erupt\Interfaces\SchemaMethod;
 
 class Attribute extends BaseAttribute implements SchemaMethod
 {
-    protected $name;
+    protected string $name;
 
     public static function build($args): Self
     {

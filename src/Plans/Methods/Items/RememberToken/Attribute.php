@@ -6,6 +6,7 @@ use Erupt\Plans\Methods\BaseAttribute;
 use Erupt\Plans\Methods\Lists\UpdaterList;
 use Erupt\Plans\Methods\Items\String\Attribute as StringAttribute;
 use Erupt\Interfaces\SchemaMethod;
+use Erupt\Models\SchemaMethods\Items\RememberToken\Method as RememberTokenSchemaMethod;
 
 class Attribute extends BaseAttribute implements SchemaMethod
 {
@@ -40,5 +41,10 @@ class Attribute extends BaseAttribute implements SchemaMethod
     public function get_schema_method(): string
     {
         return "rememberToken()";
+    }
+
+    public function get_schema_method_2()
+    {
+        return $this;
     }
 }

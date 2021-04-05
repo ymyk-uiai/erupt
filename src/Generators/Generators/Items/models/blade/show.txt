@@ -1,3 +1,4 @@
+@if(Auth::check())
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -10,13 +11,43 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!erupt
-                        foreach self.attributes.fillable as fillable into result {
-                            print("<div>{{ ${}->{} }}</div>", self.files.model.instance, fillable.name)
+                        foreach self.attributes.display as fillable into result {
+                            preprint("<x-{}-full ", self.files.model.model_name)
+                            print(":{}='${}->{}'", fillable.key, self.files.model.model_name, fillable.key)
                         }
                         print("{}", result)
+                        foreach self.relationships.content as content into result2 {
+                            print(":{}='${}->{}'", content.model.files.model.instances, self.files.model.model_name, content.model.files.model.instances)
+                        }
+                        print("{}", result2)
+                        print(" />")
                     !>
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+@else
+<x-guest-layout>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <!erupt
+                        foreach self.attributes.display as fillable into result {
+                            preprint("<x-{}-full ", self.files.model.model_name)
+                            print(":{}='${}->{}'", fillable.key, self.files.model.model_name, fillable.key)
+                        }
+                        print("{}", result)
+                        foreach self.relationships.content as content into result2 {
+                            print(":{}='${}->{}'", content.model.files.model.instances, self.files.model.model_name, content.model.files.model.instances)
+                        }
+                        print("{}", result2)
+                        print(" />")
+                    !>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-guest-layout>
+@endif

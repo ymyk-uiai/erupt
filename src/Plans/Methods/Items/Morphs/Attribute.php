@@ -8,6 +8,7 @@ use Erupt\Plans\Methods\Containers\UpdaterContainer;
 use Erupt\Plans\Methods\Items\UnsignedBigInteger\Attribute as UnsignedBigIntegerAttribute;
 use Erupt\Plans\Methods\Items\String\Attribute as StringAttribute;
 use Erupt\Interfaces\SchemaMethod;
+use Erupt\Models\SchemaMethods\Items\Morphs\Method as MorphsSchemaMethod;
 
 class Attribute extends BaseAttribute implements SchemaMethod
 {
@@ -57,5 +58,10 @@ class Attribute extends BaseAttribute implements SchemaMethod
     public function get_schema_method(): string
     {
         return "morphs('{$this->name}')";
+    }
+
+    public function get_schema_method_2()
+    {
+        return $this;
     }
 }
