@@ -1,0 +1,17 @@
+<?php
+
+namespace <!erupt namespace !>;
+
+@use
+
+@class/base
+
+<data>
+{
+    "type": "php/model",
+    "components": [
+        "class/base"
+    ],
+    "use": []
+}
+</data>

@@ -1,0 +1,39 @@
+class <!erupt short_name !>
+{
+    use HandlesAuthorization;
+
+    @methods/viewAny
+
+    @methods/view
+
+    @methods/create
+
+    @methods/update
+
+    @methods/delete
+
+    @methods/restore
+
+    @methods/forceDelete
+}
+
+<data>
+{
+    "type": "php/policy",
+    "components": [
+        "methods/viewAny",
+        "methods/view",
+        "methods/create",
+        "methods/update",
+        "methods/delete",
+        "methods/restore",
+        "methods/forceDelete"
+    ],
+    "use": [
+        "Illuminate\\Auth\\Access\\HandlesAuthorization"
+    ],
+    "events": [
+        "make_policy:<!erupt self.files.model.class_name !>, <!erupt self.files.policy.class_name !>"
+    ]
+}
+</data>

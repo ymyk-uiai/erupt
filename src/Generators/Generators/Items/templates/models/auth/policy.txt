@@ -1,0 +1,20 @@
+<?php
+
+namespace <!erupt namespace !>;
+
+@use
+
+@class/auth
+
+<data>
+{
+    "type": "php/policy",
+    "components": [
+        "class/auth"
+    ],
+    "use": [],
+    "events": [
+        "make_policy:<!erupt self.files.model.class_name !>, <!erupt self.files.policy.class_name !>"
+    ]
+}
+</data>

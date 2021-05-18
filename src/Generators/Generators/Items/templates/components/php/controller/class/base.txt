@@ -1,0 +1,38 @@
+class <!erupt short_name !> extends Controller
+{
+    @methods/index
+
+    @methods/show
+
+    @methods/create
+
+    @methods/store
+
+    @methods/edit
+
+    @methods/update
+
+    @methods/destroy
+}
+
+
+<data>
+{
+    "type": "php/controller",
+    "components": [
+        "methods/index",
+        "methods/show",
+        "methods/create",
+        "methods/store",
+        "methods/edit",
+        "methods/update",
+        "methods/destroy"
+    ],
+    "use": [
+        "App\\Http\\Controllers\\Controller"
+    ],
+    "events": [
+        "make_route:<!erupt self.files.model.instances !>, <!erupt self.files.controller.class_name !>"
+    ]
+}
+</data>

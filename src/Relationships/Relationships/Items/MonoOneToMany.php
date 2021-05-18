@@ -41,6 +41,21 @@ class MonoOneToMany extends BaseRelationship
 
     }
 
+    public function getRelationshipPlans(string $modelName): array
+    {
+        $relationshipPlans = [];
+
+        if($this->sb->get_name() == $modelName) {
+            $relationshipPlans[] = "relationship:{$this->ob->get_name()}";
+        }
+
+        if($this->ob->get_name() == $modelName) {
+            $relationshipPlans[] = "foreignId:{$this->sb->get_name()}_id";
+        }
+
+        return $relationshipPlans;
+    }
+
     public function get_model_relationships($model, $relationships, $app)
     {
         if($this->sb->get_name() == $model->get_name()) {

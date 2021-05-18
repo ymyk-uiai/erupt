@@ -1,0 +1,16 @@
+<!erupt
+    print("public function create()")
+!>
+{
+    return Auth::check();
+}
+
+<data>
+{
+    "type": "php/policy",
+    "components": [],
+    "use": [
+        "Illuminate\\Support\\Facades\\Auth"
+    ]
+}
+</data>

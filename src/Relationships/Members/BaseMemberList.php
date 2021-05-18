@@ -19,6 +19,17 @@ abstract class BaseMemberList extends BaseList
         return $list;
     }
 
+    public function has(string $name): bool
+    {
+        foreach($this->list as $member) {
+            if($member->get_name() == $name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     //  Unit Type BaseMember|BaseMemberList
     public function add($member)
     {

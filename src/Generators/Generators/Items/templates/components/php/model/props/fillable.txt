@@ -1,0 +1,17 @@
+<!erupt
+    foreach self.attributes.fillable as input join ", " into result {
+        preprint("protected $fillable = [")
+        print("'{}'", input.name)
+        postprint("];")
+    }
+
+    print("{}", result)
+!>
+
+<data>
+{
+    "type": "php/model",
+    "components": [],
+    "use": []
+}
+</data>

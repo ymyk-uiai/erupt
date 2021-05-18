@@ -1,0 +1,15 @@
+public function down()
+{
+    <!erupt
+        print("Schema::drop('{}')", 100)
+    !>
+}
+
+<data>
+{
+    "type": "php/migration",
+    "use": [
+        "Illuminate\\Support\\Facades\\Schema"
+    ]
+}
+</data>

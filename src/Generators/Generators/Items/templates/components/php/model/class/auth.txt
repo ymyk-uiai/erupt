@@ -1,0 +1,39 @@
+class <!erupt short_name !> extends Authenticatable
+{
+    use HasFactory, Notifiable;
+
+    @props/fillable
+
+    @props/hidden
+
+    @props/casts
+
+    @methods/relationships
+
+    @methods/rinverse
+
+    @methods/mrelationships
+
+    @methods/minverse
+}
+
+<data>
+{
+    "type": "php/model",
+    "components": [
+        "props/fillable",
+        "props/hidden",
+        "props/casts",
+        "methods/relationships",
+        "methods/rinverse",
+        "methods/mrelationships",
+        "methods/minverse"
+    ],
+    "use": [
+        "Illuminate\\Database\\Eloquent\\Factories\\HasFactory",
+        "Illuminate\\Contracts\\Auth\\MustVerifyEmail",
+        "Illuminate\\Foundation\\Auth\\User as Authenticatable",
+        "Illuminate\\Notifications\\Notifiable"
+    ]
+}
+</data>

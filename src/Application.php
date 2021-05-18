@@ -43,6 +43,38 @@ class Application
         $this->init_event_listeners();
     }
 
+    protected function makeRelationshipPlans(array $config): array
+    {
+        $relationships = $config["relationships"];
+
+        foreach ($relationships as $relationship) {
+            $delimiter = $this->getDelimiter($relationship);
+
+            [$l, $r] = explode($delimiter, $relationship);
+
+            //  O(user)M(post, binder, comment)
+            //  O(post, binder, comment)M(comment)
+            if($delimiter == "->") {
+                //
+            } else if($delimiter == "=>") {
+
+            } else if($delimiter == "<=>") {
+                //
+            } else if($delimiter == "~>") {
+                //
+            }
+        }
+
+        return $config;
+    }
+
+    protected function getDelimiter(string $relationship): string
+    {
+        preg_match("/->|=>|<=>|~>/", $relationship, $matches);
+
+        return $matches[0];
+    }
+
     public function get_models(): ModelList
     {
         return $this->models;

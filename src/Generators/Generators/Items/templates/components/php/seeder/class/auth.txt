@@ -1,0 +1,29 @@
+<!erupt
+    print("class {} extends Seeder", short_name)
+!>
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        @stmts/make
+
+        @stmts/save
+    }
+}
+
+<data>
+{
+    "type": "php/seeder",
+    "components": [
+        "stmts/make",
+        "stmts/save"
+    ],
+    "use": [
+        "Illuminate\\Database\\Seeder"
+    ]
+}
+</data>

@@ -94,7 +94,7 @@ class LaravelGenerator extends BaseGenerator
         "blade" => [
             "output_type" => "blade",
             "template_stem" => "{variant}",
-            "template_sup_path" => "models/blade",
+            "template_sup_path" => "templates/components/blade/pages",
             "output_sup_path" => "{name}s",
             "makers" => [
                 "auth:index,show,edit",
@@ -116,7 +116,7 @@ class LaravelGenerator extends BaseGenerator
         "blade_template" => [
             "output_type" => "blade",
             "template_stem" => "{variant}",
-            "template_sup_path" => "models/blade",
+            "template_sup_path" => "templates/components/blade/components",
             "output_sup_path" => "components/{name}",
             "makers" => [
                 "auth:full,heading,update,button",
@@ -128,7 +128,7 @@ class LaravelGenerator extends BaseGenerator
         "layout_blade" => [
             "output_type" => "blade",
             "template_stem" => "{variant}",
-            "template_sup_path" => "models/blade",
+            "template_sup_path" => "templates/components/blade/pages",
             "output_sup_path" => "layouts",
             "makers" => [
                 "app:navigation",
@@ -137,7 +137,7 @@ class LaravelGenerator extends BaseGenerator
         "base_blade" => [
             "output_type" => "blade",
             "template_stem" => "{variant}",
-            "template_sup_path" => "models/blade",
+            "template_sup_path" => "templates/components/blade/pages",
             "makers" => [
                 "app:welcome,dashboard",
             ],
@@ -161,7 +161,7 @@ class LaravelGenerator extends BaseGenerator
             "output_type" => "php",
             "data_spec_variant" => "",
             "template_base_path" => __DIR__,
-            "template_sup_path" => "models/{type}",
+            "template_sup_path" => "templates/models/{type}",
             "template_sup_stem" => "",
             "template_extension" => "txt",
             "output_sup_path" => "",

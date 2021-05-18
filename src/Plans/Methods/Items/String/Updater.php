@@ -3,7 +3,7 @@
 namespace Erupt\Plans\Methods\Items\String;
 
 use Erupt\Plans\Methods\BaseUpdater;
-use Erupt\Models\Properties\Items\Property;
+use Erupt\Models\Properties\BaseProperty as Property;
 use Erupt\Models\ValidationRules\Items\IsRequiredRule;
 
 class Updater extends BaseUpdater

@@ -11,7 +11,7 @@ abstract class BaseProperty extends BaseListItem
 {
     protected AttributeList $attributes;
 
-    public static function build($plan): Self
+    public static function build(string $plan): Self
     {
         $property = new Static;
 
@@ -22,15 +22,15 @@ abstract class BaseProperty extends BaseListItem
 
     public function get_method(): string
     {
-        $method = "";
+        $method = [];
 
         foreach($this->attributes as $attribute) {
             if($attribute instanceof SchemaMethod) {
-                $method .= $attribute->get_schema_method();
+                $method[] = $attribute->get_schema_method();
             }
         }
 
-        return $method;
+        return empty($method) ? "" : "\$table->" . implode("", $method) . ";" ;
     }
 
     public function get_methods()

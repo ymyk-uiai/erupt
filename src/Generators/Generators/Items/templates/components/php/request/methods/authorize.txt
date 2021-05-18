@@ -1,0 +1,10 @@
+public function authorize()
+{
+    return true;
+}
+
+<data>
+{
+    "type": "php/request"
+}
+</data>

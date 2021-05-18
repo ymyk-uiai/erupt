@@ -3,7 +3,7 @@
 namespace Erupt\Plans\Methods\Items\UnsignedBigInteger;
 
 use Erupt\Plans\Methods\BaseUpdater;
-use Erupt\Models\Properties\Items\Property;
+use Erupt\Models\Properties\BaseProperty as Property;
 
 class Updater extends BaseUpdater
 {

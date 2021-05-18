@@ -1,0 +1,19 @@
+<?php
+
+namespace <!erupt namespace !>;
+
+@use
+
+@class/basic
+
+<data>
+{
+    "type": "php/collection",
+    "components": [
+        "class/basic"
+    ],
+    "use": [
+        "Illuminate\\Http\\Resources\\Json\\ResourceCollection"
+    ]
+}
+</data>

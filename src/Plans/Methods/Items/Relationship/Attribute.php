@@ -8,18 +8,31 @@ use Erupt\Plans\Methods\Items\Relationship\Updater as RelationshipUpdater;
 
 class Attribute extends BaseAttribute
 {
-    public static function build(): Self
+    protected string $name;
+
+    public static function build($args): Self
     {
         $product = new Self;
 
+        $params = Self::parse_params("name", $args);
+
+        $product->set_name($params["name"]);
+
         return $product;
+    }
+
+    //  public function setArg($name, $value)
+
+    public function set_name($name)
+    {
+        $this->name = $name;
     }
 
     public function run()
     {
         $updaterList = new UpdaterList;
 
-        $updater = RelationshipUpdater::build();
+        $updater = RelationshipUpdater::build(["name" => $this->name]);
 
         $updaterList->add($updater);
 

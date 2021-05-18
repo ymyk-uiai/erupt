@@ -13,8 +13,8 @@ abstract class BasePlanList extends BaseList
 
         $planList = new Static;
 
-        foreach($merged as $name => $data) {
-            $plan = Plan::build($name, $data);
+        foreach($merged as $modelName => $data) {
+            $plan = Plan::build($modelName, $data);
 
             $planList->add($plan);
         }
@@ -27,12 +27,21 @@ abstract class BasePlanList extends BaseList
         $configModels = $config["models"];
 
         foreach($config["models"] as $name => $data) {
-            $origPlans = $data["plans"];
-            $relationshipPlans = Self::get_plans($relationships, $name);
-            $configModels[$name]["plans"] = array_merge($origPlans, $relationshipPlans);
+            $configModels[$name]["relationshipPlans"] = Self::getRelationshipPlans($name, $relationships);
         }
 
         return $configModels;
+    }
+
+    protected static function getRelationshipPlans(string $modelName, $relationships): array
+    {
+        $relationshipPlans = [];
+
+        foreach($relationships as $relationship) {
+            $relationshipPlans = array_merge($relationshipPlans, $relationship->getRelationshipPlans($modelName));
+        }
+
+        return $relationshipPlans;
     }
 
     protected static function get_plans($relationships, $name)

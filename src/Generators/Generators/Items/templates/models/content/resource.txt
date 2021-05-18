@@ -1,0 +1,17 @@
+<?php
+
+namespace <!erupt namespace !>;
+
+@use
+
+@class/base
+
+<data>
+{
+    "type": "php/resource",
+    "components": [
+        "class/base"
+    ],
+    "use": []
+}
+</data>

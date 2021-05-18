@@ -88,6 +88,8 @@ class EruptMakeCommand extends GeneratorCommand
         $model = $this->argument("model");
         $template = $this->option("template");
 
+        print_r($template["path"]."\n");
+
         return $template["path"];
     }
 
@@ -106,12 +108,14 @@ class EruptMakeCommand extends GeneratorCommand
     {
         $data_json = $this->get_data($component);
 
+        $prefix = $data_json["type"];
+
         $component_names = $data_json["components"];
 
         $result = [];
 
         foreach($component_names as $name) {
-            $result[$name] = $this->get_component($name);
+            $result[$name] = $this->get_component("$prefix/$name");
         }
 
         return $result;
@@ -132,6 +136,7 @@ class EruptMakeCommand extends GeneratorCommand
     {
         return array_merge(
             [
+                "type" => "",
                 "use" => [],
                 "components" => [],
                 "events" => [],
@@ -148,7 +153,7 @@ class EruptMakeCommand extends GeneratorCommand
 
         $base_path = trim($template["base_path"], "/\\");
 
-        return $this->files->get("/$base_path/components/$component_name.txt");
+        return $this->files->get("/$base_path/templates/components/$component_name.txt");
     }
 
     protected function update_component(string $comp, string $nc_name, string $nc_text): string

@@ -1,0 +1,16 @@
+class <!erupt class_name !> extends ResourceCollection
+{
+    @methods/toArray
+}
+
+<data>
+{
+    "type": "php/collection",
+    "components": [
+        "methods/toArray"
+    ],
+    "use": [
+        "Illuminate\\Http\\Resources\\Json\\ResourceCollection"
+    ]
+}
+</data>

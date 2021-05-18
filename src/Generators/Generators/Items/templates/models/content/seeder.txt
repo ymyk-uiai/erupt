@@ -1,0 +1,20 @@
+<?php
+
+namespace Database\Seeders;
+
+@use
+
+@class/content
+
+<data>
+{
+    "type": "php/seeder",
+    "components": [
+        "class/content"
+    ],
+    "use": [],
+    "events": [
+        "make_seeder:<!erupt short_name !>"
+    ]
+}
+</data>

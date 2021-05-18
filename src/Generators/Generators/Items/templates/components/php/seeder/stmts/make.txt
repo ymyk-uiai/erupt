@@ -1,0 +1,17 @@
+<!erupt
+    modelInstances = self.files.model.instances
+    modelShortName = self.files.model.short_name
+!>
+
+<!erupt
+    print("${} = {}::factory()->count(50)->make();", modelInstances, modelShortName)
+!>
+
+<data>
+{
+    "type": "php/seeder",
+    "use": [
+        "<!erupt self.files.model.class_name !>"
+    ]
+}
+</data>

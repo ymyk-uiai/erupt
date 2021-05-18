@@ -1,0 +1,17 @@
+<?php
+
+namespace App\View\Components;
+
+@use
+
+@class/renderHeading
+
+<data>
+{
+    "type": "php/blade",
+    "components": [
+        "class/renderHeading"
+    ],
+    "use": []
+}
+</data>

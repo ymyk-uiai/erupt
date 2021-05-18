@@ -74,8 +74,12 @@ abstract class BaseProperty extends BaseListItem
         return $this->factory;
     }
 
-    public function set_flag(string $key, bool $bool)
+    public function set_flag(string $key, bool $bool, bool $optional = false): void
     {
+        if($optional && array_key_exists($key, $this->flags)) {
+            return;
+        }
+
         $this->flags[$key] = $bool;
     }
 
@@ -124,7 +128,6 @@ abstract class BaseProperty extends BaseListItem
             if($key == "attributes") {
                 array_unshift($keys, $key);
             }
-            print_r($this->key."\n");
             return $this->app->get_models()->get($this->key)->resolve($keys);
         }
 

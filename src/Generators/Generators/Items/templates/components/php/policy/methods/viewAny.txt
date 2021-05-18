@@ -1,0 +1,22 @@
+<!erupt
+    modelClass = self.files.model.short_name
+    modelInstance = self.files.model.instance
+!>
+
+<!erupt
+    print("public function viewAny({} ${})", modelClass, modelInstance)
+!>
+{
+    return true;
+}
+
+<data>
+{
+    "type": "php/policy",
+    "components": [],
+    "use": [
+        "<!erupt auth.files.model.class_name !>",
+        "<!erupt self.files.model.class_name !>"
+    ]
+}
+</data>

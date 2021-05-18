@@ -1,0 +1,17 @@
+<?php
+
+namespace App\View\Components;
+
+@use
+
+@class/renderFull
+
+<data>
+{
+    "type": "php/blade",
+    "components": [
+        "class/renderFull"
+    ],
+    "use": []
+}
+</data>

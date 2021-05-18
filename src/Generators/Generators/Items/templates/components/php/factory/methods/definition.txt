@@ -1,0 +1,19 @@
+public function definition()
+{
+    <!erupt
+        foreach self.attributes.fillable as fillable join "," into result {
+            preprint("return [")
+            print("'{}' => $this->{}", fillable.name, fillable.factory)
+            postprint("];")
+        }
+        print("{}", result)
+    !>
+}
+
+<data>
+{
+    "type": "factory/definition",
+    "components": [],
+    "use": []
+}
+</data>

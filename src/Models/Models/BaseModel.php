@@ -2,15 +2,15 @@
 
 namespace Erupt\Models\Models;
 
+use Erupt\Application;
 use Erupt\Foundations\Lists\BaseListItem;
 use Erupt\Interfaces\Makers\Items\FileMaker;
 use Erupt\Interfaces\Makers\Items\MigrationMaker;
-use Erupt\Application;
+use Erupt\Models\Models\ValidationRules\List\ValidationRuleList;
 use Erupt\Models\Properties\Lists\PropertyList;
 use Erupt\Models\Relationships\Lists\RelationshipList;
-use Erupt\Models\Models\ValidationRules\List\ValidationRuleList;
-use Erupt\Models\SchemaMethods\Lists\SchemaMethodList;
 use Erupt\Models\SchemaMethods\Containers\SchemaMethodContainer;
+use Erupt\Models\SchemaMethods\Lists\SchemaMethodList;
 
 abstract class BaseModel extends BaseListItem implements FileMaker, MigrationMaker
 {
@@ -100,6 +100,22 @@ abstract class BaseModel extends BaseListItem implements FileMaker, MigrationMak
         return $this->table_name;
     }
 
+    public function getOrdinaryFlags(string $name): array
+    {
+        return match(array_key_exists($name, Static::$ordinaryFlags)) {
+            true => Static::$ordinaryFlags[$name],
+            false => [],
+        };
+    }
+
+    public function getRelationshipFlags(string $name): array
+    {
+        return match(array_key_exists($name, Static::$relationshipFlags)) {
+            true => Static::$relationshipFlags[$name],
+            false => [],
+        };
+    }
+
     public function get_command(): string
     {
         return "create_{$this->name}_table";
@@ -123,15 +139,13 @@ abstract class BaseModel extends BaseListItem implements FileMaker, MigrationMak
 
     public function set_schema_methods($plan): void
     {
-        $schema_methods = "";
+        $schema_methods = [];
 
         foreach($plan->get_properties() as $property) {
-            $schema_methods .= "\$table->";
-            $schema_methods .= $property->get_method();
-            $schema_methods .= ";\n";
+            $schema_methods[] = $property->get_method();
         }
 
-        $this->schema_methods = $schema_methods;
+        $this->schema_methods = implode(";\n", $schema_methods);
     }
 
     public function get_migration(): string

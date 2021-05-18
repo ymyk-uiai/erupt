@@ -21,7 +21,7 @@ abstract class BasePlan extends BaseListItem
 
         $plan->set_type($data["type"]);
 
-        $plan->set_properties(PropertyList::build($data["plans"]));
+        $plan->set_properties(PropertyList::build($data));
 
         return $plan;
     }

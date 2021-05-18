@@ -1,0 +1,23 @@
+<!erupt
+    modelInstance = self.files.model.instance
+    modelIntances = self.files.model.instances
+    authShortName = auth.files.model.short_name
+    authInstance = auth.files.model.instance
+    authInstances = auth.files.model.instances
+!>
+
+<!erupt
+    print("${} = {}::all();", authInstances, authShortName)
+    print("foreach(${} as ${}) {", modelInstances, modelInstance)
+    print("${}->{}()->associate(${}->random());", modelInstance, authInstance, authInstances)
+    print("}")
+!>
+
+<data>
+{
+    "type": "php/seeder",
+    "use": [
+        "<!erupt auth.files.model.class_name !>"
+    ]
+}
+</data>

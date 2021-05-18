@@ -1,0 +1,19 @@
+class <!erupt short_name !> extends Component
+{
+    public function render()
+    {
+        <!erupt
+            print("return view('components.{}.heading');", self.files.model.model_name)
+        !>
+    }
+}
+
+<data>
+{
+    "type": "php/blade",
+    "components": [],
+    "use": [
+        "Illuminate\\View\\Component"
+    ]
+}
+</data>

@@ -41,6 +41,21 @@ class PolyOneToMany extends BaseRelationship implements MigrationMaker
         }
     }
 
+    public function getRelationshipPlans(string $modelName):array
+    {
+        $relationshipPlans = [];
+
+        if($this->sbs->has($modelName)) {
+            $relationshipPlans[] = "relationship:{$this->ob->get_name()}";
+        }
+
+        if($this->ob->get_name() == $modelName) {
+            $relationshipPlans[] = "morphs:${modelName}able";
+        }
+
+        return $relationshipPlans;
+    }
+
     public function get_model_relationships($model, $relationships, $app)
     {
         foreach($this->sbs as $sb) {

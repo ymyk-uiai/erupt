@@ -1,0 +1,37 @@
+class <!erupt short_name !> extends Model
+{
+    use HasFactory;
+
+    @props/fillable
+
+    @props/hidden
+
+    @props/casts
+
+    @methods/relationships
+
+    @methods/rinverse
+
+    @methods/mrelationships
+
+    @methods/minverse
+}
+
+<data>
+{
+    "type": "php/model",
+    "components": [
+        "props/fillable",
+        "props/hidden",
+        "props/casts",
+        "methods/relationships",
+        "methods/rinverse",
+        "methods/mrelationships",
+        "methods/minverse"
+    ],
+    "use": [
+        "Illuminate\\Database\\Eloquent\\Factories\\HasFactory",
+        "Illuminate\\Database\\Eloquent\\Model"
+    ]
+}
+</data>

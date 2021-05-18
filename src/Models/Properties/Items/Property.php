@@ -17,4 +17,15 @@ class Property extends BaseProperty
 
         return $property;
     }
+
+    public function setModelFlags($model): Self
+    {
+        $flags = $model->getOrdinaryFlags($this->name);
+
+        foreach($flags as $name => $bool) {
+            $this->set_flag($name, $bool);
+        }
+
+        return $this;
+    }
 }
