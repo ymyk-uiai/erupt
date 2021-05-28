@@ -1,8 +1,0 @@
-<!erupt
-    foreach self.relationships.belongs as belongsTo join "" into result {
-        print("public function {}() {", belongsTo.r_method_name)
-        print("return $this->{}({});", belongsTo.r_method, belongsTo.r_method_args)
-        print("}")
-    }
-    print("{}", result)
-!>

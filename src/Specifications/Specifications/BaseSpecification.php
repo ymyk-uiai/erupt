@@ -2,9 +2,12 @@
 
 namespace Erupt\Specifications\Specifications;
 
-use Erupt\Foundations\Lists\BaseListItem;
+use Erupt\Foundations\BaseItem;
+use Erupt\Foundations\ResolverItem;
+use Erupt\Interfaces\Resolver;
+use Erupt\Specifications\Value;
 
-abstract class BaseSpecification extends BaseListItem
+abstract class BaseSpecification extends ResolverItem
 {
     protected string $name;
 
@@ -37,4 +40,24 @@ abstract class BaseSpecification extends BaseListItem
     }
 
     abstract public function get_args_and_options($t, $r): array;
+
+    protected function getResolver(string $key, array &$keys): Resolver
+    {
+        return match($key) {
+            "short_name" => new Value($this->data["data_short_name"]),
+            "class_name" => new Value($this->data["data_class_name"]),
+            "namespace" => new Value($this->data["data_namespace"]),
+            "model_name" => new Value($this->data["model_name"]),
+            "spec_variant" => new Value($this->data["data_spec_variant"]),
+            "use_as" => new Value($this->data["data_use_as"]),
+            "full_use_as" => new Value($this->data["data_class_name"]),
+            "instance" => new Value($this->data["model_name"]),
+            "instances" => new Value($this->data["model_name"]."s"),
+        };
+    }
+
+    public function evaluate()
+    {
+        return $this;
+    }
 }

@@ -2,146 +2,109 @@
 
 namespace Erupt\Models\Properties;
 
-use Erupt\Foundations\Lists\BaseListItem;
+use Erupt\Application;
+use Erupt\Foundations\ResolverItem;
+use Erupt\Models\Values\Lists\PropValueList as ValueList;
 use Erupt\Models\ValidationRules\Lists\ValidationRuleList;
+use Erupt\Models\Factories\Lists\FactoryList;
+use Erupt\Traits\BelongsToApp;
+use Erupt\Traits\BelongsToModel;
+use Erupt\Traits\HasFlags;
+use Erupt\Interfaces\Resolver;
+use Exception;
 
-abstract class BaseProperty extends BaseListItem
+abstract class BaseProperty extends ResolverItem
 {
-    protected string $name;
+    use BelongsToApp,
+        BelongsToModel,
+        HasFlags;
 
-    protected string $key;
+    protected ValueList $values;
+    
+    protected ValidationRuleList $validationRules;
 
-    protected string $column_type;
+    protected FactoryList $factories;
 
-    protected string $value_type;
-
-    protected string $factory = "";
-
-    protected ValidationRuleList $validation_rules;
-
-    protected array $flags = [];
-
-    public function set_name(string $name)
+    public function __construct()
     {
-        $this->name = $name;
+        $this->setValues(ValueList::empty());
     }
 
-    public function get_name(): string
+    public function setValues(ValueList $values): void
     {
-        return $this->name;
+        $this->values = $values;
     }
 
-    public function set_key(string $key)
+    public function getPropValues(): ValueList
     {
-        $key = preg_replace("/_id$/", "", $key);
-        $key = preg_replace("/able$/", "", $key);
-
-        $this->key = $key;
+        return $this->values;
     }
 
-    public function get_key(): string
+    public function setValidationRules(ValidationRuleList $validationRules): void
     {
-        return $this->key;
+        $this->validationRules = $validationRules;
     }
 
-    public function set_column_type(string $column_type)
+    public function getValidationRules(): ValidationRuleList
     {
-        $this->column_type = $column_type;
+        return $this->validationRules;
     }
 
-    public function get_column_type(): string
+    public function setFactories(FactoryList $factories): void
     {
-        return $this->column_type;
+        $this->factories = $factories;
     }
 
-    public function set_value_type(string $value_type)
+    public function getFactories(FactoryList $factories): FactoryList
     {
-        $this->value_type = $value_type;
+        return $this->factories;
     }
 
-    public function get_value_type(): string
+    public function finish()
     {
-        return $this->value_type;
+        //
     }
 
-    public function set_factory(string $factory)
+    public function update(array $data): void
     {
-        $this->factory = $factory;
-    }
-
-    public function get_factory(): string
-    {
-        return $this->factory;
-    }
-
-    public function set_flag(string $key, bool $bool, bool $optional = false): void
-    {
-        if($optional && array_key_exists($key, $this->flags)) {
-            return;
+        foreach($data as $key => $value) {
+            match($key) {
+                "values" => $this->getPropValues()->update($value),
+                "validationRules" => 0,
+                "factories" => 0,
+                "flags" => $this->updateFlags($value),
+            };
         }
-
-        $this->flags[$key] = $bool;
     }
 
-    public function get_flag(string $key): bool
+    protected function updateFlags(array $flags): void
     {
-        return array_key_exists($key, $this->flags) ? $this->flags[$key] : false;
-    }
-
-    public function set_validation_rules(ValidationRuleList $validation_rules)
-    {
-        $this->validation_rules = $validation_rules;
-    }
-
-    public function get_validation_rules(): ValidationRuleList
-    {
-        return $this->validation_rules;
-    }
-
-    /* delete?
-    public function set_validation_rule(string $key, string $args = null)
-    {
-        $this->validation_rules[$key] = $args;
-    }
-
-    public function get_validation_rule(string $rule)
-    {
-        return array_key_exists($key, $this->validation_rules)
-            ? $this->validation_rules[$key]
-            : false;
-    }
-    */
-
-    public function resolve($keys)
-    {
-        if(gettype($keys) == "string") {
-            $keys = explode('.', $keys);
+        foreach($flags as $flag) {
+            $this->flags[$flag] = true;
         }
+    }
 
-        if(empty($keys)) {
-            return $this;
+    protected function getResolver(string $key, array &$keys): Resolver
+    {
+        try {
+            return match($key) {
+                "name",
+                "columnType",
+                "valueType",
+                "relationshipMethodName",
+                "relationshipName",
+                "relationshipArgs",
+                "factory" => $this->getPropValues()->getValue($key),
+                "validationRules" => $this->getValidationRules(),
+                default => throw new Exception($key),
+            };
+        } catch (Exception $e) {
+            echo 'Unknown resolve key: ', $e->getMessage(), "\n";
         }
+    }
 
-        $key = array_shift($keys);
-
-        if(in_array($key, ["model", "attributes"])) {
-            if($key == "attributes") {
-                array_unshift($keys, $key);
-            }
-            return $this->app->get_models()->get($this->key)->resolve($keys);
-        }
-
-        $props = [
-            "name",
-            "key",
-            "column_type",
-            "value_type",
-            "factory",
-            "validation_rules",
-        ];
-
-        if(in_array($key, $props)) {
-            return $this->{$key};
-        }
+    public function evaluate()
+    {
+        return $this;
     }
 }

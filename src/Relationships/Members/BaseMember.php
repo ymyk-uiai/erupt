@@ -2,59 +2,43 @@
 
 namespace Erupt\Relationships\Members;
 
-use Erupt\Foundations\Lists\BaseListItem;
-use Erupt\Relationships\Updaters\Lists\UpdaterList;
+use Erupt\Relationships\Attributes\Lists\AttributeList;
 
-abstract class BaseMember extends BaseListItem
+abstract class BaseMember
 {
-    protected string $name;
+    protected string $type;
 
-    protected ?string $type;
+    protected AttributeList $attributes;
 
-    protected UpdaterList $updaters;
-
-    public static function build($str): Self
+    public function __construct(string $type, AttributeList $attrs)
     {
-        $product = new Static;
+        $this->setType($type);
 
-        $pattern = "/^(?P<name>[a-zA-Z0-9]+)(?::(?P<args>[a-z]+(?:,[a-z]+)*))?/";
-
-        preg_match($pattern, $str, $matches);
-
-        $product->set_name($matches["name"]);
-
-        $product->set_updaters(UpdaterList::build(array_key_exists("args", $matches) ? $matches["args"] : ""));
-
-        return $product;
+        $this->setAttributes($attrs);
     }
 
-    public function set_name(string $name)
+    public function setType(string $type): void
     {
-        $this->name = trim($name);
+        $this->type = $type;
     }
 
-    public function get_name(): string
-    {
-        return $this->name;
-    }
-
-    public function set_type(string $type)
-    {
-        $this->type = trim($type);
-    }
-
-    public function get_type(): string
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function set_updaters(UpdaterList $updaters)
+    public function setAttributes(AttributeList $attributes): void
     {
-        $this->updaters = $updaters;
+        $this->attributes = $attributes;
     }
 
-    public function get_updaters(): UpdaterList
+    public function getAttributes(): AttributeList
     {
-        return $this->updaters;
+        return $this->attributes;
+    }
+
+    public function check(string $type): bool
+    {
+        return $this->type == $type ? true : false;
     }
 }

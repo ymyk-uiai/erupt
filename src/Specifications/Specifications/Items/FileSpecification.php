@@ -146,6 +146,11 @@ class FileSpecification extends BaseSpecification
         return $this->data["template_name"];
     }
 
+    public function get_spec_key(): string
+    {
+        return $this->data['data_spec_key'];
+    }
+
     public function get_template_key(): string
     {
         return $this->data["data_resolve_key"];
@@ -179,28 +184,5 @@ class FileSpecification extends BaseSpecification
             "--io_template" => $template,
             "--io_result" => $result,
         ];
-    }
-
-    public function resolve($keys)
-    {
-        if(gettype($keys) == "string") {
-            $keys = explode('.', $keys);
-        }
-
-        $key = array_shift($keys);
-
-        $values = [
-            "short_name" => $this->data["data_short_name"],
-            "class_name" => $this->data["data_class_name"],
-            "namespace" => $this->data["data_namespace"],
-            "model_name" => $this->data["model_name"],
-            "spec_variant" => $this->data["data_spec_variant"],
-            "use_as" => $this->data["data_use_as"],
-            "full_use_as" => $this->data["data_class_name"],
-            "instance" => $this->data["model_name"],
-            "instances" => $this->data["model_name"]."s",
-        ];
-
-        return $values[$key];
     }
 }

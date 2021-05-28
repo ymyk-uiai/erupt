@@ -2,57 +2,47 @@
 
 namespace Erupt\Plans\Plans;
 
-use Erupt\Foundations\Lists\BaseListItem;
+use Erupt\Foundations\BaseItem;
 use Erupt\Plans\Properties\Lists\PropertyList;
+use Erupt\Models\Properties\Lists\PropertyList as ModelProps;
 
-abstract class BasePlan extends BaseListItem
+abstract class BasePlan extends BaseItem
 {
-    protected string $name;
-
     protected string $type;
 
-    protected PropertyList $properties;
+    protected PropertyList $props;
 
-    public static function build($name, $data): Self
+    public function __construct(string $type, PropertyList $props)
     {
-        $plan = new Static;
+        $this->setType($type);
 
-        $plan->set_name($name);
-
-        $plan->set_type($data["type"]);
-
-        $plan->set_properties(PropertyList::build($data));
-
-        return $plan;
+        $this->setProperties($props);
     }
 
-    public function set_name(string $name)
-    {
-        $this->name = $name;
-    }
-
-    public function get_name(): string
-    {
-        return $this->name;
-    }
-
-    public function set_type(string $type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    public function get_type(): string
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function set_properties(PropertyList $properties)
+    public function setProperties(PropertyList $props)
     {
-        $this->properties = $properties;
+        $this->props = $props;
     }
 
-    public function get_properties(): PropertyList
+    public function getProperties(): PropertyList
     {
-        return $this->properties;
+        return $this->props;
+    }
+
+    public function getModelProps(): ModelProps
+    {
+        $props = ModelProps::empty();
+
+        return $props;
     }
 }

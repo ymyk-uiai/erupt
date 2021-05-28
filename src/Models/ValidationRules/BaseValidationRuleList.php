@@ -2,20 +2,27 @@
 
 namespace Erupt\Models\ValidationRules;
 
-use Erupt\Foundations\Lists\BaseList;
-use Erupt\Models\ValidationRules\BaseValidationRule;
+use Erupt\Foundations\Resolver;
+use Erupt\Tratis\HasList;
 
-abstract class BaseValidationRuleList extends BaseList
+abstract class BaseValidationRuleList extends Resolver
 {
-    //  BaseValidationRule|Self
-    public function add($validation_rule)
-    {
-        parent::add($validation_rule);
-    }
+    use HasList;
 
-    //  BaseValidationRule|Self
-    public function remove($validation_rule)
+    public function add() {}
+
+    public function remove() {}
+
+    protected function getResolver(string $key, array &$keys): Resolver
     {
-        parent::remove($validation_rule);
+        $props = Static::empty();
+
+        foreach($this->list as $prop) {
+            if($prop->get_flag($key)) {
+                $props->add($prop);
+            }
+        }
+
+        return $props;
     }
 }

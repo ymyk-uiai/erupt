@@ -3,7 +3,7 @@
 namespace Erupt\Specifications\Makers\Lists;
 
 use Erupt\Specifications\Makers\BaseMakerList;
-use Erupt\Interfaces\Makers\Items\FileMaker;
+use Erupt\Interfaces\File;
 
 class FileMakerList extends BaseMakerList
 {
@@ -19,7 +19,7 @@ class FileMakerList extends BaseMakerList
         $list = new Self;
 
         foreach($makers as $maker) {
-            if($maker instanceof FileMaker) {
+            if($maker instanceof File) {
                 $list->add($maker);
             }
         }
@@ -30,6 +30,6 @@ class FileMakerList extends BaseMakerList
     //  Unit Type
     public function add($maker)
     {
-        parent::add($maker);
+        parent::addItemOrList($maker);
     }
 }

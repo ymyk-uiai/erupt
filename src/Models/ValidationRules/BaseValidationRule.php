@@ -2,31 +2,15 @@
 
 namespace Erupt\Models\ValidationRules;
 
-use Erupt\Foundations\Lists\BaseListItem;
+use Erupt\Foundations\Resolver;
+use Erupt\Traits\HasParams;
 
-abstract class BaseValidationRule extends BaseListItem
+abstract class BaseValidationRule extends Resolver
 {
-    protected array $args = [];
+    use HasParams;
 
-    public function resolve($keys)
+    protected function getResolver(string $key, array &$keys): Resolver
     {
-        if(gettype($keys) == "string") {
-            $keys = explode('.', $keys);
-        }
-
-        if(empty($keys)) {
-            return $this;
-        }
-
-        $key = array_shift($keys);
-
-        $props = [
-            "name",
-            "args",
-        ];
-
-        if(in_array($key, $props)) {
-            return $this->{$key};
-        }
+        return $this;
     }
 }

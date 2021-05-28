@@ -88,8 +88,6 @@ class EruptMakeCommand extends GeneratorCommand
         $model = $this->argument("model");
         $template = $this->option("template");
 
-        print_r($template["path"]."\n");
-
         return $template["path"];
     }
 

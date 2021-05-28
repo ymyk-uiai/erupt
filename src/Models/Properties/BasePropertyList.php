@@ -2,75 +2,69 @@
 
 namespace Erupt\Models\Properties;
 
-use Erupt\Foundations\Lists\BaseList;
-use Erupt\Models\Properties\Items\Property as ModelProperty;
-use Erupt\Models\Properties\Items\RelationshipProperty as ModelRelationshipProperty;
-use Erupt\Models\Properties\Lists\PropertyList as ModelProperties;
-use Erupt\Plans\Methods\Containers\UpdaterContainer;
-use Erupt\Plans\Properties\Items\Property as PlanProperty;
-use Erupt\Plans\Properties\Items\RelationshipProperty as PlanRelationshipProperty;
-use Erupt\Plans\Properties\Lists\PropertyList as PlanProperties;
-use Erupt\Plnas\Properties\Lists\PlanPropertyList;
+use Erupt\Application;
+use Erupt\Models\Models\BaseModel as Model;
+use Erupt\Foundations\ResolverList;
+use Erupt\Plans\Properties\Lists\PropertyList;
+use Erupt\Plans\Attributes\Containers\AttributeContainer;
+use Erupt\Traits\BelongsToApp;
+use Erupt\Traits\BelongsToModel;
+use Erupt\Interfaces\Resolver;
+use ReflectionClass;
 
-abstract class BasePropertyList extends BaseList
+abstract class BasePropertyList extends ResolverList
 {
-    public static function build(PlanProperties $planProperties, $app, $model): ModelProperties
+    use BelongsToApp,
+        BelongsToModel;
+        
+    public static function empty(): Static
     {
-        $propertyList = new ModelProperties;
+        $reflection = new ReflectionClass(Static::class);
+        return $reflection->newInstanceWithoutConstructor();
+    }
 
-        $rootContainer = new UpdaterContainer;
+    public function __construct(Application $app, Model $model, PropertyList $planProps)
+    {
+        $rootContainer = new AttributeContainer;
 
-        foreach($planProperties as $planProperty) {
-
-            $container = new UpdaterContainer;
-
-            foreach($planProperty->get_attributes() as $attribute) {
-
-                $sbj = $attribute->run();
-
-                if($planProperty instanceof PlanRelationshipProperty) {
-                    $sbj->setRelationship(true);
-                } else {
-                    $sbj->setRelationship(false);
-                }
-
-                if($container->count() === 0) {
-                    $container->add($sbj);
-                } else {
-                    foreach($container as $list) {
-                        $list->add($sbj);
-                    }
-                }
+        foreach($planProps as $planProp) {
+            $container = $planProp->makeContainer();
+            foreach($planProp->getAttributes() as $attribute) {
+                $container->pack($attribute->build());
             }
-
             $rootContainer->add($container);
         }
 
-        foreach($rootContainer as $list) {
+        foreach($rootContainer as $attributeList) {
+            $this->add($attributeList->makeModelProp($app, $model));
+        }
+    }
 
-            $modelProp = match($list->getRelationship()) {
-                true => ModelRelationshipProperty::build($app),
-                false => ModelProperty::build($app),
-            };
+    public function add($prop)
+    {
+        parent::addItemOrList($prop);
+    }
 
-            foreach($list as $item) {
-                $item->run($modelProp);
+    public function remove($prop)
+    {
+        parent::removeItemOrList($prop);
+    }
+
+    protected function getResolver(string $key, array &$keys): Resolver
+    {
+        $props = Static::empty();
+
+        foreach($this->list as $prop) {
+            if($prop->getFlag($key)) {
+                $props->add($prop);
             }
-
-            $propertyList->add($modelProp->setModelFlags($model));
         }
 
-        return $propertyList;
+        return $props;
     }
 
-    //  Unit Type BaseProperty|BasePropertyList
-    public function add($property)
+    public function evaluate()
     {
-        parent::add($property);
-    }
-
-    public function remove($property)
-    {
-        parent::remove($property);
+        return $this;
     }
 }

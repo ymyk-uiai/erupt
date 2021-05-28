@@ -2,6 +2,8 @@
 
 namespace Erupt\Language;
 
+use Erupt\Interfaces\Resolver;
+
 class Scope
 {
     protected string $iterator;
@@ -66,7 +68,11 @@ class Scope
     public function getDefined($key)
     {
         if(array_key_exists($key, $this->defined)) {
-            return $this->defined[$key];
+            if($this->defined[$key] instanceof Resolver) {
+                return $this->defined[$key]->evaluate();
+            } else {
+                return $this->defined[$key];
+            }
         } else if($this->parent) {
             return $this->parent->getDefined($key);
         } else {

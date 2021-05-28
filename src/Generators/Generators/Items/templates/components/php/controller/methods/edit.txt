@@ -11,7 +11,7 @@
 !>
 {
     <!erupt
-        foreach self.relationships.auth as auth join "," into result {
+        foreach self.props.relationships.auth as auth join "," into result {
             preprint("${}->load(", self.files.model.model_name)
             print("'{}'", auth.name)
             postprint(");")

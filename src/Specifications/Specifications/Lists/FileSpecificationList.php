@@ -8,6 +8,8 @@ use Erupt\Specifications\Makers\Lists\MakerList;
 use Erupt\Models\Models\Items\App;
 use Erupt\Application;
 use Erupt\Specifications\Makers\Lists\FileMakerList;
+use Erupt\Models\Properties\Lists\PropertyList; 
+use Erupt\Models\Models\BaseModel as Model;
 
 class FileSpecificationList extends BaseSpecificationList
 {
@@ -18,27 +20,10 @@ class FileSpecificationList extends BaseSpecificationList
         $specs = new Self;
 
         foreach($file_makers as $file_maker) {
-            $specs->add($app->get_generators()->make_file_specs($file_maker));
+            $specs->add($app->getGenerators()->make_file_specs($file_maker));
         }
-
-        $app_spec = new App;
-
-        $app_spec->set_app($app);
-
-        $specs->add($app->get_generators()->make_file_specs($app_spec));
 
         return $specs;
-    }
-
-    public function resolve($model, $keys)
-    {
-        if(gettype($keys) == "string") {
-            $keys = explode('.', $keys);
-        }
-
-        $key = array_shift($keys);
-
-        return $this->get_spec($model, $key)->resolve($keys);
     }
 
     public function get_spec($model, $keys): BaseSpecification
@@ -60,5 +45,18 @@ class FileSpecificationList extends BaseSpecificationList
         }
 
         throw new \Error("file spec not found. \$key = {$key}");
+    }
+
+    public function filter(Model $model): Self
+    {
+        $product = Self::empty();
+
+        foreach($this as $file) {
+            if($model->getType() == $file->get_model_type()) {
+                $product->add($file);
+            }
+        }
+
+        return $product;
     }
 }

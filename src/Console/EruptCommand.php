@@ -7,7 +7,7 @@ use Erupt\Application;
 
 class EruptCommand extends Command
 {
-    protected $signature = 'erupt {--app} {--template} {--result} {--reset}';
+    protected $signature = 'erupt {--app} {--files} {--migrations} {--template} {--result} {--reset}';
 
     protected $description = 'Create your Laravel app';
 
@@ -21,7 +21,16 @@ class EruptCommand extends Command
     public function handle()
     {
         if($this->option("app")) {
+            if(!$this->option("files")) {
+                $this->app->unsetFiles();
+            }
+
+            if(!$this->option("migrations")) {
+                $this->app->unsetMigrations();
+            }
+
             print_r($this->app);
+
             return;
         }
 
@@ -32,7 +41,7 @@ class EruptCommand extends Command
             return;
         }
 
-        $file_specs = $this->app->get_file_specs();
+        $file_specs = $this->app->getFiles();
 
         $op_template = $this->option("template");
         $op_result = $this->option("result");
@@ -41,10 +50,10 @@ class EruptCommand extends Command
             $this->call("erupt:make", $spec->get_args_and_options($op_template, $op_result));
         }
 
-        $migration_specs = $this->app->get_migration_specs();
+        $migration_specs = $this->app->getMigrations();
 
         foreach($migration_specs as $migration) {
-            if($migration->get_model_type() == "auth") continue;
+            if($migration->get_model_type() == "user") continue;
             $this->call("make:migration", [
                 "name" => $migration->get_command(),
             ]);
@@ -60,7 +69,7 @@ class EruptCommand extends Command
                             $file_contents = file_get_contents("$migration_path/$file");
                             $pattern = "/(Schema::create\([^{]*{)[^}]*(}\);)/";
                             $m_command = $spec->get_migration();
-                            $replace = "$1{$m_command}$2";
+                            $replace = "$1{$m_command};$2";
                             $file_contents = preg_replace($pattern, $replace, $file_contents);
                             file_put_contents("$migration_path/$file", $file_contents);
                         }

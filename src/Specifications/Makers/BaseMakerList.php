@@ -2,7 +2,7 @@
 
 namespace Erupt\Specifications\Makers;
 
-use Erupt\Foundations\Lists\BaseList;
+use Erupt\Foundations\BaseList;
 use Erupt\Interfaces\Makers\BaseMaker;
 
 abstract class BaseMakerList extends BaseList
@@ -10,6 +10,6 @@ abstract class BaseMakerList extends BaseList
     //  Unit Type BaseMaker|BaseMakerList
     public function add($maker)
     {
-        parent::add($maker);
+        parent::addItemOrList($maker);
     }
 }

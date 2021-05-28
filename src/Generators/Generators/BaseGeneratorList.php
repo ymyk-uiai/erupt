@@ -2,8 +2,8 @@
 
 namespace Erupt\Generators\Generators;
 
-use Erupt\Foundations\Lists\BaseList;
-use Erupt\Interfaces\Makers\Items\FileMaker;
+use Erupt\Foundations\BaseList;
+use Erupt\Interfaces\File;
 use Erupt\Specifications\Specifications\Lists\FileSpecificationList;
 use Erupt\Specifications\Specifications\Lists\MigrationSpecificationList;
 
@@ -14,7 +14,7 @@ class BaseGeneratorList extends BaseList
         return new Static;
     }
 
-    public function make_file_specs(FileMaker $maker): FileSpecificationList
+    public function make_file_specs(File $maker): FileSpecificationList
     {
         $list = new FileSpecificationList;
 
@@ -25,20 +25,19 @@ class BaseGeneratorList extends BaseList
         return $list;
     }
 
-    public function make_migration_specs($model): MigrationSpecificationList
+    public function make_migration_specs($model, $plans): MigrationSpecificationList
     {
         $list = new MigrationSpecificationList;
 
         foreach($this->list as $generator) {
-            $list->add($generator->make_migration_specs($model));
+            $list->add($generator->make_migration_specs($model, $plans));
         }
 
         return $list;
     }
 
-    //  Unit Type BaseGenerator|BaseGeneratorList
     public function add($generator)
     {
-        parent::add($generator);
+        parent::addItemOrList($generator);
     }
 }

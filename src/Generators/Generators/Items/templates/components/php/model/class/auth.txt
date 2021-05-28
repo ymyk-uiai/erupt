@@ -9,12 +9,6 @@ class <!erupt short_name !> extends Authenticatable
     @props/casts
 
     @methods/relationships
-
-    @methods/rinverse
-
-    @methods/mrelationships
-
-    @methods/minverse
 }
 
 <data>
@@ -24,10 +18,7 @@ class <!erupt short_name !> extends Authenticatable
         "props/fillable",
         "props/hidden",
         "props/casts",
-        "methods/relationships",
-        "methods/rinverse",
-        "methods/mrelationships",
-        "methods/minverse"
+        "methods/relationships"
     ],
     "use": [
         "Illuminate\\Database\\Eloquent\\Factories\\HasFactory",

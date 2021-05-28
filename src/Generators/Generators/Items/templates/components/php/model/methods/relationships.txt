@@ -1,7 +1,7 @@
 <!erupt
-    foreach self.relationships.has as has join "" into result {
-        print("public function {}() {", has.r_method_name)
-        print("return $this->{}({});", has.r_method, has.r_method_args)
+    foreach self.props.relationships as relationship join "" into result {
+        print("public function {}() {", relationship.relationshipMethodName)
+        print("return $this->{}({});", relationship.relationshipName, relationship.relationshipArgs)
         print("}")
     }
     print("{}", result)

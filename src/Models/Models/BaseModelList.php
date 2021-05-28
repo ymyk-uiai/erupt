@@ -3,106 +3,75 @@
 namespace Erupt\Models\Models;
 
 use Erupt\Application;
-use Erupt\Foundations\Lists\BaseList;
-use Erupt\Models\Models\Items\App;
-use Erupt\Models\Models\Items\Auth;
-use Erupt\Models\Models\Items\Content;
-use Erupt\Models\Models\Items\Binder;
-use Erupt\Models\Models\Items\Response;
-use Erupt\Models\Properties\Lists\PropertyList;
-use Erupt\Models\Relationships\Lists\RelationshipList;
+use Erupt\Models\Models\Items\{App, User, Post, Folder, Comment};
+use Erupt\Plans\Plans\Lists\PlanList;
+use Exception;
+use Erupt\Foundations\ResolverList;
+use Erupt\Traits\BelongsToApp;
+use Erupt\Interfaces\Resolver;
+use Erupt\Plans\Properties\Lists\PropertyList;
 
-abstract class BaseModelList extends BaseList
+abstract class BaseModelList extends ResolverList
 {
-    protected Application $app;
-
-    public static function build($plans, $relationships, $app): Self
+    use BelongsToApp;
+    
+    public function __construct(Application $app, PlanList $plans)
     {
-        $modelList = new Static;
-
-        $modelList->set_app($app);
+        $this->setApp($app);
 
         foreach($plans as $plan) {
-            $name = $plan->get_name();
-            $type = $plan->get_type();
-            $properties = $plan->get_properties();
-
-            if($type == "auth") {
-                $model = Auth::build($name);
-            } else if($type == "content") {
-                $model = Content::build($name);
-            } else if($type == "binder") {
-                $model = Binder::build($name);
-            } else if($type == "response") {
-                $model = Response::build($name);
-            } else {
-                // Unknown model type
-            }
-
-            $model->set_app($app);
-
-            $model->set_schema_methods($plan);
-
-            $model->set_schema_methods_test($plan);
-
-            $model->set_properties(PropertyList::build($properties, $app, $model));
-
-            $model->set_relationships(RelationshipList::build($model, $relationships, $app));
-
-            $modelList->add($model);
-        }
-
-        return $modelList;
-    }
-
-    public function set_app(Application $app): void
-    {
-        $this->app = $app;
-    }
-
-    public function get_app(): Application
-    {
-        return $this->app;
-    }
-
-    //  Unit Type BaseModel|BaseModelList
-    public function add($model)
-    {
-        parent::add($model);
-    }
-
-    public function remove($model)
-    {
-        parent::remove($model);
-    }
-
-    public function get($name)
-    {
-        foreach($this->list as $model) {
-            if($model->get_name() == $name) {
-                return $model;
+            try {
+                $this->add(match($plan->getType()) {
+                    "user" => new User($app, $plan->getProperties()),
+                    "post" => new Post($app, $plan->getProperties()),
+                    "folder" => new Folder($app, $plan->getProperties()),
+                    "comment" => new Comment($app, $plan->getProperties()),
+                    default => throw new Exception($plan->getType()),
+                });
+            } catch (Exception $e) {
+                echo 'Unknown model type: ', $e->getMessage(), "\n";
             }
         }
 
-        if($name == "app") {
-            $app = new App;
-
-            $app->set_app($this->get_app());
-
-            return $app;
-        }
-
-        return false;
+        $this->addApp($app);
     }
 
-    public function get_by_type($type)
+    protected function addApp($app): void
     {
-        foreach($this->list as $model) {
-            if($model->get_type() == $type) {
-                return $model;
-            }
-        }
+        $this->add(new App($app, PropertyList::empty()));
+    }
 
-        return false;
+    public function add($model): void
+    {
+        parent::addItemOrList($model);
+    }
+
+    public function remove($model): void
+    {
+        parent::removeItemOrList($model);
+    }
+
+    public function get(string $type): BaseModel
+    {
+        try {
+            foreach($this as $model) {
+                if($model->getType() == trim($type)) {
+                    return $model;
+                }
+            }
+            throw new Exception($type);
+        } catch (Exception $e) {
+            echo 'Unknown model type: ', $e->getMessage(), "\n";
+        }
+    }
+
+    protected function getResolver(string $key, array &$keys): Resolver
+    {
+        return $this;
+    }
+
+    public function evaluate()
+    {
+        return $this;
     }
 }

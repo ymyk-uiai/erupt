@@ -2,14 +2,14 @@
 
 namespace Erupt\Generators\Generators;
 
-use Erupt\Foundations\Lists\BaseListItem;
+use Erupt\Foundations\BaseItem;
 use Erupt\Models\Lists\Files\FileList;
 use Erupt\Models\Models\Auth;
 use Erupt\Models\Models\Content;
 use Erupt\Models\Models\Binder;
 use Erupt\Models\Models\Response;
 
-class BaseGenerator extends BaseListItem
+class BaseGenerator extends BaseItem
 {
     public function get_file($model, $keys)
     {

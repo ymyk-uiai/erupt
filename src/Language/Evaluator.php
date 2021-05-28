@@ -2,6 +2,8 @@
 
 namespace Erupt\Language;
 
+use Erupt\Interfaces\Resolver;
+
 class Evaluator
 {
     protected $constructs = [];
@@ -25,7 +27,11 @@ class Evaluator
                 if($arg["type"] == "value") {
                     $format["value"] = preg_replace("/{}/", $arg["value"], $format["value"], 1);
                 } else if ($arg["type"] == "word") {
-                    $format["value"] = preg_replace("/{}/", $eva->resolve($arg["name"], $scope, $eva->app), $format["value"], 1);
+                    $replacement = $eva->resolve($arg["name"], $scope, $eva->app);
+                    if($replacement instanceof Resolver) {
+                        $replacement = $replacement->evaluate();
+                    }
+                    $format["value"] = preg_replace("/{}/", $replacement, $format["value"], 1);
                 }
             }
 

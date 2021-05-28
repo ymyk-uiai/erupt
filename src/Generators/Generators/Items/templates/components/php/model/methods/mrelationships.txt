@@ -1,8 +1,0 @@
-<!erupt
-    foreach self.relationships.morphHas as has join "" into result {
-        print("public function {}() {", has.r_method_name)
-        print("return $this->{}({});", has.r_method, has.r_method_args)
-        print("}")
-    }
-    print("{}", result)
-!>

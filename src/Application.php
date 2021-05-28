@@ -2,15 +2,15 @@
 
 namespace Erupt;
 
-use Erupt\Models\Models\Lists\ModelList;
+use Erupt\Generators\Generators\BaseGenerator as Generator;
+use Erupt\Generators\Generators\Items\LaravelGenerator;
 use Erupt\Generators\Generators\Lists\GeneratorList;
+use Erupt\Models\Models\Lists\ModelList;
+use Erupt\Plans\Plans\Lists\PlanList;
+use Erupt\Relationships\Relationships\Lists\RelationshipList;
+use Erupt\Specifications\Makers\Lists\MakerList;
 use Erupt\Specifications\Specifications\Lists\FileSpecificationList;
 use Erupt\Specifications\Specifications\Lists\MigrationSpecificationList;
-use Erupt\Relationships\Relationships\Lists\RelationshipList;
-use Erupt\Plans\Plans\Lists\PlanList;
-use Erupt\Generators\Generators\BaseGenerator;
-use Erupt\Specifications\Makers\Lists\MakerList;
-use Erupt\Generators\Generators\Items\LaravelGenerator;
 
 class Application
 {
@@ -22,91 +22,98 @@ class Application
 
     protected FileSpecificationList $file_specs;
 
-    protected MigrationSpecificationList $migration_specs;
+    protected MigrationSpecificationList $migrations;
 
     protected array $events;
 
-    protected array $seeder_class = [];
+    protected array $seeders = [];
+
+    protected array $routes = [];
+
+    protected array $policies = [];
 
     public function __construct($config)
     {
-        $this->relationships = RelationshipList::build($config, $this);
+        $relationships = new RelationshipList($this, $config);
 
-        $plans = PlanList::build($config, $this->relationships);
+        $plans = new PlanList($config['models'], $relationships);
 
-        $this->models = ModelList::build($plans, $this->relationships, $this);
+        $this->models = new ModelList($this, $plans, $relationships);
 
         $this->generators = GeneratorList::build();
 
-        $this->register_generator(new LaravelGenerator);
+        $this->registerGenerator(new LaravelGenerator);
+
+        $this->setFiles($relationships);
+
+        $this->setMigrations($relationships, $plans);
 
         $this->init_event_listeners();
     }
 
-    protected function makeRelationshipPlans(array $config): array
-    {
-        $relationships = $config["relationships"];
-
-        foreach ($relationships as $relationship) {
-            $delimiter = $this->getDelimiter($relationship);
-
-            [$l, $r] = explode($delimiter, $relationship);
-
-            //  O(user)M(post, binder, comment)
-            //  O(post, binder, comment)M(comment)
-            if($delimiter == "->") {
-                //
-            } else if($delimiter == "=>") {
-
-            } else if($delimiter == "<=>") {
-                //
-            } else if($delimiter == "~>") {
-                //
-            }
-        }
-
-        return $config;
-    }
-
-    protected function getDelimiter(string $relationship): string
-    {
-        preg_match("/->|=>|<=>|~>/", $relationship, $matches);
-
-        return $matches[0];
-    }
-
-    public function get_models(): ModelList
+    public function getModels(): ModelList
     {
         return $this->models;
     }
 
-    public function get_model($model_name)
+    public function getModel(string $modelType): Model
     {
-        return $this->models->get($model_name);
+        return $this->models->get($modelType);
     }
 
-    public function get_generators(): GeneratorList
+    public function getGenerators(): GeneratorList
     {
         return $this->generators;
     }
 
-    public function register_generator(BaseGenerator $generator)
+    public function registerGenerator(Generator $generator): void
     {
         $this->generators->add($generator);
     }
 
-    public function get_file_specs(): FileSpecificationList
+    public function setFiles(RelationshipList $relationships): void
     {
-        $makers = MakerList::build($this->models, $this->relationships);
+        $makers = MakerList::build($this->models, $relationships);
 
-        return FileSpecificationList::build($makers, $this);
+        $this->files = FileSpecificationList::build($makers, $this);
     }
 
-    public function get_migration_specs(): MigrationSpecificationList
+    public function getFiles(): FileSpecificationList
     {
-        $makers = MakerList::build($this->models, $this->relationships);
+        return $this->files;
+    }
 
-        return MigrationSpecificationList::build($makers, $this);
+    public function unsetFiles(): void
+    {
+        unset($this->files);
+    }
+
+    public function setMigrations(RelationshipList $relationships, $plans): void
+    {
+        $makers = MakerList::build($this->models, $relationships);
+
+        $this->migrations = MigrationSpecificationList::build($makers, $this, $plans);
+    }
+
+    public function getMigrations(): MigrationSpecificationList
+    {
+        return $this->migrations;
+    }
+
+    public function unsetMigrations(): void
+    {
+        unset($this->migrations);
+    }
+
+    public function set_schema_methods_test($plan): void
+    {
+        $schema_methods = new SchemaMethodContainer;
+
+        foreach($plan->get_properties() as $property) {
+            $schema_methods->add($property->get_methods());
+        }
+
+        $this->schema_methods_test = $schema_methods;
     }
 
     protected function init_event_listeners(): void

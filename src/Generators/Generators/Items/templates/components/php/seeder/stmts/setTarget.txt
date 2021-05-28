@@ -8,7 +8,7 @@
 
 <!erupt
     print("$collection = collect([]);")
-    foreach self.relationships.commentable as commentable join "" into result {
+    foreach self.props.relationships.commentable as commentable join "" into result {
         print("$collection = $collection->merge(\{}::all());", commentable.model.files.model.class_name)
     }
     print("{}", result)

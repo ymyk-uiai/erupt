@@ -2,27 +2,32 @@
 
 namespace Erupt\Relationships\Members;
 
-use Erupt\Foundations\Lists\BaseList;
-use Erupt\Relationships\Members\BaseMember;
+use Erupt\Traits\HasList;
 use Erupt\Relationships\Members\Items\Member;
+use Erupt\Relationships\Attributes\Lists\AttributeList;
+use IteratorAggregate;
+use Erupt\Foundations\BaseIterator;
 
-abstract class BaseMemberList extends BaseList
+abstract class BaseMemberList implements IteratorAggregate
 {
-    public static function build(array $strs): Self
+    use HasList;
+
+    public function getIterator()
     {
-        $list = new Static;
-
-        foreach($strs as $str) {
-            $list->add(Member::build($str));
-        }
-
-        return $list;
+        return new BaseIterator($this->list);
     }
 
-    public function has(string $name): bool
+    public function __construct(array $models)
+    {
+        foreach($models as $model) {
+            $this->add(new Member($model['type'], new AttributeList($model['attrs'])));
+        }
+    }
+
+    public function has(string $type): bool
     {
         foreach($this->list as $member) {
-            if($member->get_name() == $name) {
+            if($member->getType() == $type) {
                 return true;
             }
         }
@@ -30,14 +35,14 @@ abstract class BaseMemberList extends BaseList
         return false;
     }
 
-    //  Unit Type BaseMember|BaseMemberList
-    public function add($member)
+    public function add(BaseMember|BaseMemberList $item): void
     {
-        parent::add($member);
-    }
-
-    public function remove($member_s)
-    {
-        parent::remove($member_s);
+        if($item instanceof BaseMemberList) {
+            foreach($item as $i) {
+                $this->addItem($i);
+            }
+        } else {
+            $this->addItem($item);
+        }
     }
 }

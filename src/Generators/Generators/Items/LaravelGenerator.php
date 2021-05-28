@@ -8,8 +8,8 @@ use Erupt\Specifications\Specifications\Items\FileSpecification;
 use Erupt\Specifications\Specifications\Lists\SpecificationList;
 use Erupt\Specifications\Specifications\Lists\FileSpecificationList;
 use Erupt\Specifications\Specifications\Lists\MigrationSpecificationList;
-use Erupt\Interfaces\Makers\Items\MigrationMaker;
-use Erupt\Interfaces\Makers\Items\FileMaker;
+use Erupt\Interfaces\Migration;
+use Erupt\Interfaces\File;
 
 class LaravelGenerator extends BaseGenerator
 {
@@ -18,20 +18,20 @@ class LaravelGenerator extends BaseGenerator
             "data_sup_class_name" => "Models\\{Name}",
             "template_stem" => "model",
             "makers" => [
-                "auth",
-                "content",
-                "binder",
-                "response",
+                "user",
+                "post",
+                "folder",
+                "comment",
                 ],
             ],
         "policy" => [
             "data_sup_class_name" => "Policies\\{Name}Policy",
             "template_stem" => "policy",
             "makers" => [
-                "auth",
-                "content",
-                "binder",
-                "response",
+                "user",
+                "post",
+                "folder",
+                "comment",
             ],
         ],
         "request" => [
@@ -39,10 +39,10 @@ class LaravelGenerator extends BaseGenerator
             "template_stem" => "request",
             "data_resolve_key" => "{key}{variant<*,@>}",
             "makers" => [
-                "auth:update",
-                "content:store,update",
-                "binder:store,update",
-                "response:store,update",
+                "user:update",
+                "post:store,update",
+                "folder:store,update",
+                "comment:store,update",
             ],
         ],
         "resource" => [
@@ -50,20 +50,20 @@ class LaravelGenerator extends BaseGenerator
             "template_stem" => "{variant}",
             "data_resolve_key" => "{variant}",
             "makers" => [
-                "auth:resource,collection",
-                "content:resource,collection",
-                "binder:resource,collection",
-                "response:resource,collection",
+                "user:resource,collection",
+                "post:resource,collection",
+                "folder:resource,collection",
+                "comment:resource,collection",
             ]
         ],
         "controller" => [
             "data_sup_class_name" => "Http\\Controllers\\{Name}Controller",
             "template_stem" => "controller",
             "makers" => [
-                "auth",
-                "content",
-                "binder",
-                "response",
+                "user",
+                "post",
+                "folder",
+                "comment",
             ]
         ],
         "factory" => [
@@ -72,10 +72,10 @@ class LaravelGenerator extends BaseGenerator
             "output_base_path" => "database",
             "output_sup_path" => "factories",
             "makers" => [
-                "auth",
-                "content",
-                "binder",
-                "response",
+                "user",
+                "post",
+                "folder",
+                "comment",
             ]
         ],
         "seeder" => [
@@ -85,10 +85,10 @@ class LaravelGenerator extends BaseGenerator
             "output_base_path" => "database",
             "output_sup_path" => "seeders",
             "makers" => [
-                "auth",
-                "content",
-                "binder",
-                "response",
+                "user",
+                "post",
+                "folder",
+                "comment",
             ]
         ],
         "blade" => [
@@ -97,20 +97,20 @@ class LaravelGenerator extends BaseGenerator
             "template_sup_path" => "templates/components/blade/pages",
             "output_sup_path" => "{name}s",
             "makers" => [
-                "auth:index,show,edit",
-                "content:index,create,show,edit",
-                "binder:index,create,show,edit",
-                "response:index,create,show,edit",
+                "user:index,show,edit",
+                "post:index,create,show,edit",
+                "folder:index,create,show,edit",
+                "comment:index,create,show,edit",
             ],
         ],
         "blade_component" => [
             "data_sup_class_name" => "View\\Components\\{Name}{Variant}",
             "template_stem" => "{variant}",
             "makers" => [
-                "auth:full,heading,update,button",
-                "content:full,heading,store,update,button",
-                "binder:full,heading,store,update,button",
-                "response:full,heading,store,update,button",
+                "user:full,heading,update,button",
+                "post:full,heading,store,update,button",
+                "folder:full,heading,store,update,button",
+                "comment:full,heading,store,update,button",
             ],
         ],
         "blade_template" => [
@@ -119,10 +119,10 @@ class LaravelGenerator extends BaseGenerator
             "template_sup_path" => "templates/components/blade/components",
             "output_sup_path" => "components/{name}",
             "makers" => [
-                "auth:full,heading,update,button",
-                "content:full,heading,store,update,button",
-                "binder:full,heading,store,update,button",
-                "response:full,heading,store,update,button",
+                "user:full,heading,update,button",
+                "post:full,heading,store,update,button",
+                "folder:full,heading,store,update,button",
+                "comment:full,heading,store,update,button",
             ],
         ],
         "layout_blade" => [
@@ -148,10 +148,10 @@ class LaravelGenerator extends BaseGenerator
         "table" => [
             "name" => "table",
             "makers" => [
-                "auth",
-                "content",
-                "binder",
-                "response",
+                "user",
+                "post",
+                "folder",
+                "comment",
             ]
         ],
     ];
@@ -269,13 +269,13 @@ class LaravelGenerator extends BaseGenerator
         "{Key}",
     ];
 
-    public function make_file_specs(FileMaker $maker): FileSpecificationList
+    public function make_file_specs(File $maker): FileSpecificationList
     {
         $file_specs = new FileSpecificationList;
 
         foreach(Self::$file_spec_models as $spec_key => $spec_value) {
             foreach($spec_value["makers"] as $spec_maker) {
-                if(strpos($spec_maker, $maker->get_model_type()) === 0) {
+                if(strpos($spec_maker, $maker->getType()) === 0) {
                     if(strpos($spec_maker, ':') === false) {
                         $spec  = $this->finish_spec_model($spec_key, $spec_value, $maker);
                         $file_specs->add($this->make_file_spec($spec, $maker));
@@ -294,7 +294,7 @@ class LaravelGenerator extends BaseGenerator
         return $file_specs;
     }
 
-    protected static function make_file_spec(array $file_model, FileMaker $maker): FileSpecification
+    protected static function make_file_spec(array $file_model, File $maker): FileSpecification
     {
         return FileSpecification::build($file_model, $maker);
     }
@@ -313,7 +313,7 @@ class LaravelGenerator extends BaseGenerator
         print_r($spec);
     }
     
-    protected function finish_spec_model(string $spec_key, array $spec_value, FileMaker $model): array
+    protected function finish_spec_model(string $spec_key, array $spec_value, File $model): array
     {
         $filled_spec_values = $this->fill_defaults($spec_key, $spec_value, $model);
 
@@ -345,7 +345,7 @@ class LaravelGenerator extends BaseGenerator
 
     protected function make_replace($spec): array
     {
-        $name = strtolower($spec["model_name"]);
+        $name = strtolower($spec["model_type"]);
         $type = strtolower($spec["model_type"]);
         $variant = strtolower($spec["data_spec_variant"]);
         $key = strtolower($spec["data_spec_key"]);
@@ -393,10 +393,10 @@ class LaravelGenerator extends BaseGenerator
         );
     }
 
-    protected function fill_defaults(string $spec_key, array $spec_value, FileMaker $maker): array
+    protected function fill_defaults(string $spec_key, array $spec_value, File $maker): array
     {
-        $spec_value["model_name"] = $maker->get_name();
-        $spec_value["model_type"] = $maker->get_model_type();
+        $spec_value['model_name'] = $maker->getType();
+        $spec_value["model_type"] = $maker->getType();
         $spec_value["data_spec_key"] = $spec_key;
 
         $output_type = array_key_exists("output_type", $spec_value) ? $spec_value["output_type"] : "php";
@@ -580,22 +580,22 @@ class LaravelGenerator extends BaseGenerator
         return explode(',', explode(':', $variants)[1]);
     }
 
-    public function make_migration_specs(MigrationMaker $maker): MigrationSpecificationList
+    public function make_migration_specs(Migration $maker, $plans): MigrationSpecificationList
     {
         $migration_specs = new MigrationSpecificationList;
 
         foreach(Self::$migration_spec_models as $spec_key => $spec_value) {
             foreach($spec_value["makers"] as $spec_maker) {
-                if(strpos($spec_maker, $maker->get_model_type()) === 0) {
-                    $migration_specs->add($this->make_migration_spec($spec_value, $maker));
+                if(strpos($spec_maker, $maker->getType()) === 0) {
+                    $migration_specs->add($this->make_migration_spec($spec_value, $maker, $plans));
                 }
             }
         }
         return $migration_specs;
     }
 
-    protected function make_migration_spec($spec_value, $maker): MigrationSpecification
+    protected function make_migration_spec($spec_value, $maker, $plans): MigrationSpecification
     {
-        return MigrationSpecification::build($spec_value, $maker);
+        return MigrationSpecification::build($spec_value, $maker, $plans);
     }
 }

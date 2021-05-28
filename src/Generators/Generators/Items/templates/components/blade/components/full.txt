@@ -19,7 +19,7 @@
     !>
 
     <!erupt
-        foreach self.relationships.content as content into result {
+        foreach self.props.relationships.content as content into result {
             foreach content.model.attributes.fillable as fillable into result2 {
                 print(":{}='${}->{}'", fillable.key, content.model.symbol.name, fillable.key)
             }

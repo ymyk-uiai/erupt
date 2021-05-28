@@ -32,8 +32,8 @@ class EruptLang
         $offset = 0;
         $prevOffset = 0;
 
-        $self = $this->app->get_models()->get($modelName);
-        $auth = $this->app->get_models()->get_by_type("auth");
+        $self = $this->app->getModels()->get($modelName);
+        $auth = $this->app->getModels()->get("user");
         $scope = Scope::init([
             "self" => $self,
             "auth" => $auth,

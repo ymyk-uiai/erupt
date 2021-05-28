@@ -16,7 +16,7 @@
                             print(":{}='${}->{}'", fillable.key, self.files.model.model_name, fillable.key)
                         }
                         print("{}", result)
-                        foreach self.relationships.content as content into result2 {
+                        foreach self.props.relationships.content as content into result2 {
                             print(":{}='${}->{}'", content.model.files.model.instances, self.files.model.model_name, content.model.files.model.instances)
                         }
                         print("{}", result2)
@@ -39,7 +39,7 @@
                             print(":{}='${}->{}'", fillable.key, self.files.model.model_name, fillable.key)
                         }
                         print("{}", result)
-                        foreach self.relationships.content as content into result2 {
+                        foreach self.props.relationships.content as content into result2 {
                             print(":{}='${}->{}'", content.model.files.model.instances, self.files.model.model_name, content.model.files.model.instances)
                         }
                         print("{}", result2)

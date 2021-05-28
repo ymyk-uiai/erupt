@@ -3,6 +3,8 @@
 namespace Erupt\Specifications\Specifications\Items;
 
 use Erupt\Specifications\Specifications\BaseSpecification;
+use Erupt\Interfaces\SchemaCommand;
+use Erupt\Interfaces\SchemaModifier;
 
 class MigrationSpecification extends BaseSpecification
 {
@@ -10,25 +12,48 @@ class MigrationSpecification extends BaseSpecification
 
     protected string $command;
 
-    public static function build($data, $maker): Self
+    protected string $modelType;
+
+    protected array $stmts = [];
+
+    public static function build($data, $maker, $plans): Self
     {
         $product = new Self;
 
         ksort($data);
         //print_r($data);
 
-        $table = $maker->get_name();
+        $table = $maker->getType();
 
-        $product->maker = $maker;
+        $product->modelType = $maker->getType();
+
+        //$product->maker = $maker;
 
         $product->command = "create_{$table}s_table";
+
+        foreach($plans as $plan) {
+            if($plan->getType() == $maker->getType()) {
+                foreach($plan->getProperties() as $prop) {
+                    $stmt = ["\$table"];
+                    if(!$prop->getAttributes()->isCommandStrict()) {
+                        continue;
+                    }
+                    foreach($prop->getAttributes() as $attribute) {
+                        if($attribute instanceof SchemaCommand || $attribute instanceof SchemaModifier) {
+                            $stmt[] = "${attribute}";
+                        }
+                    }
+                    $product->stmts[] = implode("->", $stmt);
+                }
+            }
+        }
 
         return $product;
     }
 
     public function get_model_type(): string
     {
-        return $this->maker->get_type();
+        return $this->modelType;
     }
 
     public function set_table_name(string $table_name)
@@ -53,7 +78,7 @@ class MigrationSpecification extends BaseSpecification
 
     public function get_migration(): string
     {
-        return $this->maker->get_migration();
+        return implode(";\n", $this->stmts);
     }
 
     public function get_args_and_options($t, $r): array

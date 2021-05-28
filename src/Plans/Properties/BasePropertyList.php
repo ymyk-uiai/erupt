@@ -2,34 +2,36 @@
 
 namespace Erupt\Plans\Properties;
 
-use Erupt\Foundations\Lists\BaseList;
+use Erupt\Foundations\BaseList;
 use Erupt\Plans\Properties\Items\Property;
-use Erupt\Plans\Properties\Items\RelationshipProperty;
+use Erupt\Relationships\Relationships\Lists\RelationshipList;
+use Erupt\Plans\Attributes\Lists\AttributeList;
+use ReflectionClass;
 
 abstract class BasePropertyList extends BaseList
 {
-    public static function build($data): Self
+    public static function empty(): Static
     {
-        $product = new Static;
-
-        foreach($data["plans"] as $plan) {
-            $property = Property::build($plan);
-
-            $product->add($property);
-        }
-
-        foreach($data["relationshipPlans"] as $relationshipPlan) {
-            $relationshipProperty = RelationshipProperty::build($relationshipPlan);
-
-            $product->add($relationshipProperty);
-        }
-
-        return $product;
+        $reflection = new ReflectionClass(Static::class);
+        return $reflection->newInstanceWithoutConstructor();
     }
-    
-    //  Unit Type BasePropety|BasePropertyList
-    public function add($property)
+
+    public function __construct(string $type, array $data, RelationshipList $relationships)
     {
-        parent::add($property);
+        foreach($data["props"] as $prop) {
+            $this->add(new Property(new AttributeList($prop)));
+        }
+
+        $this->add($relationships->makeProps($type));
+    }
+
+    public function add(BaseProperty|Self $prop): void
+    {
+        $this->addItemOrList($prop);
+    }
+
+    public function remove(BaseProperty|Self $prop): void
+    {
+        $this->removeItemOrList($prop);
     }
 }

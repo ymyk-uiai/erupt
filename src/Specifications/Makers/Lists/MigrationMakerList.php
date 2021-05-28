@@ -3,7 +3,7 @@
 namespace Erupt\Specifications\Makers\Lists;
 
 use Erupt\Specifications\Makers\BaseMakerList;
-use Erupt\Interfaces\Makers\Items\MigrationMaker;
+use Erupt\Interfaces\Migration;
 
 class MigrationMakerList extends BaseMakerList
 {
@@ -19,7 +19,7 @@ class MigrationMakerList extends BaseMakerList
         $list = new Self;
 
         foreach($makers as $maker) {
-            if($maker instanceof MigrationMaker) {
+            if($maker instanceof Migration) {
                 $list->add($maker);
             }
         }
@@ -30,6 +30,6 @@ class MigrationMakerList extends BaseMakerList
     //  Unit Type
     public function add($maker)
     {
-        parent::add($maker);
+        parent::addItemOrList($maker);
     }
 }
