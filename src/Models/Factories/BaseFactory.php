@@ -2,23 +2,21 @@
 
 namespace Erupt\Models\Factories;
 
-use Erupt\Foundations\Resolver;
-use Erupt\Traits\{HasParams, HasList, HasApp, HasModel, HasProp};
+use Erupt\Foundations\ResolverItem;
+use Erupt\Traits\HasParams;
+use Erupt\Interfaces\Resolver;
 
-abstract class BaseFactory extends Resolver
+abstract class BaseFactory extends ResolverItem
 {
-    use HasParams,
-        HasList,
-        HasApp,
-        HasModel,
-        HasProp;
+    use HasParams;
 
-    public function __construct()
+    protected function getResolver(string $key, array &$keys): Resolver
     {
-        $this->setApp($app);
+        return $this;
+    }
 
-        $this->setModel($model);
-
-        $this->setProperty($prop);
+    public function evaluate()
+    {
+        return $this;
     }
 }

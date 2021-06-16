@@ -1,5 +1,5 @@
 <!erupt
-    print("<div class='{}-heading'>", self.files.model.model_name)
+    print("<div class='{}-heading'>", self.name)
 !>
     <!erupt
         foreach self.attributes.fillable as fillable into result {

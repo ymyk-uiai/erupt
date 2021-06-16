@@ -2,9 +2,9 @@
 
 namespace Erupt\Models\Factories\Lists;
 
-use Erupt\Models\Factories\BaseFactoriesList;
+use Erupt\Models\Factories\BaseFactoryList;
 
-class FactoryList extends BaseFactoriesList
+class FactoryList extends BaseFactoryList
 {
     //
 }

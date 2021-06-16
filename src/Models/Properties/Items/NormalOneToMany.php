@@ -6,10 +6,11 @@ use Erupt\Models\Properties\BaseProperty;
 use Erupt\Models\Values\Items\RelationshipMethodName\Value as RelationshipMethodName;
 use Erupt\Models\Values\Items\RelationshipName\Value as RelationshipName;
 use Erupt\Models\Values\Items\RelationshipArgs\Value as RelationshipArgs;
+use Erupt\Interfaces\Resolver;
 
 class NormalOneToMany extends BaseProperty
 {
-    public function finish()
+    public function finish(string $propName): void
     {
         $name = $this->values->get('name');
         $name = preg_replace("/_[a-zA-Z0-9_]+$/", "", $name);
@@ -27,6 +28,19 @@ class NormalOneToMany extends BaseProperty
                 new RelationshipName('belongsTo'),
                 new RelationshipArgs("${capName}::class"),
             ]);
+
+            if($this->values->getValue('columnType')->getValue() == 'UNSIGNED BIGINT') {
+                $this->setFlag('hasRelationshipMethod', true);
+            }
         }
+
+        parent::finish($propName);
+    }
+
+    protected function getDefaultFlags(): array
+    {
+        return [
+            'relationship' => true,
+        ];
     }
 }

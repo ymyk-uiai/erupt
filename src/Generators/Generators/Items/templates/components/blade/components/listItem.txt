@@ -1,0 +1,8 @@
+<!erupt
+    print("<div class='{}-listItem'>", self.files.model.model_name)
+    foreach self.props.resource as resource into result {
+        print("<div>{{ ${} }}</div>", resource.name)
+    }
+    print("{}", result)
+!>
+</div>

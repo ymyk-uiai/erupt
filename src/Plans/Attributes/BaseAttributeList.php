@@ -19,7 +19,7 @@ abstract class BaseAttributeList extends BaseList
             if(class_exists($className)) {
                 $this->add(new $className($attr['args']));
             } else {
-                print_r("$className\n");
+                //print_r("$className\n");
                 $this->add(new Items\Flag\Attribute($attr['name']));
             }
         }
@@ -79,7 +79,7 @@ abstract class BaseAttributeList extends BaseList
             $product->update($attr->getData());
         }
 
-        $product->finish();
+        //$product->finish($product->getName());
     
         return $product;
     }

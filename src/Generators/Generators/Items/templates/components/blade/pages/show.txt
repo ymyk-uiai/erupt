@@ -11,16 +11,20 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!erupt
-                        foreach self.attributes.display as fillable into result {
-                            preprint("<x-{}-full ", self.files.model.model_name)
-                            print(":{}='${}->{}'", fillable.key, self.files.model.model_name, fillable.key)
+                        resources = self.props.resource
+                        foreach resources.ordinary as resource into result {
+                            print(":{}='${}->{}'", resource.name, self.files.model.model_name, resource.name)
+                        }
+                        print("<x-{}-full {} >", self.files.model.model_name, result)
+
+                        print("</x-{}-full>", self.files.model.model_name)
+                    !>
+                    <!erupt
+                        foreach self.props.relationships.response as response into result {
+                            model = response.model
+                            print("<x-{}-list :{}s='${}->{}s'></x-{}-list>", model.files.model.model_name, model.files.model.model_name, self.files.model.model_name ,model.files.model.model_name, model.files.model.model_name)
                         }
                         print("{}", result)
-                        foreach self.props.relationships.content as content into result2 {
-                            print(":{}='${}->{}'", content.model.files.model.instances, self.files.model.model_name, content.model.files.model.instances)
-                        }
-                        print("{}", result2)
-                        print(" />")
                     !>
                 </div>
             </div>
@@ -34,16 +38,20 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!erupt
-                        foreach self.attributes.display as fillable into result {
-                            preprint("<x-{}-full ", self.files.model.model_name)
-                            print(":{}='${}->{}'", fillable.key, self.files.model.model_name, fillable.key)
+                        resources = self.props.resource
+                        foreach resources.ordinary as resource into result {
+                            print(":{}='${}->{}'", resource.name, self.files.model.model_name, resource.name)
+                        }
+                        print("<x-{}-full {} >", self.files.model.model_name, result)
+
+                        print("</x-{}-full>", self.files.model.model_name)
+                    !>
+                    <!erupt
+                        foreach self.props.relationships.response as response into result {
+                            model = response.model
+                            print("<x-{}-list :{}s='${}->{}s'></x-{}-list>", model.files.model.model_name, model.files.model.model_name, self.files.model.model_name, model.files.model.model_name, model.files.model.model_name)
                         }
                         print("{}", result)
-                        foreach self.props.relationships.content as content into result2 {
-                            print(":{}='${}->{}'", content.model.files.model.instances, self.files.model.model_name, content.model.files.model.instances)
-                        }
-                        print("{}", result2)
-                        print(" />")
                     !>
                 </div>
             </div>

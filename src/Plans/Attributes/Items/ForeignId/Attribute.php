@@ -11,21 +11,22 @@ class Attribute extends BaseAttribute implements SchemaCommand
 {
     protected string $params = "name";
 
+    public function getPropertyName(): string
+    {
+        return $this->name;
+    }
+    protected string $migrationMethodName = "foreignId";
+
     public function evaluate()
     {
         $updaterList = new AttributeList;
         
-        $a = new UnsignedBigIntegerAttribute(["name" => $this->name]);
+        $a = new UnsignedBigIntegerAttribute(["name" => $this->name], $this->root);
 
         $u = $a->evaluate();
 
         $updaterList->add($u);
 
         return $updaterList;
-    }
-
-    public function __toString()
-    {
-        return "foreignId('{$this->name}')";
     }
 }

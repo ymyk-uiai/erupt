@@ -14,9 +14,25 @@ abstract class BaseAttribute extends BaseItem
 {
     use HasParams;
 
-    public function __construct(string|array $args = "")
+    protected string $root;
+
+    public function __construct(string|array $args = "", string $root = null)
     {
+        $this->root = $root ?? Static::class;
+
         $this->takeArgs($args);
+    }
+
+    public function __toString()
+    {
+        return $this->migrationMethodName . "('" . $this->argsToString() . "')";
+    }
+
+    protected function argsToString(): string
+    {
+        return implode(',', array_filter($this->args, function ($v, $k) {
+            return !!$v;
+        }));
     }
 
     abstract protected function evaluate();

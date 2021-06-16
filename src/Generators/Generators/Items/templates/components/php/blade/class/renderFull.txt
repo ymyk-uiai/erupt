@@ -1,23 +1,23 @@
 class <!erupt short_name !> extends Component
 {
     <!erupt
-        foreach self.attributes.fillable as fillable into result {
-            print("public ${};", fillable.key)
+        foreach self.props.resource.ordinary as resource into result {
+            print("public ${};", resource.name)
         }
         print("{}", result)
     !>
 
     <!erupt
-        foreach self.attributes.fillable as fillable join "," into args {
-            print("${}", fillable.key)
+        foreach self.props.resource.ordinary as resource join "," into args {
+            print("${}", resource.name)
         }
     !>
 
     public function __construct(<!erupt print("{}", args)!>)
     {
         <!erupt
-            foreach self.attributes.fillable as fillable into result {
-                print("$this->{} = ${};", fillable.key, fillable.key)
+            foreach self.props.resource.ordinary as resource into result {
+                print("$this->{} = ${};", resource.name, resource.name)
             }
             print("{}", result)
         !>

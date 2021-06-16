@@ -13,6 +13,12 @@ class Attribute extends BaseAttribute implements SchemaCommand
 {
     protected string $params = "name";
 
+    public function getPropertyName(): string
+    {
+        return "morphs${$this->name}";
+    }
+    protected string $migrationMethodName = "morphs";
+
     public function evaluate()
     {
         $container = new AttributeContainer;
@@ -23,9 +29,9 @@ class Attribute extends BaseAttribute implements SchemaCommand
         $container->add($l_1);
         $container->add($l_2);
 
-        $m_1 = new UnsignedBigIntegerAttribute(["name" => "{$this->name}_id"]);
+        $m_1 = new UnsignedBigIntegerAttribute(["name" => "{$this->name}_id"], $this->root);
 
-        $m_2 = new StringAttribute(["name" => "{$this->name}_type"]);
+        $m_2 = new StringAttribute(["name" => "{$this->name}_type"], $this->root);
 
         $f_1 = $m_1->evaluate();
 
@@ -36,10 +42,5 @@ class Attribute extends BaseAttribute implements SchemaCommand
         $l_2->add($f_2);
 
         return $container;
-    }
-
-    public function __toString()
-    {
-        return "morphs('{$this->name}')";
     }
 }

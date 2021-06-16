@@ -67,7 +67,15 @@ abstract class BaseModelList extends ResolverList
 
     protected function getResolver(string $key, array &$keys): Resolver
     {
-        return $this;
+        $list = Static::empty();
+
+        foreach($this->list as $item) {
+            if($item->getFlag($key)) {
+                $list->add($item);
+            }
+        }
+
+        return $list;
     }
 
     public function evaluate()

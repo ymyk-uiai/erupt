@@ -6,6 +6,8 @@ use Exception;
 
 trait HasParams
 {
+    protected array $args = [];
+
     protected function takeArgs(string|array $args): void
     {
         $params = $this->parseParams(array_map('trim', explode(',', $this->params)));
@@ -14,7 +16,7 @@ trait HasParams
 
         foreach($params as $index => $param) {
             try {
-                $this->{$param['name']} = $this->takeArg($parsedArgs, is_string($args) ? $index : $param['name'], $param);
+                $this->args[{$param['name']}] = $this->takeArg($parsedArgs, is_string($args) ? $index : $param['name'], $param);
             } catch (Exception $e) {
                 echo 'Too few arguments: ', $e->getMessage(), "\n";
             }

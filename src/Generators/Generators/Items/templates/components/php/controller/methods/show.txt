@@ -10,17 +10,10 @@
 !>
 {
     <!erupt
-        foreach self.props.relationships.auth as auth join "," into result {
-            preprint("${}->load(", self.files.model.model_name)
-            print("'{}'", auth.name)
+        foreach self.props.relationships.response as response into result {
+            print(", '{}'", response.relationshipMethodName)
         }
-        print("{}", result)
-        foreach self.props.relationships.content as content into result {
-            preprint(",")
-            print("'{}'", content.model.files.model.instances)
-            postprint(");")
-        }
-        print("{}", result)
+        print("${}->load('{}'{});", self.files.model.model_name, auth.files.model.model_name, result)
     !>
 
     <!erupt

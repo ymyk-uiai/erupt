@@ -51,12 +51,14 @@ class NormalOneToMany extends BaseRelationship
 
         if($this->getSb()->check($type)) {
             $key = $this->getOb()->getType();
-            $props->add(new PlanProp(new AttributeList("relationship:${key}|has|flag:relationships"), $this));
+            $relationalPlanPropertyString = $this->addDefaultRelationalAttributes("relationship:${key}|has:${key}", $type, $key);
+            $props->add(new PlanProp(new AttributeList($relationalPlanPropertyString), "{$this->getOb()}"));
         }
 
         if($this->getOb()->check($type)) {
             $key = $this->getSb()->getType();
-            $props->add(new PlanProp(new AttributeList("foreignId:${key}_id|belongsTo|relationships"), $this));
+            $relationalPlanPropertyString = $this->addDefaultRelationalAttributes("foreignId:${key}_id|belongsTo:${key}", $type, $key);
+            $props->add(new PlanProp(new AttributeList($relationalPlanPropertyString), "{$this->getSb()}"));
         }
 
         return $props;

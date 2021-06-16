@@ -52,12 +52,14 @@ class MorphOneToMany extends BaseRelationship
 
         if($this->getSbs()->has($type)) {
             $key = $this->getOb()->getType();
-            $props->add(new PlanProp(new AttributeList("relationship:${key}|has|relationships"), $this));
+            $relationalPlanPropertyString = $this->addDefaultRelationalAttributes("relationship:${key}|has:${key}", $type, $key);
+            $props->add(new PlanProp(new AttributeList($relationalPlanPropertyString), "{$this->getOb()}"));
         }
 
         if($this->getOb()->check($type)) {
             $key = $this->getOb()->getType();
-            $props->add(new PlanProp(new AttributeList("morphs:${key}able|belongsTo|flag:relationships"), $this));
+            $relationalPlanPropertyString = $this->addDefaultRelationalAttributes("morphs:${key}able|belongsTo:${key}", $type, $key);
+            $props->add(new PlanProp(new AttributeList($relationalPlanPropertyString), "{$this->getSbs()}"));
         }
 
         return $props;

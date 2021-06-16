@@ -34,9 +34,11 @@ class EruptLang
 
         $self = $this->app->getModels()->get($modelName);
         $auth = $this->app->getModels()->get("user");
+        $app = $this->app;
         $scope = Scope::init([
             "self" => $self,
             "auth" => $auth,
+            "app" => $app,
             "class_name" => $self->resolve("files.$type.class_name"),
             "namespace" => $self->resolve("files.$type.namespace"),
             "short_name" => $self->resolve("files.$type.short_name"),

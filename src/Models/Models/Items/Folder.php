@@ -6,6 +6,11 @@ use Erupt\Models\Models\BaseModel;
 
 class Folder extends BaseModel
 {
+    static protected array $defaultAttributes = [
+        "name" => "resource",
+        "email" => "unique",
+    ];
+
     public function getType(): string
     {
         return "folder";

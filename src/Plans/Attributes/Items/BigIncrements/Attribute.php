@@ -12,18 +12,25 @@ class Attribute extends BaseAttribute implements SchemaCommand
 {
     protected string $params = "name";
 
+    protected string $migrationMethodName = "bigIncrements";
+
     public function __construct(string|array $args)
     {
         $this->takeArgs($args);
+    }
+
+    public function getPropertyName(): string
+    {
+        return $this->name;
     }
 
     public function evaluate()
     {
         $list = new AttributeList;
 
-        $m_1 = new UnsignedBigIntegerAttribute(["name" => $this->name]);
+        $m_1 = new UnsignedBigIntegerAttribute(["name" => $this->name], $this->root);
 
-        $m_2 = new AutoIncrementsAttribute();
+        $m_2 = new AutoIncrementsAttribute("", $this->root);
 
         $f_1 = $m_1->evaluate();
 
@@ -34,10 +41,5 @@ class Attribute extends BaseAttribute implements SchemaCommand
         $list->add($f_2);
 
         return $list;
-    }
-
-    public function __toString()
-    {
-        return "bigIncrement('{$this->name}')";
     }
 }

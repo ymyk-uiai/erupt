@@ -1,12 +1,10 @@
 public function definition()
 {
     <!erupt
-        foreach self.attributes.fillable as fillable join "," into result {
-            preprint("return [")
-            print("'{}' => $this->{}", fillable.name, fillable.factory)
-            postprint("];")
+        foreach self.props.needFactoryValue as needFactoryValue join "," into result {
+            print("'{}' => {}", needFactoryValue.name, needFactoryValue.factory)
         }
-        print("{}", result)
+        print("return [{}];", result)
     !>
 }
 

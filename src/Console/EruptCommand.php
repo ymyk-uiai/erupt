@@ -7,7 +7,7 @@ use Erupt\Application;
 
 class EruptCommand extends Command
 {
-    protected $signature = 'erupt {--app} {--files} {--migrations} {--template} {--result} {--reset}';
+    protected $signature = 'erupt {--debug} {--app} {--files} {--migrations} {--template} {--result} {--reset}';
 
     protected $description = 'Create your Laravel app';
 
@@ -20,6 +20,10 @@ class EruptCommand extends Command
 
     public function handle()
     {
+        if($this->option("debug")) {
+            return;
+        }
+
         if($this->option("app")) {
             if(!$this->option("files")) {
                 $this->app->unsetFiles();

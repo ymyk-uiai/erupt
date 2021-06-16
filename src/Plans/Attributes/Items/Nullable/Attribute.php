@@ -8,6 +8,8 @@ class Attribute extends BaseAttribute
 {
     protected string $params = "";
 
+    protected string $migrationMethodName = "nullable";
+
     public function evaluate()
     {
         return $this;
@@ -17,10 +19,5 @@ class Attribute extends BaseAttribute
     {
         return [
         ];
-    }
-
-    public function __toString()
-    {
-        return "nullable()";
     }
 }

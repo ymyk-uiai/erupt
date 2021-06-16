@@ -4,6 +4,7 @@ namespace Erupt\Plans\Properties;
 
 use Erupt\Plans\Attributes\Lists\AttributeList;
 use Erupt\Foundations\BaseItem;
+use Erupt\Interfaces\SchemaCommand;
 
 abstract class BaseProperty extends BaseItem
 {
@@ -22,5 +23,16 @@ abstract class BaseProperty extends BaseItem
     public function getAttributes(): AttributeList
     {
         return $this->attributes;
+    }
+
+    public function getName(): string
+    {
+        foreach($this->list as $item) {
+            if($item instanceof SchemaCommand) {
+                return $item->getPropertyName();
+            }
+        }
+
+        return "name not found";
     }
 }

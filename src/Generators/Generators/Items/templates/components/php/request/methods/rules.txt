@@ -1,17 +1,13 @@
 public function rules()
 {
     <!erupt
-        foreach self.attributes.fillable as fillable join "," into res {
-            preprint("return [")
-            foreach fillable.validation_rules as rule join "|" into resu {
-                preprint("'")
-                print("{}", rule.name)
-                postprint("'")
+        foreach self.props.fillable as fillable join "," into result {
+            foreach fillable.validationRules as rule join "|" into res {
+                print("{}", rule,name)
             }
-            print("'{}' => {}", fillable.name, resu)
-            postprint("];")
+            print("'{}' => '{}'", fillable.name, res)
         }
-        print("{}", res)
+        print("return [{}];", result)
     !>
 }
 

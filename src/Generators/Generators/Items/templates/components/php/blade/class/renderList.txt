@@ -1,0 +1,30 @@
+class <!erupt short_name !> extends Component
+{
+    <!erupt
+        print("public ${}s;", self.files.model.model_name)
+    !>
+
+    public function __construct(<!erupt print("${}s", self.files.model.model_name)!>)
+    {
+        <!erupt
+            print("$this->{}s = ${}s;", self.files.model.model_name, self.files.model.model_name)
+        !>
+    }
+
+    public function render()
+    {
+        <!erupt
+            print("return view('components.{}.list');", self.files.model.model_name)
+        !>
+    }
+}
+
+<data>
+{
+    "type": "php/blade",
+    "components": [],
+    "use": [
+        "Illuminate\\View\\Component"
+    ]
+}
+</data>

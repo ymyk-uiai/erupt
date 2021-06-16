@@ -13,6 +13,12 @@ class Attribute extends BaseAttribute implements SchemaCommand
 {
     protected string $params = "precision?";
 
+    public function getPropertyName(): string
+    {
+        return "timestamps";
+    }
+    protected string $migrationMethodName = "timestamps";
+
     public function evaluate()
     {
         $container = new AttributeContainer;
@@ -23,11 +29,11 @@ class Attribute extends BaseAttribute implements SchemaCommand
         $container->add($list_1);
         $container->add($list_2);
 
-        $m_1_1 = new TimestampAttribute(["name" => "created_at", "precision" => $this->precision]);
-        $m_1_2 = new NullableAttribute();
+        $m_1_1 = new TimestampAttribute(["name" => "created_at", "precision" => $this->precision], $this->root);
+        $m_1_2 = new NullableAttribute("", $this->root);
 
-        $m_2_1 = new TimestampAttribute(["name" => "updated_at", "precision" => $this->precision]);
-        $m_2_2 = new NullableAttribute();
+        $m_2_1 = new TimestampAttribute(["name" => "updated_at", "precision" => $this->precision], $this->root);
+        $m_2_2 = new NullableAttribute("", $this->root);
 
         $list_1->add($m_1_1->evaluate());
         $list_1->add($m_1_2->evaluate());
@@ -36,10 +42,5 @@ class Attribute extends BaseAttribute implements SchemaCommand
         $list_2->add($m_2_2->evaluate());
         
         return $container;
-    }
-
-    public function __toString()
-    {
-        return "timestamps()";
     }
 }

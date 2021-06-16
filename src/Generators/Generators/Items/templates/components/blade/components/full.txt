@@ -1,31 +1,10 @@
 <!erupt
     print("<div class='{}-full'>", self.files.model.model_name)
 !>
-    <!erupt
-        foreach self.attributes.fillable as fillable into result {
-            print("<div>{{ ${} }}</div>", fillable.name)
-        }
-        print("{}", result)
-    !>
 
     <!erupt
-        foreach self.attributes.relationship as relationship into result {
-            foreach relationship.attributes.fillable as fillable into result2 {
-                print(":{}='${}->{}'", fillable.key, relationship.model.files.model.model_name, fillable.key)
-            }
-            print("<x-{}-full {} />", relationship.key, result2)
-        }
-        print("{}", result)
-    !>
-
-    <!erupt
-        foreach self.props.relationships.content as content into result {
-            foreach content.model.attributes.fillable as fillable into result2 {
-                print(":{}='${}->{}'", fillable.key, content.model.symbol.name, fillable.key)
-            }
-            print("@foreach (${} as ${})", content.model.symbol.instance_plural, content.model.symbol.instance)
-            print("<x-{}-heading {} />", content.name, result2)
-            print("@endforeach")
+        foreach self.props.resource.ordinary as resource into result {
+            print("<div>{{ ${} }}</div>", resource.name)
         }
         print("{}", result)
     !>

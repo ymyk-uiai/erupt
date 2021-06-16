@@ -41,4 +41,9 @@ abstract class BaseMember
     {
         return $this->type == $type ? true : false;
     }
+
+    public function __toString(): string
+    {
+        return "{$this->getType()}";
+    }
 }

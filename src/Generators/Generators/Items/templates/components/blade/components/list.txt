@@ -1,0 +1,10 @@
+<!erupt
+print("<div class='{}-list'>", self.files.model.model_name)
+    print("@foreach(${}s as ${})", self.files.model.model_name, self.files.model.model_name)
+    foreach self.props.resource as resource into result {
+        print(":{}='${}->{}'", resource.name, self.files.model.model_name, resource.name)
+    }
+    print("<x-{}-listItem {}></x-{}-litItem>", self.files.model.model_name, result, self.files.model.model_name)
+!>
+    @endforeach
+</div>

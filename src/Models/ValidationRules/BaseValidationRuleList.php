@@ -2,13 +2,12 @@
 
 namespace Erupt\Models\ValidationRules;
 
-use Erupt\Foundations\Resolver;
+use Erupt\Interfaces\Resolver;
+use Erupt\Foundations\ResolverList;
 use Erupt\Tratis\HasList;
 
-abstract class BaseValidationRuleList extends Resolver
+abstract class BaseValidationRuleList extends ResolverList
 {
-    use HasList;
-
     public function add() {}
 
     public function remove() {}
@@ -24,5 +23,10 @@ abstract class BaseValidationRuleList extends Resolver
         }
 
         return $props;
+    }
+
+    public function evaluate()
+    {
+        return $this;
     }
 }

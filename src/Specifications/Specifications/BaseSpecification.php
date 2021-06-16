@@ -51,8 +51,8 @@ abstract class BaseSpecification extends ResolverItem
             "spec_variant" => new Value($this->data["data_spec_variant"]),
             "use_as" => new Value($this->data["data_use_as"]),
             "full_use_as" => new Value($this->data["data_class_name"]),
-            "instance" => new Value($this->data["model_name"]),
-            "instances" => new Value($this->data["model_name"]."s"),
+            "instance", "name" => new Value($this->data["model_name"]),
+            "instances", "name_plural" => new Value($this->data["model_name"]."s"),
         };
     }
 

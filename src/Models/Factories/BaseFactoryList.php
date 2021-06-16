@@ -2,34 +2,101 @@
 
 namespace Erupt\Models\Factories;
 
-use Erupt\Foundations\Resolver;
-use Erupt\Traits\{HasList, HasApp, HasModel, HasProp};
+use Erupt\Foundations\ResolverList;
+use Erupt\Interfaces\Resolver;
+use Erupt\Interfaces\FactoryMain;
+use Erupt\Models\Values\Items\Value\Value;
+use Erupt\Interfaces\FactoryCommand;
 
-abstract class BaseFactoryList extends Resolver
+abstract class BaseFactoryList extends ResolverList
 {
-    use HasList, HasApp, HasModel, HasProp;
-
-    public function __construct()
+    public function getResult(): Value
     {
-        $this->setApp($app);
+        $result = [];
 
-        $this->setModel($model);
+        $command = $this->getCommand();
+        $modifiers = $this->getModifiers();
 
-        $this->setProperty($prop);
+        $methods = array_merge($modifiers, [$command]);
+
+        foreach($methods as $method) {
+            $result[] = strval($method);
+        }
+
+        if($command instanceof FactoryCommand) {
+            array_unshift($result, '$this', 'faker');
+        }
+
+        /*  getResult() -> __toString()
+        return match($this->isCommand()) {
+            true => '$this->faker'.implode('->', $methods),
+            false => implode('->', $methods),
+        };
+        */
+
+        return new Value(implode('->', $result));
     }
 
-    public function getResolver(): Resolver
+    public function getCommand(): FactoryMain
     {
-        //
+        foreach($this as $factory) {
+            if($factory instanceof FactoryMain) {
+                return $factory;
+            }
+        }
+
+        throw new Exception("no command");
     }
 
-    public function add()
+    protected function getModifiers(): array
     {
-        //
+        $result = [];
+
+        foreach($this as $factory) {
+            if($factory instanceof FactoryModifier) {
+                $result[] = $factory->getModifier();
+            }
+        }
+
+        return $result;
     }
 
-    public function remove()
+    public function update(array $values): void
     {
-        //
+        foreach($values as $value) {
+            if($value instanceof FactoryMain) {
+                $this->removeMainFactory();
+            }
+            $this->add($value);
+        }
+    }
+
+    protected function removeMainFactory(): void
+    {
+        foreach($this as $factory) {
+            if($factory instanceof FactoryMain) {
+                $this->remove($factory);
+            }
+        }
+    }
+
+    public function getResolver(string $key, array &$keys): Resolver
+    {
+        return $this;
+    }
+
+    public function evaluate()
+    {
+        return $this;
+    }
+
+    public function add($itemOrList)
+    {
+        parent::addItemOrList($itemOrList);
+    }
+
+    public function remove($itemOrList)
+    {
+        parent::removeItemOrList($itemOrList);
     }
 }

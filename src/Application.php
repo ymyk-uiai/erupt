@@ -6,13 +6,16 @@ use Erupt\Generators\Generators\BaseGenerator as Generator;
 use Erupt\Generators\Generators\Items\LaravelGenerator;
 use Erupt\Generators\Generators\Lists\GeneratorList;
 use Erupt\Models\Models\Lists\ModelList;
+use Erupt\Models\Models\BaseModel as Model;
 use Erupt\Plans\Plans\Lists\PlanList;
 use Erupt\Relationships\Relationships\Lists\RelationshipList;
 use Erupt\Specifications\Makers\Lists\MakerList;
 use Erupt\Specifications\Specifications\Lists\FileSpecificationList;
 use Erupt\Specifications\Specifications\Lists\MigrationSpecificationList;
+use Erupt\Foundations\ResolverItem;
+use Erupt\Interfaces\Resolver;
 
-class Application
+class Application extends ResolverItem
 {
     protected ModelList $models;
 
@@ -36,9 +39,13 @@ class Application
     {
         $relationships = new RelationshipList($this, $config);
 
+        //print_r($relationships);
+
         $plans = new PlanList($config['models'], $relationships);
 
         $this->models = new ModelList($this, $plans, $relationships);
+        //  $this->models = $plans->makeModels($this);
+        //  $this->migrations = $plans->makeMigrations()
 
         $this->generators = GeneratorList::build();
 
@@ -138,6 +145,23 @@ class Application
                 $app->add_policy($policy_key_value);
             }
         ];
+    }
+
+    protected function getResolver(string $key, array &$keys): Resolver
+    {
+        try {
+            return match($key) {
+                "models" => $this->getModels(),
+                default => throw new Exception($key),
+            };
+        } catch (Exception $e) {
+            echo 'Unknown resolve key: ',  $e->getMessage(), "\n";
+        }
+    }
+
+    public function evaluate()
+    {
+        return $this;
     }
 
     public function add_seeder($seeder_class): void

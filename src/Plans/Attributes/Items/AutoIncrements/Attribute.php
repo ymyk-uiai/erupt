@@ -7,7 +7,9 @@ use Erupt\Interfaces\SchemaModifier;
 
 class Attribute extends BaseAttribute implements SchemaModifier
 {
-    protected string $params = "name";
+    protected string $params = "";
+
+    protected string $migrationMethodName = "autoIncrements";
  
     public function evaluate()
     {
@@ -18,10 +20,5 @@ class Attribute extends BaseAttribute implements SchemaModifier
     {
         return [
         ];
-    }
-
-    public function __toString()
-    {
-        return "autoIncrements()";
     }
 }

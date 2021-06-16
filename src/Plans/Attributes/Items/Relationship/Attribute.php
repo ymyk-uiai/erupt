@@ -21,6 +21,9 @@ class Attribute extends BaseAttribute implements SchemaDummyCommand
             "values" => [
                 new NameValue($this->name),
             ],
+            "flags" => [
+                'hasRelationshipMethod',
+            ],
         ];
     }
 }

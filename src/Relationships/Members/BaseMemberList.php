@@ -35,6 +35,15 @@ abstract class BaseMemberList implements IteratorAggregate
         return false;
     }
 
+    public function __toString(): string
+    {
+        return implode(', ', array_reduce($this->list, function ($carry, $item) {
+            array_push($carry, $item->getType());
+
+            return $carry;
+        }, []));
+    }
+
     public function add(BaseMember|BaseMemberList $item): void
     {
         if($item instanceof BaseMemberList) {

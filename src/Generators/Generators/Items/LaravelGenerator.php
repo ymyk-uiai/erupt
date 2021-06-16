@@ -107,10 +107,10 @@ class LaravelGenerator extends BaseGenerator
             "data_sup_class_name" => "View\\Components\\{Name}{Variant}",
             "template_stem" => "{variant}",
             "makers" => [
-                "user:full,heading,update,button",
-                "post:full,heading,store,update,button",
-                "folder:full,heading,store,update,button",
-                "comment:full,heading,store,update,button",
+                "user:full,heading,update,button,list,listItem",
+                "post:full,heading,store,update,button,list,listItem",
+                "folder:full,heading,store,update,button,list,listItem",
+                "comment:full,heading,store,update,button,list,listItem",
             ],
         ],
         "blade_template" => [
@@ -119,10 +119,10 @@ class LaravelGenerator extends BaseGenerator
             "template_sup_path" => "templates/components/blade/components",
             "output_sup_path" => "components/{name}",
             "makers" => [
-                "user:full,heading,update,button",
-                "post:full,heading,store,update,button",
-                "folder:full,heading,store,update,button",
-                "comment:full,heading,store,update,button",
+                "user:full,heading,update,button,list,listItem",
+                "post:full,heading,store,update,button,list,listItem",
+                "folder:full,heading,store,update,button,list,listItem",
+                "comment:full,heading,store,update,button,list,listItem",
             ],
         ],
         "layout_blade" => [
