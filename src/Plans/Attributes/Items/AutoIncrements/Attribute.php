@@ -16,7 +16,7 @@ class Attribute extends BaseAttribute implements SchemaModifier
         return $this;
     }
 
-    public function getData(): array
+    public function getBuilders(): array
     {
         return [
         ];

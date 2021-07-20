@@ -4,10 +4,10 @@ namespace Erupt\Plans\Attributes\Items\Timestamp;
 
 use Erupt\Plans\Attributes\BaseAttribute;
 use Erupt\Interfaces\SchemaCommand;
-use Erupt\Models\Values\Items\Name\Value as NameValue;
-use Erupt\Models\Values\Items\ColumnType\Value as ColumnTypeValue;
-use Erupt\Models\Values\Items\ValueType\Value as ValueTypeValue;
-use Erupt\Models\Factories\Items\Now\Factory as NowFactory;
+use Erupt\Models\PropertyValues\Items\ColumnType\Value as ColumnType;
+use Erupt\Models\PropertyValues\Items\ValueType\Value as ValueType;
+use Erupt\Models\PropertyValues\Items\Name\Value as Name;
+use Erupt\Models\Factories\Items\Now\Factory as Now;
 
 class Attribute extends BaseAttribute implements SchemaCommand
 {
@@ -15,7 +15,7 @@ class Attribute extends BaseAttribute implements SchemaCommand
 
     public function getPropertyName(): string
     {
-        return $this->name;
+        return $this->args['name'];
     }
     protected string $migrationMethodName = "timestamp";
 
@@ -24,16 +24,23 @@ class Attribute extends BaseAttribute implements SchemaCommand
         return $this;
     }
 
-    public function getData(): array
+    public function getBuilders(): array
     {
         return [
-            "values" => [
-                new NameValue($this->name),
-                new ColumnTypeValue("TIMESTAMP"),
-                new ValueTypeValue("string"),
+            [
+                ColumnType::class,
+                "TIMESTAMP",
             ],
-            "factories" => [
-                new NowFactory(),
+            [
+                ValueType::class,
+                "string",
+            ],
+            [
+                Name::class,
+                $this->args['name'],
+            ],
+            [
+                Now::class,
             ],
         ];
     }

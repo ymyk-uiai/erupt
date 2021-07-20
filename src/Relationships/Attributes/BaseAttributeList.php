@@ -2,21 +2,11 @@
 
 namespace Erupt\Relationships\Attributes;
 
-use Erupt\Traits\HasList;
 use Erupt\Relationships\Attributes\Items;
-use IteratorAggregate;
-use Erupt\Foundations\BaseIterator;
+use Erupt\Foundations\BaseList;
 
-abstract class BaseAttributeList implements IteratorAggregate
+abstract class BaseAttributeList extends BaseList
 {
-    use HasList;
-
-    public function getIterator()
-    {
-        return new BaseIterator($this->list);
-    }
-
-
     public function __construct(array $attrs)
     {
         foreach($attrs as $attrName => $args) {

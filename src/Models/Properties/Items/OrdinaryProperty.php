@@ -3,13 +3,17 @@
 namespace Erupt\Models\Properties\Items;
 
 use Erupt\Models\Properties\BaseProperty;
+use Erupt\Models\PropertyFlags\Items\Flag\Flag as Flag;
 
 class OrdinaryProperty extends BaseProperty
 {
-    protected function getDefaultFlags(): array
+    protected function getDefaults(): array
     {
         return [
-            'ordinary' => true,
+            [
+                Flag::class,
+                'ordinary',
+            ],
         ];
     }
 }

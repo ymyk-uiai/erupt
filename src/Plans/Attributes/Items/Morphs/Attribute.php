@@ -15,7 +15,7 @@ class Attribute extends BaseAttribute implements SchemaCommand
 
     public function getPropertyName(): string
     {
-        return "morphs${$this->name}";
+        return "morphs${$this->args['name']}";
     }
     protected string $migrationMethodName = "morphs";
 
@@ -29,9 +29,9 @@ class Attribute extends BaseAttribute implements SchemaCommand
         $container->add($l_1);
         $container->add($l_2);
 
-        $m_1 = new UnsignedBigIntegerAttribute(["name" => "{$this->name}_id"], $this->root);
+        $m_1 = new UnsignedBigIntegerAttribute(["name" => "{$this->args['name']}_id"], $this->root);
 
-        $m_2 = new StringAttribute(["name" => "{$this->name}_type"], $this->root);
+        $m_2 = new StringAttribute(["name" => "{$this->args['name']}_type"], $this->root);
 
         $f_1 = $m_1->evaluate();
 

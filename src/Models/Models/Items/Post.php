@@ -14,6 +14,7 @@ class Post extends BaseModel
     static protected array $defaultRelationalAttributes = [
         "user" => "required",
         "comment" => "interactive",
+        "folder" => "nullable",
     ];
 
     public function getType(): string

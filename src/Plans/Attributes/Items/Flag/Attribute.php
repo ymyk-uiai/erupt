@@ -3,6 +3,7 @@
 namespace Erupt\Plans\Attributes\Items\Flag;
 
 use Erupt\Plans\Attributes\BaseAttribute;
+use Erupt\Models\PropertyFlags\Items\Flag\Flag;
 
 class Attribute extends BaseAttribute
 {
@@ -13,12 +14,13 @@ class Attribute extends BaseAttribute
         return $this;
     }
 
-    public function getData(): array
+    public function getBuilders(): array
     {
         return [
-            "flags" => [
-                $this->name,
-            ],
+            [
+                Flag::class,
+                $this->args['name'],
+            ]
         ];
     }
 }

@@ -2,16 +2,23 @@
 
 namespace Erupt\Models\ModelValues;
 
-use Erupt\Foundations\ResolverItem;
+use Erupt\Application;
+use Erupt\Foundations\ResolverItemBelongsToModel;
 use Erupt\Interfaces\Resolver;
+use Erupt\Models\Models\BaseModel as Model;
 
-abstract class BaseModelValue extends ResolverItem
+abstract class BaseModelValue extends ResolverItemBelongsToModel
 {
     protected int|string|bool $value;
 
-    public function __construct($value)
+    public function __construct(Application $app, Model $model)
     {
-        $this->setValue($value);
+        parent::__construct($app, $model);
+    }
+
+    public function build($value): void
+    {
+        $this->value = $value;
     }
 
     abstract public function getKey(): string;

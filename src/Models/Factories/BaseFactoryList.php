@@ -2,14 +2,22 @@
 
 namespace Erupt\Models\Factories;
 
-use Erupt\Foundations\ResolverList;
-use Erupt\Interfaces\Resolver;
-use Erupt\Interfaces\FactoryMain;
-use Erupt\Models\Values\Items\Value\Value;
+use Erupt\Application;
+use Erupt\Foundations\ResolverListBelongsToProperty;
 use Erupt\Interfaces\FactoryCommand;
+use Erupt\Interfaces\FactoryMain;
+use Erupt\Interfaces\Resolver;
+use Erupt\Models\Models\BaseModel as Model;
+use Erupt\Models\Properties\BaseProperty as Property;
+use Erupt\Models\Values\Items\Value\Value;
 
-abstract class BaseFactoryList extends ResolverList
+abstract class BaseFactoryList extends ResolverListBelongsToProperty
 {
+    public function __construct(Application $app, Model $model, Property $property)
+    {
+        parent::__construct($app, $model, $property);
+    }
+
     public function getResult(): Value
     {
         $result = [];

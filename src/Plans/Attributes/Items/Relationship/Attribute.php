@@ -3,8 +3,9 @@
 namespace Erupt\Plans\Attributes\Items\Relationship;
 
 use Erupt\Plans\Attributes\BaseAttribute;
-use Erupt\Models\Values\Items\Name\Value as NameValue;
 use Erupt\Interfaces\SchemaDummyCommand;
+use Erupt\Models\PropertyValues\Items\Name\Value as Name;
+use Erupt\Models\PropertyFlags\Items\Flag\Flag;
 
 class Attribute extends BaseAttribute implements SchemaDummyCommand
 {
@@ -15,13 +16,15 @@ class Attribute extends BaseAttribute implements SchemaDummyCommand
         return $this;
     }
 
-    public function getData(): array
+    public function getBuilders(): array
     {
         return [
-            "values" => [
-                new NameValue($this->name),
+            [
+                Name::class,
+                $this->args['name'],
             ],
-            "flags" => [
+            [
+                Flag::class,
                 'hasRelationshipMethod',
             ],
         ];

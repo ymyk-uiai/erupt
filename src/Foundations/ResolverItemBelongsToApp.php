@@ -12,6 +12,17 @@ abstract class ResolverItemBelongsToApp extends ResolverItem
 
     public function __construct(Application $app)
     {
-        $this->setApp($app);
+        $this->setApplication($app);
+    }
+
+    public function startDebug(): void
+    {
+        unset($this->app);
+
+        foreach($this as $value) {
+            if(is_object($value) && method_exists($value, 'startDebug')) {
+                $value->startDebug();
+            }
+        }
     }
 }

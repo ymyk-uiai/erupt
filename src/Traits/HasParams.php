@@ -16,7 +16,7 @@ trait HasParams
 
         foreach($params as $index => $param) {
             try {
-                $this->args[{$param['name']}] = $this->takeArg($parsedArgs, is_string($args) ? $index : $param['name'], $param);
+                $this->args[$param['name']] = $this->takeArg($parsedArgs, is_string($args) ? $index : $param['name'], $param);
             } catch (Exception $e) {
                 echo 'Too few arguments: ', $e->getMessage(), "\n";
             }

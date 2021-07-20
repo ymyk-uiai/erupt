@@ -3,28 +3,13 @@
 namespace Erupt\Relationships\Relationships;
 
 use Erupt\Application;
-use Erupt\Traits\HasList;
 use ReflectionClass;
 use Erupt\Relationships\Relationships\Lists\{NormalOneToManyList, MorphOneToManyList};
 use Exception;
-use IteratorAggregate;
-use Erupt\Foundations\BaseIterator;
+use Erupt\Foundations\BaseList;
 
-abstract class BaseRelationshipList implements IteratorAggregate
+abstract class BaseRelationshipList extends BaseList
 {
-    use HasList;
-
-    public function getIterator()
-    {
-        return new BaseIterator($this->list);
-    }
-
-    public static function empty(): Static
-    {
-        $reflection = new ReflectionClass(BaseRelationshipList::class);
-        return $reflection->newInstanceWithoutConstructor();
-    }
-
     public function __construct(Application $app, array $config)
     {
         $relationshipPlans = $config["relationships"] ?? [];

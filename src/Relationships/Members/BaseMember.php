@@ -3,8 +3,9 @@
 namespace Erupt\Relationships\Members;
 
 use Erupt\Relationships\Attributes\Lists\AttributeList;
+use Erupt\Foundations\BaseItem;
 
-abstract class BaseMember
+abstract class BaseMember extends BaseItem
 {
     protected string $type;
 

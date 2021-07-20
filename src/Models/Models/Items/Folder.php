@@ -11,6 +11,11 @@ class Folder extends BaseModel
         "email" => "unique",
     ];
 
+    static protected array $defaultRelationalAttributes = [
+        "user" => "required",
+        "comment" => "interactive",
+    ];
+
     public function getType(): string
     {
         return "folder";

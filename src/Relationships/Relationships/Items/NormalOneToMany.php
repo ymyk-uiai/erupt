@@ -5,6 +5,8 @@ namespace Erupt\Relationships\Relationships\Items;
 use Erupt\Relationships\Relationships\BaseRelationship;
 use Erupt\Relationships\Members\Items\Member;
 use Erupt\Plans\Properties\Items\NormalOneToMany as PlanProp;
+use Erupt\Plans\Properties\Items\NormalOneToManyHas as Has;
+use Erupt\Plans\Properties\Items\NormalOneToManyBelongsTo as BelongsTo;
 use Erupt\Plans\Properties\Lists\PropertyList;
 use Erupt\Plans\Attributes\Lists\AttributeList;
 
@@ -52,17 +54,15 @@ class NormalOneToMany extends BaseRelationship
         if($this->getSb()->check($type)) {
             $key = $this->getOb()->getType();
             $relationalPlanPropertyString = $this->addDefaultRelationalAttributes("relationship:${key}|has:${key}", $type, $key);
-            $props->add(new PlanProp(new AttributeList($relationalPlanPropertyString), "{$this->getOb()}"));
+            $props->add(new Has(new AttributeList($relationalPlanPropertyString), "{$this->getSb()}", "{$this->getOb()}"));
         }
 
         if($this->getOb()->check($type)) {
             $key = $this->getSb()->getType();
             $relationalPlanPropertyString = $this->addDefaultRelationalAttributes("foreignId:${key}_id|belongsTo:${key}", $type, $key);
-            $props->add(new PlanProp(new AttributeList($relationalPlanPropertyString), "{$this->getSb()}"));
+            $props->add(new BelongsTo(new AttributeList($relationalPlanPropertyString), "{$this->getSb()}", "{$this->getOb()}"));
         }
 
         return $props;
     }
-
-    //  makeCorrespondingProp()
 }

@@ -29,10 +29,10 @@ class Attribute extends BaseAttribute implements SchemaCommand
         $container->add($list_1);
         $container->add($list_2);
 
-        $m_1_1 = new TimestampAttribute(["name" => "created_at", "precision" => $this->precision], $this->root);
+        $m_1_1 = new TimestampAttribute(["name" => "created_at", "precision" => $this->args['precision']], $this->root);
         $m_1_2 = new NullableAttribute("", $this->root);
 
-        $m_2_1 = new TimestampAttribute(["name" => "updated_at", "precision" => $this->precision], $this->root);
+        $m_2_1 = new TimestampAttribute(["name" => "updated_at", "precision" => $this->args['precision']], $this->root);
         $m_2_2 = new NullableAttribute("", $this->root);
 
         $list_1->add($m_1_1->evaluate());

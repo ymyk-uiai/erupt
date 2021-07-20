@@ -1,5 +1,5 @@
 <!erupt
-    foreach self.props.relationships.hasRelationshipMethod as relationship join "" into result {
+    foreach self.props.relationship.hasRelationshipMethod as relationship join "" into result {
         print("public function {}() {", relationship.relationshipMethodName)
         print("return $this->{}({});", relationship.relationshipName, relationship.relationshipArgs)
         print("}")

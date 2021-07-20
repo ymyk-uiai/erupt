@@ -8,12 +8,12 @@ trait BelongsToApp
 {
     protected Application $app;
 
-    public function setApp(Application $app): void
+    public function setApplication(Application $app): void
     {
         $this->app = $app;
     }
 
-    public function getApp(): Application
+    public function getApplication(): Application
     {
         return $this->app;
     }

@@ -3,40 +3,58 @@
 namespace Erupt\Models\Properties;
 
 use Erupt\Application;
-use Erupt\Foundations\ResolverItem;
-use Erupt\Models\Values\Lists\PropValueList as ValueList;
-use Erupt\Models\Values\Items\Value\Value;
-use Erupt\Models\ValidationRules\Lists\ValidationRuleList;
-use Erupt\Models\Factories\Lists\FactoryList;
-use Erupt\Traits\BelongsToApp;
-use Erupt\Traits\BelongsToModel;
-use Erupt\Traits\HasFlags;
+use Erupt\Foundations\ResolverItemBelongsToModel;
 use Erupt\Interfaces\Resolver;
+use Erupt\Models\Factories\BaseFactory as Factory;
+use Erupt\Models\PropertyFlags\BasePropertyFlag as PropertyFlag;
+use Erupt\Models\PropertyValues\BasePropertyValue as PropertyValue;
+use Erupt\Models\ValidationRules\BaseValidationRule as ValidationRule;
+use Erupt\Models\Factories\Lists\FactoryList;
+use Erupt\Models\PropertyFlags\Lists\PropertyFlagList as FlagList;
+use Erupt\Models\PropertyValues\Lists\PropertyValueList as ValueList;
+use Erupt\Models\ValidationRules\Lists\ValidationRuleList;
+use Erupt\Models\Values\Items\Value\Value;
+use Erupt\Models\Models\BaseModel as Model;
+use Erupt\Traits\HasFactoryList;
+use Erupt\Traits\HasPropertyFlagList as HasFlagList;
+use Erupt\Traits\HasPropertyValueList as HasValueList;
+use Erupt\Traits\HasValidationRuleList;
 use Exception;
 
-abstract class BaseProperty extends ResolverItem
+abstract class BaseProperty extends ResolverItemBelongsToModel
 {
-    use BelongsToApp,
-        BelongsToModel,
-        HasFlags;
+    use HasValueList, HasFlagList, HasValidationRuleList, HasFactoryList;
 
-    protected ValueList $values;
-    
-    protected ValidationRuleList $validationRules;
-
-    protected FactoryList $factories;
-
-    public function __construct($app, $model)
+    public function __construct(Application $app, Model $model)
     {
-        $this->setApp($app);
+        parent::__construct($app, $model);
 
-        $this->setModel($model);
+        $this->values = new ValueList($app, $model, $this);
+        $this->flags = new FlagList($app, $model, $this);
+        $this->validationRules = new ValidationRuleList($app, $model, $this);
+        $this->factories = new FactoryList($app, $model, $this);
+    }
 
-        $this->setValues(ValueList::empty());
+    protected function makeBuilder($bldr)
+    {
+        $builder = new $bldr[0]($this->app, $this->model, $this);
+        $builder->build($bldr[1]);
+        return $builder;
+    }
 
-        $this->setValidationRules(ValidationRuleList::empty());
-
-        $this->setFactories(FactoryList::empty());
+    public function build($builder): void
+    {
+        if($builder instanceof PropertyValue) {
+            $this->updatePropertyValues($builder);
+        } else if($builder instanceof PropertyFlag) {
+            $this->updatePropertyFlags($builder);
+        } else if($builder instanceof ValidationRule) {
+            $this->updateValidationRules($builder);
+        } else if($builder instanceof Factory) {
+            $this->updateFactories($builder);
+        } else {
+            print_r(get_class($builder));
+        }
     }
 
     public function getName(): string
@@ -44,67 +62,20 @@ abstract class BaseProperty extends ResolverItem
         return $this->values->get('name');
     }
 
-    public function setValues(ValueList $values): void
+    public function complete(): void
     {
-        $this->values = $values;
-    }
+        /*
+        $defaults = $this->getModel()->getDefaults($this->getName());
 
-    public function getPropValues(): ValueList
-    {
-        return $this->values;
-    }
-
-    public function setValidationRules(ValidationRuleList $validationRules): void
-    {
-        $this->validationRules = $validationRules;
-    }
-
-    public function getValidationRules(): ValidationRuleList
-    {
-        return $this->validationRules;
-    }
-
-    public function setFactories(FactoryList $factories): void
-    {
-        $this->factories = $factories;
-    }
-
-    public function getFactories(): FactoryList
-    {
-        return $this->factories;
-    }
-
-    public function finish(string $propName): void
-    {
-        $defaultFlags = $this->getModel()->getDefaultFlags($propName);
-
-        foreach($defaultFlags as $name => $bool) {
-            $this->setFlag($name, $bool);
+        foreach($defaults as $default) {
+            $this->build($default);
         }
+        */
 
-        $defaultFlags = $this->getDefaultFlags();
+        $defaults = $this->getDefaults();
 
-        foreach($defaultFlags as $name => $bool) {
-            $this->setFlag($name, $bool);
-        }
-    }
-
-    public function update(array $data): void
-    {
-        foreach($data as $key => $value) {
-            match($key) {
-                "values" => $this->getPropValues()->update($value),
-                "validationRules" => 0,
-                "factories" => $this->getFactories()->update($value),
-                "flags" => $this->updateFlags($value),
-            };
-        }
-    }
-
-    protected function updateFlags(array $flags): void
-    {
-        foreach($flags as $flag) {
-            $this->flags[$flag] = true;
+        foreach($defaults as $default) {
+            $this->build($this->makeBuilder($default));
         }
     }
 
@@ -117,7 +88,7 @@ abstract class BaseProperty extends ResolverItem
                 "valueType",
                 "relationshipMethodName",
                 "relationshipName",
-                "relationshipArgs" => $this->getPropValues()->getValue($key),
+                "relationshipArgs" => $this->getPropertyValues()->getValue($key),
                 "factory" => $this->getFactories()->getResult(),
                 "validationRules" => $this->getValidationRules(),
                 default => throw new Exception($key),

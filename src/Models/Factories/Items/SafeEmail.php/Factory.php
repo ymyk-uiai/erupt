@@ -7,6 +7,8 @@ use Erupt\Interfaces\FactoryCommand;
 
 class Factory extends BaseFactory implements FactoryCommand
 {
+    protected string $params = "";
+
     public function __toString(): string
     {
         return 'safeEmail';

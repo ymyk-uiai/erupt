@@ -25,12 +25,18 @@ abstract class BaseAttribute extends BaseItem
 
     public function __toString()
     {
-        return $this->migrationMethodName . "('" . $this->argsToString() . "')";
+        $args = $this->argsToString();
+
+        if($args != "") {
+            $args = "'$args'";
+        }
+
+        return $this->migrationMethodName."($args)";
     }
 
     protected function argsToString(): string
     {
-        return implode(',', array_filter($this->args, function ($v, $k) {
+        return implode(',', array_filter($this->args, function ($v) {
             return !!$v;
         }));
     }

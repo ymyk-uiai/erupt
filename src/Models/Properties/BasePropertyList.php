@@ -3,27 +3,20 @@
 namespace Erupt\Models\Properties;
 
 use Erupt\Application;
-use Erupt\Models\Models\BaseModel as Model;
-use Erupt\Foundations\ResolverList;
-use Erupt\Plans\Properties\Lists\PropertyList;
-use Erupt\Plans\Attributes\Containers\AttributeContainer;
-use Erupt\Traits\BelongsToApp;
-use Erupt\Traits\BelongsToModel;
+use Erupt\Foundations\ResolverListBelongsToModel;
 use Erupt\Interfaces\Resolver;
-use ReflectionClass;
+use Erupt\Models\Models\BaseModel as Model;
+use Erupt\Plans\Attributes\Containers\AttributeContainer;
+use Erupt\Plans\Properties\Lists\PropertyList as PlanPropertyList;
 
-abstract class BasePropertyList extends ResolverList
+abstract class BasePropertyList extends ResolverListBelongsToModel
 {
-    use BelongsToApp,
-        BelongsToModel;
-        
-    public static function empty(): Static
+    public function __construct(Application $app, Model $model)
     {
-        $reflection = new ReflectionClass(Static::class);
-        return $reflection->newInstanceWithoutConstructor();
+        parent::__construct($app, $model);
     }
 
-    public function __construct(Application $app, Model $model, PropertyList $planProps)
+    public function build(PlanPropertyList $planProps): void
     {
         $rootContainer = new AttributeContainer;
 
@@ -36,26 +29,16 @@ abstract class BasePropertyList extends ResolverList
         }
 
         foreach($rootContainer as $attributeList) {
-            $this->add($attributeList->makeModelProp($app, $model));
+            $this->add($attributeList->makeModelProp($this->app, $this->model));
         }
-    }
-
-    public function add($prop)
-    {
-        parent::addItemOrList($prop);
-    }
-
-    public function remove($prop)
-    {
-        parent::removeItemOrList($prop);
     }
 
     protected function getResolver(string $key, array &$keys): Resolver
     {
-        $props = Static::empty();
+        $props = Static::makeEmpty();
 
         foreach($this->list as $prop) {
-            if($prop->getFlag($key)) {
+            if($prop->checkFlag($key)) {
                 $props->add($prop);
             }
         }
@@ -66,5 +49,15 @@ abstract class BasePropertyList extends ResolverList
     public function evaluate()
     {
         return $this;
+    }
+
+    public function add($prop)
+    {
+        parent::addItemOrList($prop);
+    }
+
+    public function remove($prop)
+    {
+        parent::removeItemOrList($prop);
     }
 }

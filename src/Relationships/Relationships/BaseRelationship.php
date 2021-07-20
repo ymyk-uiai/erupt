@@ -2,13 +2,11 @@
 
 namespace Erupt\Relationships\Relationships;
 
-use Erupt\Traits\HasFlags;
+use Erupt\Foundations\BaseItem;
 use Erupt\Models\Models\Items\{User, Post, Folder, Comment};
 
-abstract class BaseRelationship
+abstract class BaseRelationship extends BaseItem
 {
-    use HasFlags;
-
     protected function addDefaultRelationalAttributes(string $attrs, string $modelType, string $target): string
     {
         $defaultAttributes = match ($modelType) {
@@ -19,6 +17,9 @@ abstract class BaseRelationship
             default => throw new Exception("unknown model type"),
         };
 
-        return implode('|', [$attrs, $defaultAttributes]);
+        //  print_r("modelType:\t$modelType\ttarget:\t$target\tattributes\t$defaultAttributes\n");
+        //  print_r(implode('|', array_filter([$attrs, $defaultAttributes]))."\n");
+
+        return implode('|', array_filter([$attrs, $defaultAttributes]));
     }
 }

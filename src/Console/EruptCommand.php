@@ -33,6 +33,9 @@ class EruptCommand extends Command
                 $this->app->unsetMigrations();
             }
 
+            $models = $this->app->getModels();
+            $models->startDebug();
+
             print_r($this->app);
 
             return;

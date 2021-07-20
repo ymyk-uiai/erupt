@@ -2,21 +2,12 @@
 
 namespace Erupt\Relationships\Members;
 
-use Erupt\Traits\HasList;
 use Erupt\Relationships\Members\Items\Member;
 use Erupt\Relationships\Attributes\Lists\AttributeList;
-use IteratorAggregate;
-use Erupt\Foundations\BaseIterator;
+use Erupt\Foundations\BaseList;
 
-abstract class BaseMemberList implements IteratorAggregate
+abstract class BaseMemberList extends BaseList
 {
-    use HasList;
-
-    public function getIterator()
-    {
-        return new BaseIterator($this->list);
-    }
-
     public function __construct(array $models)
     {
         foreach($models as $model) {

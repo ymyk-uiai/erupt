@@ -6,6 +6,8 @@ use Erupt\Relationships\Relationships\BaseRelationship;
 use Erupt\Relationships\Members\Items\Member;
 use Erupt\Relationships\Members\Lists\MemberList;
 use Erupt\Plans\Properties\Items\MorphOneToMany as PlanProp;
+use Erupt\Plans\Properties\Items\MorphOneToManyHas as Has;
+use Erupt\Plans\Properties\Items\MorphOneToManyBelongsTo as BelongsTo;
 use Erupt\Plans\Properties\Lists\PropertyList;
 use Erupt\Plans\Attributes\Lists\AttributeList;
 
@@ -53,13 +55,13 @@ class MorphOneToMany extends BaseRelationship
         if($this->getSbs()->has($type)) {
             $key = $this->getOb()->getType();
             $relationalPlanPropertyString = $this->addDefaultRelationalAttributes("relationship:${key}|has:${key}", $type, $key);
-            $props->add(new PlanProp(new AttributeList($relationalPlanPropertyString), "{$this->getOb()}"));
+            $props->add(new Has(new AttributeList($relationalPlanPropertyString), "{$this->getSbs()}", "{$this->getOb()}"));
         }
 
         if($this->getOb()->check($type)) {
             $key = $this->getOb()->getType();
             $relationalPlanPropertyString = $this->addDefaultRelationalAttributes("morphs:${key}able|belongsTo:${key}", $type, $key);
-            $props->add(new PlanProp(new AttributeList($relationalPlanPropertyString), "{$this->getSbs()}"));
+            $props->add(new BelongsTo(new AttributeList($relationalPlanPropertyString), "{$this->getSbs()}", "{$this->getOb()}"));
         }
 
         return $props;

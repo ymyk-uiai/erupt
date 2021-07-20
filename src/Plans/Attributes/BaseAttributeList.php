@@ -76,10 +76,14 @@ abstract class BaseAttributeList extends BaseList
         $product = $this->makeCorrespondingModelProp($app, $model);
 
         foreach($this->list as $attr) {
-            $product->update($attr->getData());
+            foreach($attr->getBuilders() as $bldr) {
+                $builder = new $bldr[0]($app, $model, $product);
+                $builder->build($bldr[1] ?? "");
+                $product->build($builder);
+            }
         }
 
-        //$product->finish($product->getName());
+        $product->complete();
     
         return $product;
     }

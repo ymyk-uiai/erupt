@@ -12,11 +12,20 @@ abstract class ResolverListBelongsToApp extends ResolverList
 
     public function __construct(Application $app)
     {
-        $this->setApp($app);
+        $this->setApplication($app);
     }
 
-    public function empty(): Self
+    public function makeEmpty(): Static
     {
-        
+        return new Static($this->app);
+    }
+
+    public function startDebug(): void
+    {
+        unset($this->app);
+
+        foreach($this->list as $item) {
+            $item->startDebug();
+        }
     }
 }

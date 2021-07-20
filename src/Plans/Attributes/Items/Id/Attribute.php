@@ -12,11 +12,6 @@ class Attribute extends BaseAttribute implements SchemaCommand
 
     protected string $migrationMethodName = "id";
 
-    public function __construct(string|array $args)
-    {
-        $this->takeArgs($args);
-    }
-
     public function getPropertyName(): string
     {
         return "id";

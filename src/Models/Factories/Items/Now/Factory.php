@@ -7,6 +7,8 @@ use Erupt\Interfaces\FactoryMain;
 
 class Factory extends BaseFactory implements FactoryMain
 {
+    protected string $params = "";
+
     public function __toString(): string
     {
         return 'now()';

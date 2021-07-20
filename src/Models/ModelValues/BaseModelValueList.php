@@ -2,19 +2,18 @@
 
 namespace Erupt\Models\ModelValues;
 
-use Erupt\Foundations\ResolverList;
-use Erupt\Traits\BelongsToApp;
+use Erupt\Application;
+use Erupt\Foundations\ResolverListBelongsToModel;
 use Erupt\Interfaces\Resolver;
+use Erupt\Models\Models\BaseModel as Model;
 use Erupt\Models\Values\BaseValue;
 use Exception;
 
-abstract class BaseModelValueList extends ResolverList
+abstract class BaseModelValueList extends ResolverListBelongsToModel
 {
-    use BelongsToApp;
-    
-    public function __construct()
+    public function __construct(Application $app, Model $model)
     {
-        //
+        parent::__construct($app, $model);
     }
 
     public function get(string $key)
