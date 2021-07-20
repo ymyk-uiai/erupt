@@ -1,0 +1,10 @@
+<div>
+    test
+</div>
+
+
+<data>
+{
+    "type": "blade/show"
+}
+</data>

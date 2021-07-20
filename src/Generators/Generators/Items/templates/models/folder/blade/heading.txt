@@ -1,0 +1,10 @@
+@pages/base
+
+<data>
+{
+    "type": "blade/heading",
+    "components": [
+        "pages/base"
+    ]
+}
+</data>

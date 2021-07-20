@@ -98,6 +98,11 @@ abstract class BaseProperty extends ResolverItemBelongsToModel
         }
     }
 
+    protected function getCorrespondingModel(): Resolver
+    {
+        return $this->app->getModel($this->getName());
+    }
+
     public function evaluate()
     {
         return $this;

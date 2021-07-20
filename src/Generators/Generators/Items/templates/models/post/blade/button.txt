@@ -1,0 +1,10 @@
+@pages/base
+
+<data>
+{
+    "type": "blade/button",
+    "components": [
+        "pages/base"
+    ]
+}
+</data>

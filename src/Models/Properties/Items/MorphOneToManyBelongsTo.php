@@ -42,9 +42,25 @@ class MorphOneToManyBelongsTo extends BaseProperty
 
     protected function getResolver(string $key, array &$keys): Resolver
     {
+        $name = $this->values->get('name');
+        $name = preg_replace("/_[a-zA-Z0-9_]+$/", "", $name);
+        $capName = ucfirst($name);
+
         try {
             return match($key) {
-                "model" => $this->getCorrespondingModel(),
+                "models" => $this->getCorrespondingModels(),
+                "relationshipMethodName" => $this->makeBuilder([
+                    RelationshipMethodName::class,
+                    "${name}",
+                ]),
+                "relationshipName" => $this->makeBuilder([
+                    RelationshipName::class,
+                    'morphTo',
+                ]),
+                "relationshipArgs" => $this->makeBuilder([
+                    RelationshipArgs::class,
+                    "",
+                ]),
                 default => parent::getResolver($key, $keys),
             };
         } catch (Exception $e) {
@@ -52,9 +68,18 @@ class MorphOneToManyBelongsTo extends BaseProperty
         }
     }
 
-    protected function getCorrespondingModel(): Resolver
+    protected function getCorrespondingModels(): Resolver
     {
-        return $this->app->getModel($this->getName());
+        $modelsStr = $this->getPropertyValue("morphModels");
+        $modelsStr = explode(',', $modelsStr);
+
+        $models = new ModelList($this->app);
+
+        foreach($modelsStr as $modelStr) {
+            $models->add($this->app->getModel(trim($modelStr)));
+        }
+
+        return $models;
     }
 
     protected function getDefaults(): array

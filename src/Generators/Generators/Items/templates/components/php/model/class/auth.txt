@@ -2,8 +2,6 @@ class <!erupt short_name !> extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    @props/fillable
-
     @props/hidden
 
     @props/casts

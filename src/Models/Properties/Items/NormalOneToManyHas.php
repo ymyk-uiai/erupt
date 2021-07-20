@@ -33,6 +33,34 @@ class NormalOneToManyHas extends BaseProperty
         parent::complete();
     }
 
+    protected function getResolver(string $key, array &$keys): Resolver
+    {
+        $name = $this->values->get('name');
+        $name = preg_replace("/_[a-zA-Z0-9_]+$/", "", $name);
+        $capName = ucfirst($name);
+
+        try {
+            return match($key) {
+                "model" => $this->getCorrespondingModel(),
+                "relationshipMethodName" => $this->makeBuilder([
+                    RelationshipMethodName::class,
+                    "${name}s",
+                ]),
+                "relationshipName" => $this->makeBuilder([
+                    RelationshipName::class,
+                    'hasMany',
+                ]),
+                "relationshipArgs" => $this->makeBuilder([
+                    RelationshipArgs::class,
+                    "${capName}::class",
+                ]),
+                default => parent::getResolver($key, $keys),
+            };
+        } catch (Exception $e) {
+            echo 'Unknown resolve key: ', $e->getMessage(), "\n";
+        }
+    }
+
     protected function getDefaults(): array
     {
         return [

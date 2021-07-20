@@ -1,0 +1,26 @@
+<!erupt
+    print("<div class='{}-full'>", self.files.model.model_name)
+!>
+
+    <!erupt
+        foreach self.props.resource.ordinary as resource into result {
+            print("<div>{{ ${} }}</div>", resource.name)
+        }
+        print("{}", result)
+    !>
+
+    <!erupt
+        foreach self.props.belongsTo.required as required into result {
+            print("{{ ${} }}", required.model.name)
+        }
+        print("{}", result)
+    !>
+</div>
+
+<data>
+{
+    "type": "blade/index",
+    "components": [
+    ]
+}
+</data>

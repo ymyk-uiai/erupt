@@ -1,0 +1,19 @@
+<form method="POST" action="{{ <!erupt print("route('{}.store')", self.files.model.instances)!> }}">
+    @csrf
+    <!erupt
+        foreach self.props.ordinary.resource as resource into result {
+            print("<input type='text' id='{}' name='{}'/>", resource.name, resource.name)
+        }
+        print("{}", result)
+    !>
+    {{ $slot }}
+    <button type="submit">Store</button>
+</form>
+
+<data>
+{
+    "type": "blade/index",
+    "components": [
+    ]
+}
+</data>

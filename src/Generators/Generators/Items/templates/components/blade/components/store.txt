@@ -1,8 +1,8 @@
 <form method="POST" action="{{ <!erupt print("route('{}.store')", self.files.model.instances)!> }}">
     @csrf
     <!erupt
-        foreach self.attributes.fillable as fillable into result {
-            print("<input type='text' id='{}' name='{}'/>", fillable.name, fillable.name)
+        foreach self.props.ordinary.resource as resource into result {
+            print("<input type='text' id='{}' name='{}'/>", resource.name, resource.name)
         }
         print("{}", result)
     !>

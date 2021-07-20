@@ -8,6 +8,13 @@
     print("{}", result)
 !>
 
+<!erupt
+    foreach self.props.ordinary.resource as resource join ", " into result {
+        print("'{}'", resource.name)
+    }
+    print("protected $fillable = [{}];", result)
+!>
+
 <data>
 {
     "type": "php/model",

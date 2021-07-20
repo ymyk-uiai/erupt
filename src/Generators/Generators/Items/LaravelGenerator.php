@@ -91,18 +91,6 @@ class LaravelGenerator extends BaseGenerator
                 "comment",
             ]
         ],
-        "blade" => [
-            "output_type" => "blade",
-            "template_stem" => "{variant}",
-            "template_sup_path" => "templates/components/blade/pages",
-            "output_sup_path" => "{name}s",
-            "makers" => [
-                "user:index,show,edit",
-                "post:index,create,show,edit",
-                "folder:index,create,show,edit",
-                "comment:index,create,show,edit",
-            ],
-        ],
         "blade_component" => [
             "data_sup_class_name" => "View\\Components\\{Name}{Variant}",
             "template_stem" => "{variant}",
@@ -113,11 +101,28 @@ class LaravelGenerator extends BaseGenerator
                 "comment:full,heading,store,update,button,list,listItem",
             ],
         ],
-        "blade_template" => [
-            "output_type" => "blade",
+        "blade_pages_new" => [
+            "data_sup_class_name" => "{variant}",
             "template_stem" => "{variant}",
-            "template_sup_path" => "templates/components/blade/components",
+            "output_base_path" => "resources/views",
+            "output_sup_path" => "{name}s",
+            "output_sup_stem" => "blade",
+            "output_extension" => "php",
+            "makers" => [
+                "user:index,show,edit",
+                "post:index,create,show,edit",
+                "folder:index,create,show,edit",
+                "comment:index,create,show,edit",
+            ],
+        ],
+        "blade_components_new" => [
+            "data_sup_class_name" => "{variant}",
+            "template_sup_path" => "templates/models/{type}/blade",
+            "template_stem" => "{variant}",
+            "output_base_path" => "resources/views",
             "output_sup_path" => "components/{name}",
+            "output_sup_stem" => "blade",
+            "output_extension" => "php",
             "makers" => [
                 "user:full,heading,update,button,list,listItem",
                 "post:full,heading,store,update,button,list,listItem",
@@ -125,19 +130,24 @@ class LaravelGenerator extends BaseGenerator
                 "comment:full,heading,store,update,button,list,listItem",
             ],
         ],
-        "layout_blade" => [
-            "output_type" => "blade",
+        "blade_layouts" => [
+            "data_sup_class_name" => "{variant}",
+            "template_sup_path" => "templates/models/{type}/blade",
             "template_stem" => "{variant}",
-            "template_sup_path" => "templates/components/blade/pages",
+            "output_base_path" => "resources/views",
             "output_sup_path" => "layouts",
+            "output_sup_stem" => "blade",
             "makers" => [
                 "app:navigation",
             ],
+
         ],
-        "base_blade" => [
-            "output_type" => "blade",
+        "blade_common" => [
+            "data_sup_class_name" => "{variant}",
+            "template_sup_path" => "templates/models/{type}/blade",
             "template_stem" => "{variant}",
-            "template_sup_path" => "templates/components/blade/pages",
+            "output_base_path" => "resources/views",
+            "output_sup_stem" => "blade",
             "makers" => [
                 "app:welcome,dashboard",
             ],

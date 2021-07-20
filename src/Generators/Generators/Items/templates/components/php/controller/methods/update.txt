@@ -19,12 +19,10 @@
     $validated = $request->validated();
 
     <!erupt
-        foreach self.attributes.fillable as fillable join "," into result {
-            preprint("${}->fill([", modelInstance, model)
-            print("'{}' => $validated['{}']", fillable.name, fillable.name)
-            postprint("]);")
+        foreach self.props.ordinary.resource as resource join ", " into result {
+            print("'{}' => $validated['{}']", resource.name, resource.name)
         }
-        print("{}", result)
+        print("${}->fill([{}]);", modelInstance, result)
     !>
 
     <!erupt

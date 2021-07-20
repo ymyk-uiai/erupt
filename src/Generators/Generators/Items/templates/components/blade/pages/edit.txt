@@ -10,10 +10,10 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!erupt
-                        foreach self.props.fillable as fillable into result {
-                            print(":{}='${}->{}'", fillable.name, self.files.model.model_name, fillable.name)
+                        foreach self.props.ordinary.updater as updater into result {
+                            print(":{}='${}->{}'", updater.name, self.name, updater.name)
                         }
-                        print("<x-{}-update {} :id='${}->id'></x-{}-update>", self.files.model.model_name, result, self.files.model.model_name, self.files.model.model_name)
+                        print("<x-{}-update {}></x-{}-update>", self.name, result, self.name)
                     !>
                 </div>
             </div>

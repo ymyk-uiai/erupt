@@ -4,7 +4,13 @@ print("<div class='{}-list'>", self.files.model.model_name)
     foreach self.props.resource as resource into result {
         print(":{}='${}->{}'", resource.name, self.files.model.model_name, resource.name)
     }
-    print("<x-{}-listItem {}></x-{}-litItem>", self.files.model.model_name, result, self.files.model.model_name)
+    foreach self.props.belongsTo.required as required into result2 {
+        foreach required.model.props.resource as resource into result3 {
+            print(":{}='${}->{}->{}'", resource.name, self.name, required.model.name, resource.name)
+        }
+        print("<x-slot name='{}'><x-{}-heading {}></x-{}-heading></x-slot>", required.model.name, required.model.name, result3, required.model.name)
+    }
+    print("<x-{}-listItem {}>{}</x-{}-litItem>", self.name, result, result2, self.name)
 !>
     @endforeach
 </div>

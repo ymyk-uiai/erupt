@@ -1,0 +1,18 @@
+<!erupt
+    print("<div class='{}-heading'>", self.name)
+!>
+    <!erupt
+        foreach self.props.resource as fillable into result {
+            print("<div>{{ ${} }}</div>", fillable.name)
+        }
+        print("{}", result)
+    !>
+</div>
+
+<data>
+{
+    "type": "blade/index",
+    "components": [
+    ]
+}
+</data>

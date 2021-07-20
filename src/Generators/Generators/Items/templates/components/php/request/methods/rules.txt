@@ -1,11 +1,11 @@
 public function rules()
 {
     <!erupt
-        foreach self.props.fillable as fillable join "," into result {
-            foreach fillable.validationRules as rule join "|" into res {
+        foreach self.props.ordinary.resource as resource join "," into result {
+            foreach resource.validationRules as rule join "|" into res {
                 print("{}", rule,name)
             }
-            print("'{}' => '{}'", fillable.name, res)
+            print("'{}' => '{}'", resource.name, res)
         }
         print("return [{}];", result)
     !>

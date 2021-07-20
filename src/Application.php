@@ -8,7 +8,7 @@ use Erupt\Generators\Generators\Lists\GeneratorList;
 use Erupt\Models\Models\Lists\ModelList;
 use Erupt\Models\Models\BaseModel as Model;
 use Erupt\Plans\Plans\Lists\PlanList;
-use Erupt\Relationships\Relationships\Containers\RelationshipContainer;
+use Erupt\Relationships\Relationships\Lists\RelationshipList;
 use Erupt\Specifications\Makers\Lists\MakerList;
 use Erupt\Specifications\Specifications\Lists\FileSpecificationList;
 use Erupt\Specifications\Specifications\Lists\MigrationSpecificationList;
@@ -37,7 +37,7 @@ class Application extends ResolverItem
 
     public function __construct($config)
     {
-        $relationships = new RelationshipContainer($this, $config);
+        $relationships = new RelationshipList($this, $config);
 
         //print_r($relationships);
 

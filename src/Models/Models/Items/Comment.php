@@ -10,6 +10,11 @@ class Comment extends BaseModel
         "text" => "resource",
     ];
 
+    static protected array $defaultRelationalAttributes = [
+        "user" => "required",
+        "comment" => "interactive",
+    ];
+
     public function getType(): string
     {
         return "comment";

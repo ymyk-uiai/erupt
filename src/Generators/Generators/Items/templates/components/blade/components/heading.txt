@@ -2,7 +2,7 @@
     print("<div class='{}-heading'>", self.name)
 !>
     <!erupt
-        foreach self.attributes.fillable as fillable into result {
+        foreach self.props.resource as fillable into result {
             print("<div>{{ ${} }}</div>", fillable.name)
         }
         print("{}", result)

@@ -8,4 +8,11 @@
         }
         print("{}", result)
     !>
+
+    <!erupt
+        foreach self.props.belongsTo.required as required into result {
+            print("{{ ${} }}", required.model.name)
+        }
+        print("{}", result)
+    !>
 </div>

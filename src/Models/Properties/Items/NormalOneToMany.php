@@ -37,6 +37,23 @@ class NormalOneToMany extends BaseProperty
         parent::finish($propName);
     }
 
+    protected function getResolver(string $key, array &$keys): Resolver
+    {
+        try {
+            return match($key) {
+                "model" => $this->getCorrespondingModel(),
+                default => parent::getResolver($key, $keys),
+            };
+        } catch (Exception $e) {
+            echo 'Unknown resolve key: ', $e->getMessage(), "\n";
+        }
+    }
+
+    protected function getCorrespondingModel(): Resolver
+    {
+        return $this->app->getModel($this->getRelationshipMethodName());
+    }
+
     protected function getDefaultFlags(): array
     {
         return [

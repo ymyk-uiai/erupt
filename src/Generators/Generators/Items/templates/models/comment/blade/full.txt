@@ -1,0 +1,10 @@
+@pages/base
+
+<data>
+{
+    "type": "blade/full",
+    "components": [
+        "pages/base"
+    ]
+}
+</data>

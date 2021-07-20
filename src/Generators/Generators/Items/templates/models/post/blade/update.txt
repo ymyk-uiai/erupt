@@ -1,0 +1,10 @@
+@pages/base
+
+<data>
+{
+    "type": "blade/update",
+    "components": [
+        "pages/base"
+    ]
+}
+</data>

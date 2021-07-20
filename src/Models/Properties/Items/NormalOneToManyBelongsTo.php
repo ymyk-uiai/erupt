@@ -40,6 +40,41 @@ class NormalOneToManyBelongsTo extends BaseProperty
         parent::complete();
     }
 
+    protected function getResolver(string $key, array &$keys): Resolver
+    {
+        $name = $this->values->get('name');
+        $name = preg_replace("/_[a-zA-Z0-9_]+$/", "", $name);
+        $capName = ucfirst($name);
+
+        try {
+            return match($key) {
+                "model" => $this->getCorrespondingModel(),
+                "relationshipMethodName" => $this->makeBuilder([
+                    RelationshipMethodName::class,
+                    "${name}",
+                ]),
+                "relationshipName" => $this->makeBuilder([
+                    RelationshipName::class,
+                    'belongsTo',
+                ]),
+                "relationshipArgs" => $this->makeBuilder([
+                    RelationshipArgs::class,
+                    "${capName}::class",
+                ]),
+                default => parent::getResolver($key, $keys),
+            };
+        } catch (Exception $e) {
+            echo 'Unknown resolve key: ', $e->getMessage(), "\n";
+        }
+    }
+
+    protected function getCorrespondingModel(): Resolver
+    {
+        $name = rtrim($this->getName(), '_id');
+
+        return $this->app->getModel($name);
+    }
+
     protected function getDefaults(): array
     {
         return [

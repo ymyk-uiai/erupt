@@ -13,9 +13,9 @@
                         <a href="{{ route('posts.edit', $post) }}">{{ $post->title }}</a>
                     </div>
                 @endforeach
-                @foreach ($books as $book)
+                @foreach ($folders as $folder)
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <a href="{{ route('books.edit', $book) }}">{{ $book->title }}</a>
+                        <a href="{{ route('folders.edit', $folder) }}">{{ $folder->title }}</a>
                     </div>
                 @endforeach
             </div>

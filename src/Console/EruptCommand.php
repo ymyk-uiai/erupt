@@ -102,7 +102,7 @@ class EruptCommand extends Command
         $route_file = str_replace($target, $replace, $route_file);
 
         $target = "return view('dashboard');";
-        $replace = '$posts = Auth::user()->posts; $books = Auth::user()->books; return view("dashboard", ["posts" => $posts, "books" => $books]);';
+        $replace = '$posts = Auth::user()->posts; $folders = Auth::user()->folders; return view("dashboard", ["posts" => $posts, "folders" => $folders]);';
         $route_file = str_replace($target, $replace, $route_file);
 
         $pattern = "/$/";

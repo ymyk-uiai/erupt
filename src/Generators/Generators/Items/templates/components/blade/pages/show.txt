@@ -20,7 +20,7 @@
                         print("</x-{}-full>", self.files.model.model_name)
                     !>
                     <!erupt
-                        foreach self.props.relationships.response as response into result {
+                        foreach self.props.has.interactive as response into result {
                             model = response.model
                             print("<x-{}-list :{}s='${}->{}s'></x-{}-list>", model.files.model.model_name, model.files.model.model_name, self.files.model.model_name ,model.files.model.model_name, model.files.model.model_name)
                         }
@@ -44,10 +44,18 @@
                         }
                         print("<x-{}-full {} >", self.files.model.model_name, result)
 
+                        foreach self.props.belongsTo.required as required into result {
+                            foreach required.model.props.resource as resource into result2 {
+                                print(":{}='${}->{}->{}'", resource.name, self.name, required.model.name, resource.name)
+                            }
+                            print("<x-slot name='{}'><x-{}-heading {}></x-{}-heading></x-slot>", required.model.name, required.model.name, result2, required.model.name)
+                        }
+                        print("{}", result)
+
                         print("</x-{}-full>", self.files.model.model_name)
                     !>
                     <!erupt
-                        foreach self.props.relationships.response as response into result {
+                        foreach self.props.has.interactive as response into result {
                             model = response.model
                             print("<x-{}-list :{}s='${}->{}s'></x-{}-list>", model.files.model.model_name, model.files.model.model_name, self.files.model.model_name, model.files.model.model_name, model.files.model.model_name)
                         }

@@ -1,0 +1,10 @@
+@pages/navigation
+
+<data>
+{
+    "type": "blade/layout",
+    "components": [
+        "pages/navigation"
+    ]
+}
+</data>

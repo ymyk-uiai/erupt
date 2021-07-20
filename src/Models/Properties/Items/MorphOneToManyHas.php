@@ -41,9 +41,25 @@ class MorphOneToManyHas extends BaseProperty
 
     protected function getResolver(string $key, array &$keys): Resolver
     {
+        $name = $this->values->get('name');
+        $name = preg_replace("/_[a-zA-Z0-9_]+$/", "", $name);
+        $capName = ucfirst($name);
+
         try {
             return match($key) {
                 "model" => $this->getCorrespondingModel(),
+                "relationshipMethodName" => $this->makeBuilder([
+                    RelationshipMethodName::class,
+                    "${name}s",
+                ]),
+                "relationshipName" => $this->makeBuilder([
+                    RelationshipName::class,
+                    'morphMany',
+                ]),
+                "relationshipArgs" => $this->makeBuilder([
+                    RelationshipArgs::class,
+                    "${capName}::class, '${name}able'",
+                ]),
                 default => parent::getResolver($key, $keys),
             };
         } catch (Exception $e) {
