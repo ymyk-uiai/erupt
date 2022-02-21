@@ -4,8 +4,8 @@ namespace Erupt\Language;
 
 use Erupt\Language\Parser;
 use Erupt\Language\Evaluator;
-use Ds\Set;
-use PhpParser\{ParserFactory, PrettyPrinter};
+use Erupt\Models\BaseModel as Model;
+use Erupt\Files\BaseFile as File;
 
 class EruptLang
 {
@@ -24,7 +24,7 @@ class EruptLang
         $this->app = $app;
     }
 
-    public function exec($template, $modelName, $type, $io_t, $io_r)
+    public function exec(string $template, Model $model, File $file): string
     {
         $result = "";
 
@@ -32,16 +32,12 @@ class EruptLang
         $offset = 0;
         $prevOffset = 0;
 
-        $self = $this->app->getModels()->get($modelName);
-        $auth = $this->app->getModels()->get("user");
-        $app = $this->app;
         $scope = Scope::init([
-            "self" => $self,
-            "auth" => $auth,
-            "app" => $app,
-            "class_name" => $self->resolve("files.$type.class_name"),
-            "namespace" => $self->resolve("files.$type.namespace"),
-            "short_name" => $self->resolve("files.$type.short_name"),
+            "self" => $model,
+            "auth" => $this->app->getModels()->get("user"),
+            "app" => $this->app,
+            "shortName" => $file->getShortName(),
+            "namespace" => $file->getNamespace(),
         ]);
 
         while(preg_match($pattern, $template, $matches, PREG_OFFSET_CAPTURE, $offset)) {
@@ -52,8 +48,6 @@ class EruptLang
 
             $result .= $this->evaluator->evaluate($ast, $scope);
 
-            //$this->evaluator->init();
-
             $scope->emptyStd();
 
             $offset = $matches[0][1] + strlen($matches[0][0]);
@@ -62,34 +56,6 @@ class EruptLang
         $result .= substr($template, $offset);
 
         $result = $this->removeDuplicatedUses($result);
-
-        /*
-        if($file_type == "php") {
-            $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
-            try {
-                $ast = $parser->parse($result);
-                $prettyPrinter = new PrettyPrinter\Standard;
-                $result = $prettyPrinter->prettyPrintFile($ast);
-            } catch (Error $error) {
-                echo "Parse error: {$error->getMessage()}\n";
-                return;
-            }
-        }
-        */
-
-        if($io_t || $io_r) {
-            print_r("\033[31m$modelName $type\033[0m\n");
-        }
-        if($io_t) {
-            print_r("\033[33m".trim($template)."\033[0m\n");
-        }
-        if($io_r) {
-            print_r("\033[32m".trim($result)."\033[0m\n");
-        }
-
-        //$ast = $this->parser->parse($template);
-
-        //return $this->evaluator->evaluate($ast);
 
         return $result;
     }

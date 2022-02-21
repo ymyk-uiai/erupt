@@ -2,61 +2,63 @@
 
 namespace Erupt;
 
-use Erupt\Generators\Generators\BaseGenerator as Generator;
-use Erupt\Generators\Generators\Items\LaravelGenerator;
-use Erupt\Generators\Generators\Lists\GeneratorList;
-use Erupt\Models\Models\Lists\ModelList;
-use Erupt\Models\Models\BaseModel as Model;
-use Erupt\Plans\Plans\Lists\PlanList;
-use Erupt\Relationships\Relationships\Lists\RelationshipList;
-use Erupt\Specifications\Makers\Lists\MakerList;
-use Erupt\Specifications\Specifications\Lists\FileSpecificationList;
-use Erupt\Specifications\Specifications\Lists\MigrationSpecificationList;
-use Erupt\Foundations\ResolverItem;
-use Erupt\Interfaces\Resolver;
+use Erupt\Relationships\Lists\RelationshipList;
+use Erupt\Plans\Lists\PlanList;
+use Erupt\Models\Lists\ModelList;
+use Erupt\Generators\Lists\GeneratorList;
+use Erupt\Files\Lists\FileList;
+use Erupt\Migrations\Lists\MigrationList;
+use Erupt\Events\Lists\EventList;
+use Erupt\Generators\BaseGenerator;
+use Erupt\Migrations\BaseMigration as Migration;
+use Erupt\Events\BaseEvent as Event;
+use Erupt\Seeders\Lists\SeederList;
+use Erupt\Routes\Lists\RouteList;
+use Erupt\AuthProviders\Lists\AuthProviderList;
 
-class Application extends ResolverItem
+class Application
 {
     protected ModelList $models;
 
-    protected RelationshipList $relationships;
-
     protected GeneratorList $generators;
 
-    protected FileSpecificationList $file_specs;
+    protected FileList $files;
 
-    protected MigrationSpecificationList $migrations;
+    protected MigrationList $migrations;
 
-    protected array $events;
-
-    protected array $seeders = [];
-
-    protected array $routes = [];
-
-    protected array $policies = [];
+    protected EventList $events;
 
     public function __construct($config)
     {
-        $relationships = new RelationshipList($this, $config);
+        $relationships = RelationshipList::build($config["relationships"]);
 
-        //print_r($relationships);
+        $plans = PlanList::build($config["models"], $relationships);
 
-        $plans = new PlanList($config['models'], $relationships);
+        $models = ModelList::build($plans);
+
+        $this->models = $models;
 
         //print_r($plans);
 
-        $this->models = new ModelList($this, $plans, $relationships);
-        $this->models->build($plans);
+        //print_r($models);
 
         $this->generators = GeneratorList::build();
 
-        $this->registerGenerator(new LaravelGenerator);
+        $this->files = FileList::build($this, $plans, $relationships);
 
-        $this->setFiles($relationships);
+        //print_r($this->files);
 
-        $this->setMigrations($relationships, $plans);
+        $this->migrations = MigrationList::build($this, $plans, $relationships);
 
-        $this->init_event_listeners();
+        //print_r($this->migrations);
+
+        $this->events = EventList::build();
+
+        $this->seeders = new SeederList;
+
+        $this->routes = new RouteList;
+
+        $this->authProviders = new AuthProviderList;
     }
 
     public function getModels(): ModelList
@@ -64,158 +66,60 @@ class Application extends ResolverItem
         return $this->models;
     }
 
-    public function getModel(string $modelType): Model
+    public function getMigrationGenerator(): BaseGenerator
     {
-        return $this->models->get($modelType);
+        return $this->generators->getMigrationGenerator();
     }
 
-    public function getGenerators(): GeneratorList
-    {
-        return $this->generators;
-    }
-
-    public function registerGenerator(Generator $generator): void
-    {
-        $this->generators->add($generator);
-    }
-
-    public function setFiles(RelationshipList $relationships): void
-    {
-        $makers = MakerList::build($this->models, $relationships);
-
-        $this->files = FileSpecificationList::build($makers, $this);
-    }
-
-    public function getFiles(): FileSpecificationList
+    public function getFiles(): FileList
     {
         return $this->files;
     }
 
-    public function unsetFiles(): void
-    {
-        unset($this->files);
-    }
-
-    public function setMigrations(RelationshipList $relationships, $plans): void
-    {
-        $makers = MakerList::build($this->models, $relationships);
-
-        $this->migrations = MigrationSpecificationList::build($makers, $this, $plans);
-    }
-
-    public function getMigrations(): MigrationSpecificationList
+    public function getMigrations(): MigrationList
     {
         return $this->migrations;
     }
 
-    public function unsetMigrations(): void
+    public function getMigration(string $fileName): Migration|bool
     {
-        unset($this->migrations);
-    }
-
-    public function set_schema_methods_test($plan): void
-    {
-        $schema_methods = new SchemaMethodContainer;
-
-        foreach($plan->get_properties() as $property) {
-            $schema_methods->add($property->get_methods());
-        }
-
-        $this->schema_methods_test = $schema_methods;
-    }
-
-    protected function init_event_listeners(): void
-    {
-        $app = $this;
-
-        //  event_name, event_listener
-        //
-        //  "create_seeder"
-        //  ||
-        //  "syntax"
-        //  "event_listener"
-
-        $this->events = [
-            "make_seeder" => function ($seeder_class) use ($app) {
-                $app->add_seeder($seeder_class);
-            },
-            "make_route" => function ($route_name) use ($app) {
-                $app->add_route($route_name);
-            },
-            "make_policy" => function ($policy_key_value) use ($app) {
-                $app->add_policy($policy_key_value);
+        foreach($this->migrations as $migration) {
+            if($migration->is($fileName)) {
+                return $migration;
             }
-        ];
+        }
+        return false;
     }
 
-    protected function getResolver(string $key, array &$keys): Resolver
+    public function registerEvent(string $event): void
     {
-        try {
-            return match($key) {
-                "models" => $this->getModels(),
-                default => throw new Exception($key),
-            };
-        } catch (Exception $e) {
-            echo 'Unknown resolve key: ',  $e->getMessage(), "\n";
+        $this->events->add(EventList::build($event));
+    }
+
+    public function dispatchEvents(): void
+    {
+        foreach($this->events as $event) {
+            $this->dispatchEvent($event);
         }
     }
 
-    public function evaluate()
+    public function dispatchEvent(Event $event): void
     {
-        return $this;
+        $event->dispatch();
     }
 
-    public function add_seeder($seeder_class): void
+    public function getSeeders(): SeederList
     {
-        $this->seeders[] = "$seeder_class::class";
+        return $this->seeders;
     }
 
-    public function add_route($route_name) : void
+    public function getRoutes(): RouteList
     {
-        $this->routes[] = $route_name;
+        return $this->routes;
     }
 
-    public function add_policy($policy_key_value) : void
+    public function getAuthProviders(): AuthProviderList
     {
-        $this->policies[] = $policy_key_value;
-    }
-
-    public function implode_seeders(): string
-    {
-        return implode(",\n", $this->seeders);
-    }
-
-    public function implode_routes(): string
-    {
-        return implode("\n", array_map(function ($route_args) {
-            $route_args = array_map("trim", explode(",", $route_args));
-            $route_args = array_map(function ($route_arg) {
-                return "'{$route_arg}'";
-            }, $route_args);
-            $route_args = implode(",", $route_args);
-            return "Route::resource({$route_args});";
-        }, $this->routes));
-
-        return implode("\n", array_map(function ($route_args) {
-            $route_args = implode(", ", array_map(function ($route_arg) {
-                 return "'".trim($route_arg)."'";
-            }, explode(",", $route_args)));
-            return "Route::resource({$route_args});";
-        }, $this->routes));
-    }
-
-    public function implode_policies(): string
-    {
-        return implode(",\n", array_map(function ($policy_key_value) {
-            $policy_key_value = implode(" => ", array_map(function ($arg) {
-                return "'".trim($arg)."'";
-            }, explode(",", $policy_key_value)));
-            return $policy_key_value;
-        }, $this->policies));
-    }
-
-    public function dispatch($name, $args): void
-    {
-        $this->events[$name]($args);
+        return $this->authProviders;
     }
 }

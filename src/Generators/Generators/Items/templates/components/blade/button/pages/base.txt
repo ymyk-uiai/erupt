@@ -1,9 +1,0 @@
-<button>{{ $slot }}</button>
-
-<data>
-{
-    "type": "blade/index",
-    "components": [
-    ]
-}
-</data>
