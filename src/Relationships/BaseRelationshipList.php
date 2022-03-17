@@ -3,54 +3,96 @@
 namespace Erupt\Relationships;
 
 use Erupt\Foundation\BaseList;
-use Erupt\Relationships\Items\{NormalOneToMany, MorphOneToMany};
-use Erupt\Proposals\Lists\ProposalList;
-use Erupt\Plans\BasePlan as Plan;
+use Erupt\Interfaces\Accessor;
+use Erupt\Traits\HandleAccess;
+use Erupt\Foundation\Initializer as Ini;
+use Erupt\Traits\HandleInitialize;
 
-abstract class BaseRelationshipList extends BaseList
+abstract class BaseRelationshipList extends BaseList implements Accessor
 {
-    public static function build(array $relationships): static
+    use HandleAccess,
+        HandleInitialize;
+
+    protected static array $accessKeys = ['rs', 'rels', 'relationships', 'relationshipList'];
+
+    public static function getClassSymbol(): string
     {
-        $product = new static;
-        foreach($relationships as $relationship) {
-            $product->add(self::buildRelationship($relationship));
-        }
-        return $product;
+        return array_slice(explode('\\', static::class), 0, 0);
     }
 
-    protected static function buildRelationship(string $relationship): BaseRelationship
+    public static function getDefaultClassSymbol(): string
     {
-        list($mark, $lhs, $rhs) = explode('|', $relationship);
-
-        try {
-            return match($mark) {
-                "OM" => NormalOneToMany::build($lhs, $rhs),
-                "POM" => MorphOneToMany::build($lhs, $rhs),
-                default => throw new Exception($mark),
-            };
-        } catch (Exception $e) {
-            echo 'Unknown relationship type: ', $e->getMessage(), "\n";
-        }
+        return "DefaultClassSymbol";
     }
 
-    public function makeProposals(Plan $plan): ProposalList
+    public static function init(Ini $ini): static
     {
-        $proposals = new ProposalList;
-
-        foreach($this as $relationship) {
-            $proposals->add($relationship->makeProposals($plan));
-        }
-
-        return $proposals;
+        return new static($ini);
     }
 
-    public function add(BaseRelationship|Self $incoming): void
+    public static function initWithItsName(Ini $ini, string $name): self
+    {
+        return self::instantiate($ini, self::makeClassName($name));
+    }
+
+    protected static function makeClassName(string $className): string
+    {
+        return "Erupt\\Relationships\\Lists\\".ucfirst($className);
+    }
+
+    protected static function instantiate(Ini $ini, string $className): self
+    {
+        return class_exists($className) ? new $className($ini) : throw new \Exception($className);
+    }
+
+    public static function build(Ini $ini, string $descs, $scope = null): static
+    {
+        return static::init($ini)->extend($ini, $descs, $scope);
+    }
+
+    public static function buildWithItsName(Ini $ini, string $name, string $descs, $scope = null): self
+    {
+        return self::initWithItsName($ini, $name)->extend($ini, $descs, $scope);
+    }
+
+    public function __construct(Ini $ini)
+    {
+        //$this->initialize($ini);
+    }
+
+    public function extend(Ini $ini, string $descs, $scope = null): self
+    {
+        return array_reduce($this->split($descs), function ($carry, $desc) use ($ini, $scope) {
+            [$name, $args] = $carry->parse($desc);
+            $carry->add(BaseRelationship::buildWithItsName($ini, $name, $args, $scope));
+            return $carry;
+        }, $this);
+    }
+
+    protected function split(string $descs): array
+    {
+        return preg_split("/\|{2}/", $descs);
+    }
+
+    protected function parse(string $desc): array
+    {
+        return preg_split("/:{2}/", $desc);
+    }
+
+    public function add(self|BaseRelationship $incoming): void
     {
         $this->addItemOrList($incoming);
     }
 
-    public function remove(BaseRelationship|Self $incoming): void
+    public function remove(self|BaseRelationship $incoming): void
     {
         $this->removeItemOrList($incoming);
+    }
+
+    public function getRelationalProposals(string $planName): array
+    {
+        return array_reduce($this->items, function ($carry, $rel) use ($planName) {
+            return array_merge($carry, $rel->getRelationalProposals($planName));
+        }, []);
     }
 }

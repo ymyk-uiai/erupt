@@ -3,10 +3,11 @@
 namespace Erupt\Attributes\Items\BelongsTo;
 
 use Erupt\Attributes\BaseAttribute;
+use Erupt\Interfaces\TableColumnMaker;
 
-class Attribute extends BaseAttribute
+class Attribute extends BaseAttribute implements TableColumnMaker
 {
-    protected string $params = "key";
+    protected string $params = "name";
 
-    protected bool $column = true;
+    protected ?string $alias = "string:{name}_id";
 }

@@ -3,45 +3,77 @@
 namespace Erupt\Relationships;
 
 use Erupt\Foundation\BaseListItem;
-use Erupt\Plans\BasePlan as Plan;
-use Erupt\Proposals\BaseProposal as Proposal;
-use Erupt\Proposals\BaseProposalList as ProposalList;
-use Erupt\Proposals\Lists\ProposalList as PlaneProposalList;
+use Erupt\Interfaces\Accessor;
+use Erupt\Traits\HandleAccess;
+use Erupt\Foundation\Initializer as Ini;
+use Erupt\Traits\HandleInitialize;
+use Erupt\Primitives\BasePrimitiveList;
 
-abstract class BaseRelationship extends BaseListItem
+abstract class BaseRelationship extends BaseListItem implements Accessor
 {
-    public static function build(array|string $lhs, string $rhs): static
+    use HandleAccess,
+        HandleInitialize;
+
+    protected static array $accessKeys = ['r', 'rel', 'relationship'];
+
+    public static function getClassSymbol(): string
     {
-        $product = new static;
-        $product->setRhs($rhs);
-        $product->setLhs($lhs);
-        return $product;
+        return array_slice(explode('\\', static::class), 3);
     }
 
-    protected function setLeftModel(string $model)
+    public static function getDefaultClassSymbol(): string
     {
-        //
+        return "DefaultClassSymbol";
     }
 
-    protected function setRightModel(string $model)
+    public static function init(Ini $ini): static
     {
-        //
+        return new static($ini);
     }
 
-    public function makeProposals(Plan $plan): Proposal|ProposalList
+    public static function initWithItsName(Ini $ini, string $name): self
     {
-        $proposals = new PlaneProposalList;
+        return self::instantiate($ini, self::makeClassName($name));
+    }
 
-        $p = $this->getHasRelationships($plan);
-        if(!!$p) {
-            $proposals->add($p);
-        }
+    protected static function makeClassName(string $className): string
+    {
+        return "Erupt\\Relationships\\Items\\".ucfirst($className);
+    }
 
-        $p = $this->getBelongsToRelationships($plan);
-        if(!!$p) {
-            $proposals->add($p);
-        }
+    protected static function instantiate(Ini $ini, string $className): self
+    {
+        return class_exists($className) ? new $className($ini) : throw new \Exception($className);
+    }
 
-        return $proposals;
+    public static function build(Ini $ini, string $desc, $scope = null): static
+    {
+        return static::init($ini)->extend($ini, $desc, $scope);
+    }
+
+    public static function buildWithItsName(Ini $ini, string $name, string $desc, $scope = null): self
+    {
+        return self::initWithItsName($ini, $name)->extend($ini, $desc, $scope);
+    }
+
+    public function __construct(Ini $ini)
+    {
+        //$this->initialize($ini);
+    }
+
+    public function extend(Ini $ini, string $desc, $scope = null): self
+    {
+        $this->primitives = BasePrimitiveList::buildWithItsName($ini, BasePrimitiveList::getDefaultClassSymbol(), $desc, $scope);
+        return $this;
+    }
+
+    protected function split(string $descs): array
+    {
+        return preg_split("/[^|]|[^|]/", $descs);
+    }
+
+    protected function parse(string $desc): array
+    {
+        return preg_split("/[^:]::[^:]/", $desc);
     }
 }

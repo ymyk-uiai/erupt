@@ -27,7 +27,7 @@ abstract class BaseSeeder extends BaseListItem
         return $product;
     }
 
-    protected static function makeClassName(string $name): string
+    protected static function makeClassName(string $className): string
     {
         return "Erupt\\Seeders\\Items\\".strtoupper($name)."\\Seeder";
     }

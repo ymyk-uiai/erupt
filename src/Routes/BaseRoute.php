@@ -26,7 +26,7 @@ abstract class BaseRoute extends BaseListItem
         return $product;
     }
 
-    protected static function makeClassName(string $name): string
+    protected static function makeClassName(string $className): string
     {
         return "Erupt\\Routes\\Items\\".strtoupper($name)."\\Route";
     }

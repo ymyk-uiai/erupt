@@ -5,6 +5,7 @@ namespace Erupt\Providers;
 use Illuminate\Support\ServiceProvider;
 use Erupt\Console\EruptActivateCommand;
 use Erupt\Console\EruptMakeCommand;
+use Erupt\Console\EruptResetCommand;
 use Erupt\Application;
 
 class EruptServiceProvider extends ServiceProvider
@@ -23,6 +24,7 @@ class EruptServiceProvider extends ServiceProvider
             $this->commands([
                 EruptActivateCommand::class,
                 EruptMakeCommand::class,
+                EruptResetCommand::class,
             ]);
         }
     }

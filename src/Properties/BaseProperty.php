@@ -3,78 +3,92 @@
 namespace Erupt\Properties;
 
 use Erupt\Foundation\BaseListItem;
-use Erupt\Traits\HasParams;
-use Erupt\Attributes\BaseAttribute as Attribute;
-use Erupt\Values\BaseValue as Value;
+use Erupt\Interfaces\Accessor;
+use Erupt\Traits\HandleAccess;
+use Erupt\Proposals\BaseProposal;
+use Erupt\Attributes\BaseAttribute;
+use Erupt\Foundation\Initializer as Ini;
+use Erupt\Traits\HandleInitialize;
 use Erupt\Values\Lists\ValueList;
-use Erupt\ValidationRules\BaseValidationRule as ValidationRule;
 use Erupt\ValidationRules\Lists\ValidationRuleList;
-use Erupt\Flags\BaseFlag as Flag;
 use Erupt\Flags\Lists\FlagList;
-use Erupt\Factories\BaseFactory as Factory;
-use Erupt\Factories\Lists\FactoryList;
 
-abstract class BaseProperty extends BaseListItem
+abstract class BaseProperty extends BaseListItem implements Accessor
 {
-    use HasParams;
+    use HandleAccess,
+        HandleInitialize;
 
-    protected ValueList $values;
+    protected static array $accessKeys = ['p', 'prop', 'property'];
 
-    protected ValidationRuleList $validationRules;
-
-    protected FlagList $flags;
-
-    protected FactoryList $factories;
-
-    public function __construct()
+    public static function getClassSymbol(): string
     {
-        $this->values = new ValueList;
-        $this->validationRules = new ValidationRuleList;
-        $this->flags = new FlagList;
-        $this->factories = new FactoryList;
+        return array_slice(explode('\\', static::class), 0, 0);
     }
 
-    public function build(Attribute $attr): void
+    public static function getDefaultClassSymbol(): string
     {
-        $this->buildValues($attr->getValues(), $attr);
-        $this->buildValidationRules($attr->getValidationRules(), $attr);
-        $this->buildFlags($attr->getFlags(), $attr);
-        $this->buildFactories($attr->getFactories(), $attr);
+        return "DefaultClassSymbol";
     }
 
-    protected function buildValues(string $values, Attribute $attr): void
+    public static function init(Ini $ini): static
     {
-        $values = array_filter(explode('|', $values));
-
-        foreach($values as $value) {
-            $this->values->add(Value::build($value, $attr));
-        }
+        return new static($ini);
     }
 
-    protected function buildValidationRules(string $rules, Attribute $attr): void
+    public static function initWithItsName(Ini $ini, string $name): self
     {
-        $rules = array_filter(explode('|', $rules));
-
-        foreach($rules as $rule) {
-            $this->validationRules->add(ValidationRule::build($rule, $attr));
-        }
+        return self::instantiate($ini, self::makeClassName($name));
     }
 
-    protected function buildFlags(string $flags, Attribute $attr): void
+    protected static function makeClassName(string $className): string
     {
-        $flags = array_filter(explode('|', $flags));
-
-        foreach($flags as $flag) {
-            $this->flags->add(Flag::build($flag, $attr));
-        }
+        return "Erupt\\Properties\\Items\\".ucfirst($className);
     }
 
-    protected function buildFactories(string $factories, Attribute $attr): void
+    protected static function instantiate(Ini $ini, string $className): self
     {
-        $factories = array_filter(explode('|', $factories));
+        return class_exists($className) ? new $className($ini) : throw new \Exception($className);
+    }
 
-        foreach($factories as $factory) {
-            $this->factories->add(Factory::build($factory, $attr));
-        }
+    public static function build(Ini $ini, BaseProposal $proposal, $scope = null): static
+    {
+        return static::init($ini)->extend($ini, $proposal, $scope);
+    }
+
+    public static function buildWithItsName(Ini $ini, string $name, BaseProposal $proposal, $scope = null): self
+    {
+        return self::initWithItsName($ini, $name)->extend($ini, $proposal, $scope);
+    }
+
+    public function __construct(Ini $ini)
+    {
+        //$this->initialize($ini);
+        $this->values = ValueList::init($ini);
+        $this->validationRules = ValidationRuleList::init($ini);
+        $this->flags = FlagList::init($ini);
+    }
+
+    public function extend(Ini $ini, BaseAttribute $attribute, $scope = null): self
+    {
+        $this->values->extend($ini, $attribute->getValues(), $attribute);
+        $this->validationRules->extend($ini, $attribute->getValidationRules(), $attribute);
+        $this->flags->extend($ini, $attribute->getFlags(), $attribute);
+    
+        return $this;
+    }
+
+    protected function split(string $descs): array
+    {
+        return preg_split("/[^|]|||[^|]/", $descs);
+    }
+
+    protected function parse(string $desc): array
+    {
+        return preg_split("/[^:]::[^:]/", $desc);
+    }
+
+    protected function accessAdditionally(string $keys, int $index): Accessor
+    {
+        return $this->values->access($keys, $index);
     }
 }

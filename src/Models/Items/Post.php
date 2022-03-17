@@ -6,8 +6,5 @@ use Erupt\Models\BaseModel;
 
 class Post extends BaseModel
 {
-    public function getName(): string
-    {
-        return "post";
-    }
+    //  "name:post|instanceName:post|instancePluralName:posts"
 }

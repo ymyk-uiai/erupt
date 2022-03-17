@@ -7,8 +7,8 @@ use Erupt\Properties\Items\Property;
 
 class AttributeContainer extends BaseAttributeContainer
 {
-    protected function makeCorrespondingProperty(): Property
+    protected static function getCorrespondingPropertyName(): string
     {
-        return new Property;
+        return "Property";
     }
 }

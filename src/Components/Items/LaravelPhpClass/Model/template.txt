@@ -1,0 +1,7 @@
+<!erupt
+    foreach model.props as prop join "\n" into res {
+        print("{}|{}|{}", prop.name, prop.valueType, prop.columnType)
+    }
+
+    print("{}", res)
+!>

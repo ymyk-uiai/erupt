@@ -17,6 +17,11 @@ abstract class BaseList implements IteratorAggregate
         }
     }
 
+    public function getItems(): array
+    {
+        return $this->items;
+    }
+
     public function getIterator()
     {
         return new BaseIterator($this->items);

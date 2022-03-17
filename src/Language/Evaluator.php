@@ -98,7 +98,12 @@ class Evaluator
                 $iterator = $this->resolve($ast["iterator"]["name"], $scope);
 
                 $iterScope = Scope::inherit($scope);
-                $iterScope->setGlue($ast["join"]["value"]);
+                $glue = match($ast['join']['value']) {
+                    '\\n' => "\n",
+                    '\\t' => "\t",
+                    default => $ast['join']['value'],
+                };
+                $iterScope->setGlue($glue);
 
                 $scope->setDefined($ast["into"]["name"], "");
                 
@@ -144,7 +149,7 @@ class Evaluator
     protected function resolve($name, $scope)
     {
         if(preg_match("/^(\w+)((?:\.[\w@]+)+)/", $name, $matches)) {
-            return $scope->getDefined($matches[1])->resolve(trim($matches[2], '.'), $this->app);
+            return $scope->getDefined($matches[1])->access($name, 1);
         } else {
             return $scope->getDefined($name);
         }

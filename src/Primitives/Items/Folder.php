@@ -6,5 +6,5 @@ use Erupt\Primitives\BasePrimitive;
 
 class Folder extends BasePrimitive
 {
-    protected string $name = "folder";
+    //
 }

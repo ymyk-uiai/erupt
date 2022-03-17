@@ -2,153 +2,136 @@
 
 namespace Erupt\Attributes;
 
-use Erupt\Traits\HasParams;
 use Erupt\Foundation\BaseListItem;
-use Erupt\Attributes\BaseAttributeContainer;
-use Erupt\Attributes\Lists\AttributeList;
+use Erupt\Traits\HasParams;
 use Erupt\Attributes\Containers\AttributeContainer;
+use Erupt\Attributes\Lists\AttributeList;
+use Erupt\Interfaces\TableColumnMaker;
+use Erupt\Foundation\Initializer as Ini;
+use Erupt\Traits\HandleInitialize;
+use Erupt\Interfaces\Accessor;
+use Erupt\Traits\HandleAccess;
 
-abstract class BaseAttribute extends BaseListItem
+abstract class BaseAttribute extends BaseListItem implements Accessor
 {
-    use HasParams;
+    use HasParams,
+        HandleInitialize,
+        HandleAccess;
 
-    protected bool $column = false;
+    protected ?string $alias;
 
-    protected ?string $alias = null;
+    protected ?string $values;
 
-    protected ?string $schemaCommand = null;
+    protected ?string $validationRules;
 
-    protected ?string $schemaModifier = null;
+    protected ?string $flags;
 
-    protected string $values = "";
-
-    protected string $validationRules = "";
-
-    protected string $flags = "";
-
-    protected string $factories = "";
-
-    public function getValues(): ?string
+    public static function getClassSymbol(): string
     {
-        return $this->values;
+        return array_slice(explode('\\', static::class), 0, 0);
     }
 
-    public function getValidationRules(): ?string
+    public static function getDefaultClassSymbol(): string
     {
-        return $this->validationRules;
+        return "DefaultClassSymbol";
     }
 
-    public function getFlags(): ?string
+    public static function init(Ini $ini): static
     {
-        return $this->flags;
+        return new static($ini);
     }
 
-    public function getFactories(): ?string
+    public static function initWithItsName(Ini $ini, string $name): self
     {
-        return $this->factories;
+        return self::instantiate($ini, self::makeClassName($name));
     }
 
-    public static function build(string $attr, self $a = null): self
+    protected static function makeClassName(string $className): string
     {
-        list($name, $args) = explode(":", $attr.":", 2);
+        return "Erupt\\Attributes\\Items\\".ucfirst($className)."\\Attribute";
+    }
 
-        $product = match ($name) {
-            "id" => new Items\Id\Attribute,
-            "bigIncrements" => new Items\BigIncrements\Attribute,
-            "unsignedBigInteger" => new Items\UnsignedBigInteger\Attribute,
-            "string" => new Items\String\Attribute,
-            "rememberToken" => new Items\RememberToken\Attribute,
-            "timestamp" => new Items\Timestamp\Attribute,
-            "timestamps" => new Items\Timestamps\Attribute,
-            "has" => new Items\Has\Attribute,
-            "belongsTo" => new Items\BelongsTo\Attribute,
-            default => new Items\Unknown\Attribute,
-        };
+    protected static function instantiate(Ini $ini, string $className): self
+    {
+        return class_exists($className) ? new $className($ini) : throw new \Exception($className);
+    }
 
-        if($a) {
-            $args = preg_replace_callback(
+    public static function build(Ini $ini, string $desc, $scope = null): static
+    {
+        return static::init($ini)->extend($ini, $desc, $scope);
+    }
+
+    public static function buildWithItsName(Ini $ini, string $name, string $desc, $scope = null): self
+    {
+        return self::initWithItsName($ini, $name)->extend($ini, $desc, $scope);
+    }
+
+    public function __construct(Ini $ini)
+    {
+        //$this->initialize($ini);
+    }
+
+    public function extend(Ini $ini, string $desc, $scope = null): self
+    {
+        //  $args = evalArgs($args, $scope);
+        if(isset($scope)) {
+            $desc = preg_replace_callback(
                 "/({(\w+)})(.*)/",
-                function ($matches) use ($a) {
-                    return $a->getArg($matches[2]).$matches[3];
+                function ($matches) use ($scope) {
+                    return $scope->getArg($matches[2]).$matches[3];
                 },
-                $args
+                $desc
             );
         }
 
-        /*
-        if($a) {
-            foreach($args as $index => $arg) {
-                $args[$index] = preg_replace_callback(
-                    "/({(\w+)})(.*)/",
-                    function ($matches) use ($a) {
-                        return $a->getArg($matches[2]).$matches[3];
-                    },
-                    $arg
-                );
-            }
-        }
-        */
+        $this->takeArgs(trim($desc, ":"));
 
-        $product->takeArgs(trim($args, ":"));
-
-        return $product;
+        return $this;
     }
 
-    public function isSchemaCommand(): bool
+    protected function split(string $descs): array
     {
-        return !!$this->schemaCommand;
+        return preg_split("/[^|]|||[^|]/", $descs);
     }
 
-    public function getSchemaCommand(): string
+    protected function parse(string $desc): array
     {
-        $args = implode(",", array_map(function ($e) {
-            return "'$e'";
-        }, array_filter($this->args)));
-        return $args ? $this->schemaCommand."(".$args.")" : $this->schemaCommand."()";
+        return preg_split("/[^:]::[^:]/", $desc);
     }
 
-    public function isSchemaModifier(): bool
+    public function getValues(): string
     {
-        return !!$this->schemaModifier;
+        return empty($this->values) ? "" : $this->values;
     }
 
-    public function getSchemaModifier(): string
+    public function getValidationRules(): string
     {
-        return $this->schemaModifier;
+        return empty($this->validationRules) ? "" : $this->validationRules;
     }
 
-    public function getArg(string $name): string
+    public function getFlags(): string
     {
-        return $this->args[$name];
+        return empty($this->flags) ? "" : $this->flags;
     }
 
-    public function evaluate(array $args = []): BaseAttributeContainer
+    public function isTableColumnMaker(): bool
     {
-        if(!!!$this->alias) {
-            $container = new AttributeContainer;
-            $list = new AttributeList;
-            $list->add($this);
-            $container->add($list);
-            return $container;
+        return $this instanceof TableColumnMaker;
+    }
+
+    public function evaluate(): BaseAttributeContainer
+    {
+        if(empty($this->alias)) {
+            return AttributeContainer::wrap($this->makeIni(), $this);
         }
 
-        $ps = explode('&', $this->alias);
+        $proposals = explode('||', $this->alias);
 
-        $container = new AttributeContainer;
-        foreach($ps as $p) {
-            $as = explode('|', $p);
-            $list = new AttributeList;
-            foreach($as as $a) {
-                $list->add(self::build($a, $this));
-            }
-            $container->add($list);
+        $container = AttributeContainer::init($this->makeIni());
+        foreach($proposals as $attributeList) {
+            $container->add(AttributeList::build($this->makeIni(), $attributeList, $this));
         }
 
         return $container->evaluate();
-    }
-
-    public function isColumn(): bool
-    {
-        return $this->column;
     }
 }

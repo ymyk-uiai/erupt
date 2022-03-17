@@ -3,57 +3,85 @@
 namespace Erupt\Plans;
 
 use Erupt\Foundation\BaseListItem;
-use Erupt\Proposals\BaseProposal;
-use Erupt\Proposals\Items\Proposal;
-use Erupt\Proposals\Lists\ProposalList;
+use Erupt\Proposals\BaseProposalList;
 use Erupt\Relationships\Lists\RelationshipList;
-use Erupt\Models\BaseModel;
+use Erupt\Interfaces\Accessor;
+use Erupt\Traits\HandleAccess;
+use Erupt\Foundation\Initializer as Ini;
+use Erupt\Traits\HandleInitialize;
 
-abstract class BasePlan extends BaseListItem
+abstract class BasePlan extends BaseListItem implements Accessor
 {
-    protected ProposalList $proposals;
+    use HandleAccess,
+        HandleInitialize;
 
-    public function __construct()
+    protected BaseProposalList $proposals;
+
+    protected static array $accessKeys = ['pl', 'plan'];
+
+    public static function getClassSymbol(): string
     {
-        $this->proposals = new ProposalList;
+        return implode('\\', array_slice(explode('\\', static::class), 3));
     }
 
-    public static function build(array $plan, RelationshipList $relationships): static
+    public static function getDefaultClassSymbol(): string
     {
-        $product = new static;
-
-        foreach ($plan["props"] as $prop) {
-            $product->addProposal(Proposal::build($prop));
-        }
-
-        $product->addProposals($relationships->makeProposals($product));
-
-        return $product;
+        return "DefaultClassSymbol";
     }
 
-    public function makeModel(): BaseModel
+    public static function init(Ini $ini): static
     {
-        $product = $this->makeCorrespondingModel();
-
-        foreach($this->proposals as $proposal) {
-            $product->getProperties()->add($proposal->makeProperties());
-        }
-
-        return $product;
+        return new static($ini);
     }
 
-    public function addProposal(Proposal $proposal): void
+    public static function initWithItsName(Ini $ini, string $name): self
     {
-        $this->proposals->add($proposal);
+        return self::instantiate($ini, self::makeClassName($name));
     }
 
-    protected function addProposals(ProposalList $proposals): void
+    protected static function makeClassName(string $className): string
     {
-        $this->proposals->add($proposals);
+        return "Erupt\\Plans\\Items\\".ucfirst($className);
     }
 
-    public function getName(): string
+    protected static function instantiate(Ini $ini, string $className): self
     {
-        return $this->name;
+        return class_exists($className) ? new $className($ini) : throw new \Exception($className);
+    }
+
+    public static function build(Ini $ini, string $desc, $scope = null): static
+    {
+        return static::init($ini)->extend($ini, $desc, $scope);
+    }
+
+    public static function buildWithItsName(Ini $ini, string $name, string $desc, $scope = null): self
+    {
+        return self::initWithItsName($ini, $name)->extend($ini, $desc, $scope);
+    }
+
+    public function __construct(Ini $ini)
+    {
+        //$this->initialize($ini);
+    }
+
+    public function extend(Ini $ini, string $desc, $scope = null): self
+    {
+        $this->proposals = BaseProposalList::buildWithItsName($ini, BaseProposalList::getDefaultClassSymbol(), $desc, $scope);
+        return $this;
+    }
+
+    protected function split(string $descs): array
+    {
+        return preg_split("/\|{3}/", $descs);
+    }
+
+    protected function parse(string $desc): array
+    {
+        return preg_split("/:{3}/", $desc);
+    }
+
+    public function getProposals(): BaseProposalList
+    {
+        return $this->proposals;
     }
 }

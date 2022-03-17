@@ -6,8 +6,5 @@ use Erupt\Models\BaseModel;
 
 class Folder extends BaseModel
 {
-    public function getName(): string
-    {
-        return "folder";
-    }
+    //  "name:folder|instanceName:folder|instancePluralName:folders"
 }

@@ -27,7 +27,7 @@ abstract class BaseAuthProvider extends BaseListItem
         return $product;
     }
 
-    protected static function makeClassName(string $name): string
+    protected static function makeClassName(string $className): string
     {
         return "Erupt\\AuthProviders\\Items\\".strtoupper($name)."\\AuthProvider";
     }

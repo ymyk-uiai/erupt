@@ -5,6 +5,8 @@ namespace Erupt;
 use Erupt\Relationships\Lists\RelationshipList;
 use Erupt\Plans\Lists\PlanList;
 use Erupt\Models\Lists\ModelList;
+use Erupt\Models\BaseModelList;
+use Erupt\Models\BaseModel;
 use Erupt\Generators\Lists\GeneratorList;
 use Erupt\Files\Lists\FileList;
 use Erupt\Migrations\Lists\MigrationList;
@@ -15,111 +17,80 @@ use Erupt\Events\BaseEvent as Event;
 use Erupt\Seeders\Lists\SeederList;
 use Erupt\Routes\Lists\RouteList;
 use Erupt\AuthProviders\Lists\AuthProviderList;
+use Erupt\Foundation\Initializer;
 
 class Application
 {
     protected ModelList $models;
 
-    protected GeneratorList $generators;
-
     protected FileList $files;
-
-    protected MigrationList $migrations;
 
     protected EventList $events;
 
+    protected static array $accessKeys = ['app', 'application'];
+
     public function __construct($config)
     {
-        $relationships = RelationshipList::build($config["relationships"]);
+        $ini = new Initializer;
+        $ini->add($this);
 
-        $plans = PlanList::build($config["models"], $relationships);
+        //print_r($ini);
 
-        $models = ModelList::build($plans);
+        $relationships = RelationshipList::build($ini, implode('||', $config['relationships']));
+        //print_r($relationships);
+        $this->relationships = $relationships;
 
-        $this->models = $models;
-
+        $plans = $this->completePlans($config['plans'], $relationships);
         //print_r($plans);
 
-        //print_r($models);
+        $plans = PlanList::build($ini, $plans);
+        //print_r($plans);
+        $this->plans = $plans;
 
-        $this->generators = GeneratorList::build();
+        $models = ModelList::build($ini, $plans);
+        print_r($models->getModel('user'));
+        $this->models = $models;
 
-        $this->files = FileList::build($this, $plans, $relationships);
-
-        //print_r($this->files);
-
-        $this->migrations = MigrationList::build($this, $plans, $relationships);
-
-        //print_r($this->migrations);
-
-        $this->events = EventList::build();
-
-        $this->seeders = new SeederList;
-
-        $this->routes = new RouteList;
-
-        $this->authProviders = new AuthProviderList;
+        $files = FileList::build($ini, $plans, $relationships);
+        //print_r($files);
+        $this->files = $files;
     }
 
-    public function getModels(): ModelList
+    protected function completePlans(array $plans, RelationshipList $rels): string
+    {
+        foreach($plans as $name => $data) {
+            $plans[$name]['props'] = array_merge($plans[$name]['props'], $rels->getRelationalProposals($name));
+        }
+
+        $results = [];
+
+        foreach($plans as $name => $value) {
+            $proposals = array_map(function ($proposal) {
+                if(preg_match("/^[a-zA-Z\\\\]+:{2}/", $proposal)) {
+                    return $proposal;
+                } else {
+                    return "Proposal::".$proposal;
+                }
+            }, $value['props']);
+            $proposals = implode('||', $proposals);
+            $results[] = ucfirst($name).':::'.$proposals;
+        }
+        //print_r($results);
+        return implode('|||', $results);
+    }
+
+    public function getModels(): BaseModelList
     {
         return $this->models;
     }
 
-    public function getMigrationGenerator(): BaseGenerator
+    public function getModel(string $name): BaseModel
     {
-        return $this->generators->getMigrationGenerator();
+        return $this->models->getModel($name);
     }
 
     public function getFiles(): FileList
     {
         return $this->files;
-    }
-
-    public function getMigrations(): MigrationList
-    {
-        return $this->migrations;
-    }
-
-    public function getMigration(string $fileName): Migration|bool
-    {
-        foreach($this->migrations as $migration) {
-            if($migration->is($fileName)) {
-                return $migration;
-            }
-        }
-        return false;
-    }
-
-    public function registerEvent(string $event): void
-    {
-        $this->events->add(EventList::build($event));
-    }
-
-    public function dispatchEvents(): void
-    {
-        foreach($this->events as $event) {
-            $this->dispatchEvent($event);
-        }
-    }
-
-    public function dispatchEvent(Event $event): void
-    {
-        $event->dispatch();
-    }
-
-    public function getSeeders(): SeederList
-    {
-        return $this->seeders;
-    }
-
-    public function getRoutes(): RouteList
-    {
-        return $this->routes;
-    }
-
-    public function getAuthProviders(): AuthProviderList
-    {
-        return $this->authProviders;
     }
 }

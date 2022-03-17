@@ -4,35 +4,100 @@ namespace Erupt\Attributes;
 
 use Erupt\Foundation\BaseListContainer;
 use Erupt\Attributes\Lists\AttributeList;
+use Erupt\Attributes\Containers\AttributeContainer;
 use Erupt\Properties\Lists\PropertyList;
 use Erupt\Properties\BaseProperty;
-use Erupt\Attributes\Containers\AttributeContainer;
+use Erupt\Foundation\Initializer as Ini;
+use Erupt\Traits\HandleInitialize;
+use Erupt\Interfaces\Accessor;
+use Erupt\Traits\HandleAccess;
 
-abstract class BaseAttributeContainer extends BaseListContainer
+abstract class BaseAttributeContainer extends BaseListContainer implements Accessor
 {
-    public function add(BaseAttributeList|Self $incoming): void
-    {
-        parent::addListOrContainer($incoming);
-    }
+    use HandleInitialize, HandleAccess;
 
-    public function remove(BaseAttributeList|Self $incoming): void
-    {
-        parent::removeListOrContainer($incoming);
-    }
-
-    public function evaluate(): self
-    {
-        $container = new AttributeContainer;
-        foreach($this as $list) {
-            $container->add($list->evaluate());
+        public static function getClassSymbol(): string
+        {
+            return implode('\\', array_slice(explode('\\', static::class), 3));
         }
+    
+        public static function getDefaultClassSymbol(): string
+        {
+            return "AttributeContainer";
+        }
+
+        protected static function getCorrespondingPropertyName(): string
+        {
+            return static::getClassSymbol();
+        }
+    
+        public static function init(Ini $ini): static
+        {
+            return new static($ini);
+        }
+    
+        public static function initWithItsName(Ini $ini, string $name): self
+        {
+            return self::instantiate($ini, self::makeClassName($name));
+        }
+    
+        protected static function makeClassName(string $className): string
+        {
+            return "Erupt\\Attributes\\Containers\\".ucfirst($className);
+        }
+    
+        protected static function instantiate(Ini $ini, string $className): self
+        {
+            return class_exists($className) ? new $className($ini) : throw new \Exception($className);
+        }
+    
+        public static function build(Ini $ini, string $descs, $scope = null): static
+        {
+            return static::init($ini)->extend($ini, $descs, $scope);
+        }
+    
+        public static function buildWithItsName(Ini $ini, string $name, string $descs, $scope = null): self
+        {
+            return self::initWithItsName($ini, $name)->extend($ini, $descs, $scope);
+        }
+    
+        public function __construct(Ini $ini)
+        {
+            //$this->initialize($ini);
+        }
+    
+        public function extend(Ini $ini, string $descs, $scope = null): self
+        {
+            return array_reduce($this->split($descs), function ($carry, $desc) use ($ini, $scope) {
+                [$name, $args] = $carry->parse($desc);
+                $carry->add(BaseAttribute::buildWithItsName($ini, $name, $args, $scope));
+                return $carry;
+            }, $this);
+        }
+    
+        protected function split(string $descs): array
+        {
+            return preg_split("/\|/", $descs);
+        }
+    
+        protected function parse(string $desc): array
+        {
+            return preg_split("/:/", $desc.":");
+        }
+    
+    public static function wrap(Ini $ini, BaseAttribute $incoming): static
+    {
+        //  static::init($ini)->add(AttributeList::wrap($ini, $incoming));
+        $container = static::init($ini);
+        $container->add(AttributeList::wrap($ini, $incoming));
         return $container;
     }
 
+    //  merge(), mergeItem()
     public function merge(self $container): void
     {
         foreach($container as $list) {
-            if($list->hasColumn()) {
+            if($list->isTableColumnMaker()) {
                 $this->add($list);
             } else {
                 foreach($this as $thisList) {
@@ -42,23 +107,37 @@ abstract class BaseAttributeContainer extends BaseListContainer
         }
     }
 
-    public function makeProperties(): PropertyList
+    public function add(self|BaseAttributeList $incoming): void
     {
-        $props = new PropertyList;
-        foreach($this as $list) {
-            $props->add($this->makeProperty($list));
-        }
-        return $props;
+        $this->addListOrContainer($incoming);
     }
 
-    abstract protected function makeCorrespondingProperty(): BaseProperty;
-
-    protected function makeProperty(AttributeList $attrs): BaseProperty
+    public function remove(self|BaseAttributeList $incoming): void
     {
-        $property = $this->makeCorrespondingProperty();
-        foreach($attrs as $attr) {
-            $property->build($attr);
-        }
-        return $property;
+        $this->removeListOrContainer($incoming);
+    }
+
+    public function evaluate(): self
+    {
+        return array_reduce($this->lists, function ($carry, $list) {
+            $carry->add($list->evaluate());
+            return $carry;
+        }, AttributeContainer::init($this->makeIni()));
+    }
+
+    public function makeProperties(Ini $ini): PropertyList
+    {
+        return array_reduce($this->lists, function ($carry, $list) use ($ini) {
+            $carry->add($this->makeProperty($ini, $list));
+            return $carry;
+        }, PropertyList::init($ini));
+    }
+
+    protected function makeProperty(Ini $ini, AttributeList $attributes): BaseProperty
+    {
+        return array_reduce($attributes->getItems(), function ($carry, $attribute) use ($ini) {
+            $carry->extend($ini, $attribute);
+            return $carry;
+        }, BaseProperty::initWithItsName($this->makeIni(), static::getCorrespondingPropertyName()));
     }
 }

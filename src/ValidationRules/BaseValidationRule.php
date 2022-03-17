@@ -3,39 +3,90 @@
 namespace Erupt\ValidationRules;
 
 use Erupt\Foundation\BaseListItem;
+use Erupt\Interfaces\Accessor;
+use Erupt\Traits\HandleAccess;
+use Erupt\Foundation\Initializer as Ini;
+use Erupt\Traits\HandleInitialize;
 use Erupt\Traits\HasParams;
-use Erupt\Attributes\BaseAttribute as Attribute;
 
-abstract class BaseValidationRule extends BaseListItem
+abstract class BaseValidationRule extends BaseListItem implements Accessor
 {
-    use HasParams;
+    use HandleAccess,
+        HandleInitialize,
+        HasParams;
 
-    protected string $params = "";
+    protected static array $accessKeys = ['vr', 'validationRule', 'rule'];
 
-    public static function build(string $value, Attribute $setter = null): self
+    public static function getClassSymbol(): string
     {
-        list($name, $args) = explode(":", $value.":", 2);
+        return array_slice(explode('\\', static::class), 0, 0);
+    }
 
-        $className = "Erupt\\ValidationRules\\Items\\".strtoupper($name)."\\Rule";
+    public static function getDefaultClassSymbol(): string
+    {
+        return "DefaultClassSymbol";
+    }
 
-        if(class_exists($className)) {
-            $product = new $className;
-        } else {
-            $product = new \Erupt\ValidationRules\Items\Unknown\Rule;
-        }
+    public static function init(Ini $ini): static
+    {
+        return new static($ini);
+    }
 
-        if($setter) {
+    public static function initWithItsName(Ini $ini, string $name): self
+    {
+        return self::instantiate($ini, self::makeClassName($name));
+    }
+
+    protected static function makeClassName(string $className): string
+    {
+        return "Erupt\\ValidationRules\\Items\\".ucfirst($className)."\\ValidationRule";
+    }
+
+    protected static function instantiate(Ini $ini, string $className): self
+    {
+        return class_exists($className) ? new $className($ini) : throw new \Exception($className);
+    }
+
+    public static function build(Ini $ini, string $desc, $scope = null): static
+    {
+        return static::init($ini)->extend($ini, $desc, $scope);
+    }
+
+    public static function buildWithItsName(Ini $ini, string $name, string $desc, $scope = null): self
+    {
+        return self::initWithItsName($ini, $name)->extend($ini, $desc, $scope);
+    }
+
+    public function __construct(Ini $ini)
+    {
+        //$this->initialize($ini);
+    }
+
+    public function extend(Ini $ini, string $desc, $scope = null): self
+    {
+        //  $args = evalArgs($args, $scope);
+        if(isset($scope)) {
             $args = preg_replace_callback(
                 "/({(\w+)})(.*)/",
-                function ($matches) use ($setter) {
-                    return $setter->getArg($matches[2]).$matches[3];
+                function ($matches) use ($scope) {
+                    return $scope->getArg($matches[2]).$matches[3];
                 },
                 $args
             );
         }
 
-        $product->takeArgs(trim($args, ":"));
+        $this->takeArgs(trim($args, ":"));
 
-        return $product;
+        return $this;
+    }
+
+    protected function split(string $descs): array
+    {
+        return preg_split("/[^|]|||[^|]/", $descs);
+    }
+
+    protected function parse(string $desc): array
+    {
+        return preg_split("/[^:]::[^:]/", $desc);
     }
 }

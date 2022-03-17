@@ -3,64 +3,79 @@
 namespace Erupt\Models;
 
 use Erupt\Foundation\BaseListItem;
-use Erupt\Properties\Lists\PropertyList;
+use Erupt\Interfaces\Accessor;
+use Erupt\Traits\HandleAccess;
+use Erupt\Plans\BasePlan;
+use Erupt\Proposals\Lists\ProposalList;
+use Erupt\Properties\BasePropertyList;
+use Erupt\Foundation\Initializer as Ini;
+use Erupt\Traits\HandleInitialize;
 
-abstract class BaseModel extends BaseListItem
+abstract class BaseModel extends BaseListItem implements Accessor
 {
-    protected PropertyList $properties;
+    use HandleAccess,
+        HandleInitialize;
 
-    public function __construct()
+    protected static array $accessKeys = ['m', 'model'];
+
+    public static function getClassSymbol(): string
     {
-        $this->properties = new PropertyList;
+        return implode('\\', array_slice(explode('\\', static::class), 3));
     }
 
-    public function getProperties(): PropertyList
+    public static function getDefaultClassSymbol(): string
     {
-        return $this->properties;
+        return "DefaultClassSymbol";
     }
 
-    abstract public function getName(): string;
-
-    public function resolve(string|array $keys)
+    public static function init(Ini $ini): static
     {
-        $key = $this->getNextKey($keys);
-
-        if($key == "") {
-            return $this;
-        }
-
-        return $this->getResolver($key, $keys)->resolve($keys);
+        return new static($ini);
     }
 
-    protected function getResolver(string $key, array &$keys)
+    public static function initWithItsName(Ini $ini, string $name): self
     {
-        try {
-            if($key == "name") {
-                array_push($keys, "model");
-                array_push($keys, "name");
-            }
-            return match($key) {
-                "name" => $this->getFiles(),
-                "values" => $this->getValues(),
-                "attributes",
-                "props" => $this->getProperties(),
-                "files" => $this->getFiles(),
-                "className" => $this->getValues()->getValue('className'),
-                default => throw new Exception($key),
-            };
-        } catch (Exception $e) {
-            echo 'Unknown resolve key: ',  $e->getMessage(), "\n";
-        }
+        return self::instantiate($ini, self::makeClassName($name));
     }
 
-    protected function getNextKey(string|array &$keys): string
+    protected static function makeClassName(string $className): string
     {
-        if(is_string($keys)) {
-            $keys = explode('.', $keys);
-        }
+        return "Erupt\\Models\\Items\\".ucfirst($className);
+    }
 
-        $key = array_shift($keys);
+    protected static function instantiate(Ini $ini, string $className): self
+    {
+        return class_exists($className) ? new $className($ini) : throw new \Exception($className);
+    }
 
-        return $key ?? "";
+    public static function build(Ini $ini, BasePlan $plan, $scope = null): static
+    {
+        return static::init($ini)->extend($ini, $plan, $scope);
+    }
+
+    public static function buildWithItsName(Ini $ini, string $name, BasePlan $plan, $scope = null): self
+    {
+        return self::initWithItsName($ini, $name)->extend($ini, $plan, $scope);
+    }
+
+    public function __construct(Ini $ini)
+    {
+        //$this->initialize($ini);
+    }
+
+    public function extend(Ini $ini, BasePlan $plan, $scope = null): self
+    {
+        $this->properties = BasePropertyList::buildWithItsName($ini, BasePropertyList::getDefaultClassSymbol(), $plan->getProposals(), $scope);
+        return $this;
+    }
+
+    protected function split(string $descs): array
+    {
+        return preg_split("/[^|]|||[^|]/", $descs);
+    }
+
+    protected function parse(string $desc): array
+    {
+        return preg_split("/[^:]::[^:]/", $desc);
     }
 }

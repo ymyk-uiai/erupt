@@ -24,26 +24,13 @@ class EruptMakeCommand extends GeneratorCommand
     {
         $file = $this->argument("file");
 
-        $this->makeDirectory($file->getPath());
+        $this->makeDirectory($file->access('path')."");
 
-        $this->files->put(base_path($file->getName()), $this->build());
+        $fileName = $file->access('path') . '/' . $file->access('shortName');
+
+        $this->files->put(base_path($fileName), $file->getContent());
 
         //$this->info("{$file['name']} created successfully.");
-    }
-
-    protected function build(): string
-    {
-        $file = $this->argument("file");
-
-        [$template, $data] = $file->getTemplateAndData();
-
-        $this->registerEvents($data["events"]);
-
-        $lang = new EruptLang($this->app);
-
-        print_r("$template\n\n");
-
-        return $lang->exec($template, $file->getCorrespondingModel(), $file);
     }
 
     protected function registerEvents(array $events): void

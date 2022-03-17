@@ -1,0 +1,5 @@
+@nested1
+
+@nested2
+
+parent component
